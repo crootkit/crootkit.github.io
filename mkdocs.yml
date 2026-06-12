@@ -1,0 +1,49 @@
+site_name: JRC BLOG
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - pymdownx.highlight:
+      linenums: true          # 核心：全局默认显示行号
+      anchor_linenums: true   # 推荐：让行号可以点击并生成链接
+  - pymdownx.superfences      # 核心：支持带语言标签的代码块解析
+
+extra_javascript:
+  - stylesheets/javascripts/cyber-buddha.js
+
+extra_css:
+  - stylesheets/extra.css  # 确保这一行存在
+
+theme: 
+  name: material
+  logo: logos/logo1.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    # - navigation.tabs     # 顶部导航栏显示为标签页形式（适合层级较浅的文档结构）
+    # - navigation.sections   # 顶级文件夹渲染为侧边栏的“分组标题”。
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.select        # 点击代码块任意位置可一键全选
+    - content.code.annotate      # 杀手级功能：允许在代码行旁边添加悬浮注释
+  
+  # nav:
+  #   首页: index.md
+  #   关于: about.md
