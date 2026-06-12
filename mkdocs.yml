@@ -11,14 +11,14 @@ markdown_extensions:
   - pymdownx.superfences      # 核心：支持带语言标签的代码块解析
 
 extra_javascript:
-  - stylesheets/javascripts/cyber-buddha.js
+  - config/stylesheets/javascripts/cyber-buddha.js
 
 extra_css:
-  - stylesheets/extra.css  # 确保这一行存在
+  - config/stylesheets/extra.css  # 确保这一行存在
 
 theme: 
   name: material
-  logo: logos/logo1.png
+  logo: config/logos/logo1.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default

