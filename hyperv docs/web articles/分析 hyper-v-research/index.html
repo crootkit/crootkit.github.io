@@ -1,0 +1,1828 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
+      
+      
+        <link rel="next" href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Hyper-V Research 文章总结 - JRC BLOG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hyper-v-research" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="JRC BLOG" class="md-header__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../logos/logo1.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JRC BLOG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hyper-V Research 文章总结
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="JRC BLOG" class="md-nav__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../logos/logo1.png" alt="logo">
+
+    </a>
+    JRC BLOG
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to crj blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于这个博客的主人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyperv docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hyperv docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hyper-V%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E7%94%9F%E6%80%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 技术应用生态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V PowerShell 代码示例索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web articles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Web articles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章主旨
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章核心内容
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="文章核心内容">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hyper-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hyper-V 的基本定位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 启动链中的关键组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cpuid-hyper-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CPUID 在 Hyper-V 初始化中的作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-winloadexe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. winload.exe 中的关键路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-partition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 分区（Partition）与拦截机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-vtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. VTL 与系统信任分层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-securekernelexe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. securekernel.exe 的初始化流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-hypercall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Hypercall 支持的建立
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章的研究价值
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一句话结论
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5" id="__nav_3_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_5_1" id="__nav_3_5_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_5_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章主旨
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章核心内容
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="文章核心内容">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hyper-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Hyper-V 的基本定位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 启动链中的关键组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-cpuid-hyper-v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. CPUID 在 Hyper-V 初始化中的作用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-winloadexe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. winload.exe 中的关键路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-partition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 分区（Partition）与拦截机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-vtl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. VTL 与系统信任分层
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-securekernelexe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. securekernel.exe 的初始化流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-hypercall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Hypercall 支持的建立
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文章的研究价值
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一句话结论
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hyper-v-research">Hyper-V Research 文章总结</h1>
+<h2 id="_1">文章主旨</h2>
+<p>这篇文章是一篇面向安全研究视角的 Hyper-V 入门与逆向分析笔记。作者从 Hyper-V 在 Windows 安全体系中的定位出发，串联了 Hyper-V、VBS、HVCI、VTL、Secure Kernel 与 hypercall 等关键概念，并结合 <code>winload.exe</code>、<code>hvloader.dll</code>、<code>securekernel.exe</code> 等组件的反汇编结果，说明 Hyper-V 是如何在系统启动阶段被装载、初始化并逐步接管更高权限执行环境的。</p>
+<h2 id="_2">文章核心内容</h2>
+<h3 id="1-hyper-v">1. Hyper-V 的基本定位</h3>
+<ul>
+<li>Hyper-V 是微软的 Type 1 Hypervisor，运行权限高于传统内核，可视作 Ring -1 组件。</li>
+<li>它不仅用于虚拟机能力，也构成了 Windows VBS（基于虚拟化的安全）体系的底座。</li>
+<li>HVCI 等强安全机制依赖 Hyper-V 才能生效，因此 Hyper-V 在现代 Windows 安全架构里不是“可选附属”，而是基础设施。</li>
+</ul>
+<h3 id="2">2. 启动链中的关键组件</h3>
+<p>文章重点解释了 Hyper-V 在启动链中的装载流程：</p>
+<ul>
+<li><code>Hvloader.dll</code> 负责加载并启动 Hyper-V 与 Secure Kernel。</li>
+<li><code>Hvloader.dll</code> 会根据 CPU 平台选择对应的 Hypervisor 映像：</li>
+<li>Intel 使用 <code>Hvix64.exe</code></li>
+<li>AMD 使用 <code>Hvax64.exe</code></li>
+<li>ARM64 使用 <code>Hvaa64.exe</code></li>
+<li><code>Winload.exe</code> 中的逻辑会先准备 Hypervisor 相关数据结构，再完成向 Hypervisor 执行空间的切换。</li>
+</ul>
+<p>作者强调，Hyper-V 的加载分为两个阶段：</p>
+<ul>
+<li>第一阶段建立仅映射 Hypervisor 映像的页表层级。</li>
+<li>第二阶段在 Winload 末期关闭部分启动环境，切换地址空间并把执行流转移到 Hypervisor。</li>
+</ul>
+<p>其结果是：原本正在启动的 Windows 实例会被“转化”为运行在 Hypervisor 之上的虚拟化环境。</p>
+<h3 id="3-cpuid-hyper-v">3. <code>CPUID</code> 在 Hyper-V 初始化中的作用</h3>
+<p>文章用较大篇幅说明 <code>CPUID</code> 在初始化期间的用途，核心包括：</p>
+<ul>
+<li>检查 CPU 厂商字符串，例如 <code>GenuineIntel</code>。</li>
+<li>检查处理器是否支持 VMX 等虚拟化功能。</li>
+<li>检查 Hypervisor 是否存在，以及是否为 Microsoft 兼容实现。</li>
+<li>获取 Hypervisor Feature 信息，为后续装载和功能启用做条件判断。</li>
+</ul>
+<p>作者通过汇编和伪代码展示了 <code>CpuComp</code>、<code>VmxEnComp</code>、<code>HviGetHypervisorFeatures</code>、<code>HviIsHypervisorMicrosoftCompatible</code> 等函数，说明 Hyper-V 相关代码不会盲目运行，而是先验证底层处理器与虚拟化环境能力是否满足要求。</p>
+<h3 id="4-winloadexe">4. <code>winload.exe</code> 中的关键路径</h3>
+<p>作者从 <code>OslpMain()</code> 切入，指出其中最值得关注的是 <code>OslPrepareTarget()</code>。这条路径最终会走到 <code>OslArchHypervisorSetup()</code>，后者负责：</p>
+<ul>
+<li>获取 Hypervisor 启动类型</li>
+<li>加载 <code>HvLoader</code></li>
+<li>加载真正的 Hypervisor 映像</li>
+<li>记录 Hypervisor 启动事件</li>
+</ul>
+<p>这里最关键的函数包括：</p>
+<ul>
+<li><code>OslGetHypervisorLaunchType()</code>：决定是否以及如何启动 Hypervisor。</li>
+<li><code>HvlpLoadHvLoader()</code>：负责获取 <code>hvloader.dll</code> 并解析导出函数。</li>
+<li><code>HvlpLoadHvLoaderDll()</code>：拼接路径、预加载或正式加载 <code>hvloader.dll</code>。</li>
+<li><code>HvlpLoadHypervisor()</code>：进一步把 Hypervisor 主体映像装载到内存。</li>
+</ul>
+<p>作者特别指出，<code>HvlpLoadHvLoader()</code> 会动态解析多个关键导出，例如：</p>
+<ul>
+<li><code>HvlRescindVsm</code></li>
+<li><code>HvlLaunchHypervisor</code></li>
+<li><code>HvlLoadHypervisor</code></li>
+<li><code>HvlRegisterRuntimeRange</code></li>
+<li><code>HvlExchangeDispatchInterface</code></li>
+</ul>
+<p>这说明启动加载器和 Hypervisor 主体之间是通过一组运行期解析的接口协同工作的。</p>
+<h3 id="5-partition">5. 分区（Partition）与拦截机制</h3>
+<p>文章随后从架构层面介绍 Hyper-V 的 Partition 模型：</p>
+<ul>
+<li>Root Partition：宿主分区，掌握更高控制权限。</li>
+<li>Child Partition：来宾分区，用于承载普通客户机操作系统。</li>
+</ul>
+<p>作者强调一个重要观点：Child Partition 并不是完全自由执行的。遇到特定事件时，执行会被 VM Exit/Intercept 打断并交由上层处理。文章列举了大量 Intel VM Exit 原因，例如：</p>
+<ul>
+<li><code>CPUID</code></li>
+<li><code>HLT</code></li>
+<li><code>VMCALL</code></li>
+<li><code>CR_ACCESS</code></li>
+<li><code>MSR_READ</code></li>
+<li><code>MSR_WRITE</code></li>
+<li><code>EPT_VIOLATION</code></li>
+</ul>
+<p>这部分的意义在于说明 Hyper-V 的控制能力并不只是“提供虚拟机”，而是通过精细的拦截与事件转发机制对来宾执行过程进行治理。</p>
+<h3 id="6-vtl">6. VTL 与系统信任分层</h3>
+<p>文章对 VTL（Virtual Trust Level）做了较清晰的说明：</p>
+<ul>
+<li>VTL Admin / <code>hvix64.sys</code>：由 Hypervisor 管理，拥有对内存、寄存器、EPT、上下文切换等最强控制权限。</li>
+<li>VTL 0：普通操作系统所在层级，典型代表是 <code>ntoskrnl.exe</code> 与常规驱动。</li>
+<li>VTL 1：由 <code>securekernel.exe</code> 驱动的安全内核层，用于承载 HVCI、Credential Guard 等安全能力。</li>
+</ul>
+<p>重点在于：</p>
+<ul>
+<li>VTL 1 的地址空间与 VTL 0 隔离。</li>
+<li>普通 Ring 0 代码不能直接访问 VTL 1。</li>
+<li><code>hvix64.sys</code> 不作为普通驱动出现在常规驱动树中，因为它位于操作系统“之下”。</li>
+</ul>
+<p>这也是 Windows 把关键安全机制从传统内核中“抽离”出来并放到更高信任层的基础逻辑。</p>
+<h3 id="7-securekernelexe">7. <code>securekernel.exe</code> 的初始化流程</h3>
+<p>文章进一步进入 VTL 1，分析 <code>securekernel.exe</code> 的入口 <code>SkiSystemStartup()</code>。作者展示了该函数如何逐步完成：</p>
+<ul>
+<li>时间戳计数器初始化</li>
+<li>CPU 特性位收集</li>
+<li>Hypervisor 交互能力初始化</li>
+<li>内存管理初始化</li>
+<li>安全服务表整理</li>
+<li>最终启动 VTL 1 相关能力</li>
+</ul>
+<p>其中作者重点分析了几个函数：</p>
+<ul>
+<li><code>SkiInitializeSystemTsc()</code>：初始化 TSC 相关信息，决定时间基准。</li>
+<li><code>SkiSetFeatureBits()</code>：借助 <code>CPUID</code> 收集 CPU 能力并设置 Secure Kernel 的功能位。</li>
+<li><code>SkiGetProcessorSignature()</code> 与 <code>SkiGetCpuVendor()</code>：识别 CPU 厂商、系列和型号。</li>
+<li><code>ShvlInitSystem()</code>：负责安全内核阶段初始化、VSM 能力查询以及 hypercall 支持的建立。</li>
+</ul>
+<p>这部分说明 Secure Kernel 虽然体量精简，但它不是一个简单的附属模块，而是一个拥有独立初始化路径和执行环境的安全内核。</p>
+<h3 id="8-hypercall">8. Hypercall 支持的建立</h3>
+<p>文章最后一块重点内容是 Hypercall 机制。作者通过 <code>ShvlpInitializeHypercallSupport()</code>、<code>ShvlpRegisterForHypercallSupport()</code>、<code>HvcallInitiateHypercall()</code> 等函数说明：</p>
+<ul>
+<li>Secure Kernel 会拿到 hypercall code page 的虚拟地址和物理地址。</li>
+<li>初始化过程中会写入相关 MSR 以启用 Hypercall 支持。</li>
+<li>Hypercall 最终通过函数指针 <code>HvcallCodeVa</code> 进入 Hypervisor 提供的调用页。</li>
+</ul>
+<p>作者还给出一个例子：<code>ShvlNotifyLongSpinWait()</code> 最终调用 <code>HvcallInitiateHypercall(0x10008, a1, 0)</code>，说明 Secure Kernel 与 Hypervisor 之间的交互是通过这种受控接口完成的。</p>
+<h2 id="_3">文章的研究价值</h2>
+<p>从研究角度看，这篇文章的价值主要体现在以下几点：</p>
+<ul>
+<li>它不是只讲概念，而是把概念与真实二进制中的函数路径对应起来。</li>
+<li>它把 Hyper-V、VBS、Secure Kernel、VTL 等常见术语放回到系统启动与初始化语境里，便于建立整体理解。</li>
+<li>它给出了后续漏洞研究的切入点，例如：启动阶段、Hypervisor 装载逻辑、VTL 边界、Hypercall 接口、拦截机制。</li>
+</ul>
+<h2 id="_4">一句话结论</h2>
+<p>这篇文章的核心观点是：Hyper-V 并不只是 Windows 的虚拟机功能模块，而是现代 Windows 安全架构的底层执行基座；理解它的启动链、分区模型、VTL 隔离与 Hypercall 机制，是进一步研究 VBS、HVCI、Secure Kernel 乃至 Hyper-V 漏洞利用的前提。</p>
+<h1 id="_5">人工补充</h1>
+<p>1、hyper在开机的时候是如何和winload进行交互的。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>sequenceDiagram
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>    participant CPU
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>    participant Winload as Winload (旧页表)
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>    participant Trampoline as &lt;1MB 过渡区
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>    participant Hypervisor as Hypervisor (新页表)
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>    CPU-&gt;&gt;Winload: 执行 HvLoader 准备代码
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>    Winload-&gt;&gt;CPU: CR0.PG = 0 (关分页，进入物理模式)
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>    CPU-&gt;&gt;Trampoline: 跳转至 &lt;1MB 物理地址
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>    Trampoline-&gt;&gt;CPU: mov CR3, Hypervisor_PageTable_Base
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>    Trampoline-&gt;&gt;CPU: CR0.PG = 1 (开分页，MMU 激活)
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>    CPU-&gt;&gt;Hypervisor: 执行流切入 Hypervisor 代码段
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a>    Hypervisor-&gt;&gt;CPU: 恢复保存的寄存器快照，VMLAUNCH
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>    CPU-&gt;&gt;Winload: 以 Root Partition 身份继续执行
+</code></pre></div></td></tr></table></div>
+<p>2、交互的流程图</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span>
+<span class="normal"><a href="#__codelineno-1-19">19</a></span>
+<span class="normal"><a href="#__codelineno-1-20">20</a></span>
+<span class="normal"><a href="#__codelineno-1-21">21</a></span>
+<span class="normal"><a href="#__codelineno-1-22">22</a></span>
+<span class="normal"><a href="#__codelineno-1-23">23</a></span>
+<span class="normal"><a href="#__codelineno-1-24">24</a></span>
+<span class="normal"><a href="#__codelineno-1-25">25</a></span>
+<span class="normal"><a href="#__codelineno-1-26">26</a></span>
+<span class="normal"><a href="#__codelineno-1-27">27</a></span>
+<span class="normal"><a href="#__codelineno-1-28">28</a></span>
+<span class="normal"><a href="#__codelineno-1-29">29</a></span>
+<span class="normal"><a href="#__codelineno-1-30">30</a></span>
+<span class="normal"><a href="#__codelineno-1-31">31</a></span>
+<span class="normal"><a href="#__codelineno-1-32">32</a></span>
+<span class="normal"><a href="#__codelineno-1-33">33</a></span>
+<span class="normal"><a href="#__codelineno-1-34">34</a></span>
+<span class="normal"><a href="#__codelineno-1-35">35</a></span>
+<span class="normal"><a href="#__codelineno-1-36">36</a></span>
+<span class="normal"><a href="#__codelineno-1-37">37</a></span>
+<span class="normal"><a href="#__codelineno-1-38">38</a></span>
+<span class="normal"><a href="#__codelineno-1-39">39</a></span>
+<span class="normal"><a href="#__codelineno-1-40">40</a></span>
+<span class="normal"><a href="#__codelineno-1-41">41</a></span>
+<span class="normal"><a href="#__codelineno-1-42">42</a></span>
+<span class="normal"><a href="#__codelineno-1-43">43</a></span>
+<span class="normal"><a href="#__codelineno-1-44">44</a></span>
+<span class="normal"><a href="#__codelineno-1-45">45</a></span>
+<span class="normal"><a href="#__codelineno-1-46">46</a></span>
+<span class="normal"><a href="#__codelineno-1-47">47</a></span>
+<span class="normal"><a href="#__codelineno-1-48">48</a></span>
+<span class="normal"><a href="#__codelineno-1-49">49</a></span>
+<span class="normal"><a href="#__codelineno-1-50">50</a></span>
+<span class="normal"><a href="#__codelineno-1-51">51</a></span>
+<span class="normal"><a href="#__codelineno-1-52">52</a></span>
+<span class="normal"><a href="#__codelineno-1-53">53</a></span>
+<span class="normal"><a href="#__codelineno-1-54">54</a></span>
+<span class="normal"><a href="#__codelineno-1-55">55</a></span>
+<span class="normal"><a href="#__codelineno-1-56">56</a></span>
+<span class="normal"><a href="#__codelineno-1-57">57</a></span>
+<span class="normal"><a href="#__codelineno-1-58">58</a></span>
+<span class="normal"><a href="#__codelineno-1-59">59</a></span>
+<span class="normal"><a href="#__codelineno-1-60">60</a></span>
+<span class="normal"><a href="#__codelineno-1-61">61</a></span>
+<span class="normal"><a href="#__codelineno-1-62">62</a></span>
+<span class="normal"><a href="#__codelineno-1-63">63</a></span>
+<span class="normal"><a href="#__codelineno-1-64">64</a></span>
+<span class="normal"><a href="#__codelineno-1-65">65</a></span>
+<span class="normal"><a href="#__codelineno-1-66">66</a></span>
+<span class="normal"><a href="#__codelineno-1-67">67</a></span>
+<span class="normal"><a href="#__codelineno-1-68">68</a></span>
+<span class="normal"><a href="#__codelineno-1-69">69</a></span>
+<span class="normal"><a href="#__codelineno-1-70">70</a></span>
+<span class="normal"><a href="#__codelineno-1-71">71</a></span>
+<span class="normal"><a href="#__codelineno-1-72">72</a></span>
+<span class="normal"><a href="#__codelineno-1-73">73</a></span>
+<span class="normal"><a href="#__codelineno-1-74">74</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>graph TD
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>    %% 定义样式
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a>    classDef uefi fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a>    classDef hv_load fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a>    classDef mem_map fill:#e8eaf6,stroke:#283593,stroke-width:3px,font-weight:bold;
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a>    classDef phase1 fill:#e0f2f1,stroke:#00695c,stroke-width:2px;
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a>    classDef phase2 fill:#fce4ec,stroke:#c2185b,stroke-width:2px;
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>    classDef transition fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,stroke-dasharray: 5 5;
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a>    classDef hypervisor fill:#ede7f6,stroke:#4527a0,stroke-width:3px;
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a>    classDef win_os fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a>    subgraph UEFI_Boot [UEFI 引导阶段]
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a>        Start((系统冷启动)) --&gt; UEFI_Winload[Winload.efi 执行]
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a>        UEFI_Winload --&gt; Detect[调用 HvLoader 检测目标平台]
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a>    end
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a>    subgraph HvLoader_Check [HvLoader 兼容性检测]
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a>        Detect --&gt; CPUID{执行 CPUID 指令}
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a>        CPUID -- 不兼容 --&gt; Skip[跳过虚拟化 -&gt; 标准裸机启动]
+<a id="__codelineno-1-20" name="__codelineno-1-20"></a>        CPUID -- 兼容 --&gt; CopyMemMap[&quot;📋 复制 UEFI 物理内存映射表&quot;]
+<a id="__codelineno-1-21" name="__codelineno-1-21"></a>        CopyMemMap --&gt; LoadPE[加载 Hypervisor 镜像 PE 文件]
+<a id="__codelineno-1-22" name="__codelineno-1-22"></a>        LoadPE --&gt; Verify[校验镜像完整性与结构]
+<a id="__codelineno-1-23" name="__codelineno-1-23"></a>    end
+<a id="__codelineno-1-24" name="__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25"></a>    subgraph Phase1 [第一阶段：构建最小化环境]
+<a id="__codelineno-1-26" name="__codelineno-1-26"></a>        Verify --&gt; BuildPT[构建 Hypervisor 专属页表层级]
+<a id="__codelineno-1-27" name="__codelineno-1-27"></a>        BuildPT --&gt; MapImg[仅映射 Hypervisor 镜像本身]
+<a id="__codelineno-1-28" name="__codelineno-1-28"></a>    end
+<a id="__codelineno-1-29" name="__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30"></a>    subgraph Phase2 [第二阶段：状态冻结与转移准备]
+<a id="__codelineno-1-31" name="__codelineno-1-31"></a>        MapImg --&gt; DiscardUEFI[丢弃 UEFI Boot Services]
+<a id="__codelineno-1-32" name="__codelineno-1-32"></a>        DiscardUEFI --&gt; CopyRuntime[复制 UEFI Runtime Services 物理地址]
+<a id="__codelineno-1-33" name="__codelineno-1-33"></a>        CopyRuntime --&gt; CaptureState[捕获当前处理器完整状态]
+<a id="__codelineno-1-34" name="__codelineno-1-34"></a>        CaptureState --&gt; Disable[关闭中断、调试器、分页 CR0.PG=0]
+<a id="__codelineno-1-35" name="__codelineno-1-35"></a>        Disable --&gt; JumpFunc[调用 HvlpTransferToHypervisorViaTransitionSpace]
+<a id="__codelineno-1-36" name="__codelineno-1-36"></a>    end
+<a id="__codelineno-1-37" name="__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38"></a>    subgraph Transition [过渡空间：1MB 以下区域]
+<a id="__codelineno-1-39" name="__codelineno-1-39"></a>        JumpFunc --&gt; Jump1MB[跳转至 1MB 以下安全物理内存]
+<a id="__codelineno-1-40" name="__codelineno-1-40"></a>        Jump1MB --&gt; UpdateCR3[加载 Hypervisor 页表基址到 CR3]
+<a id="__codelineno-1-41" name="__codelineno-1-41"></a>        UpdateCR3 --&gt; EnablePaging[重新开启分页机制]
+<a id="__codelineno-1-42" name="__codelineno-1-42"></a>        EnablePaging --&gt; SwitchExec[切换执行流至 Hypervisor 代码段]
+<a id="__codelineno-1-43" name="__codelineno-1-43"></a>    end
+<a id="__codelineno-1-44" name="__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45"></a>    subgraph Hypervisor_Core [Hypervisor 接管：Root Mode]
+<a id="__codelineno-1-46" name="__codelineno-1-46"></a>        SwitchExec --&gt; HV_Start[Hypervisor 微内核启动]
+<a id="__codelineno-1-47" name="__codelineno-1-47"></a>        HV_Start --&gt; SpaceSep[创建隔离地址空间]
+<a id="__codelineno-1-48" name="__codelineno-1-48"></a>        SpaceSep --&gt; RestoreContext[使用保存的处理器状态快照]
+<a id="__codelineno-1-49" name="__codelineno-1-49"></a>        RestoreContext --&gt; VM_Launch[调整 VMCS/VMCB 后执行 VMLAUNCH]
+<a id="__codelineno-1-50" name="__codelineno-1-50"></a>    end
+<a id="__codelineno-1-51" name="__codelineno-1-51"></a>
+<a id="__codelineno-1-52" name="__codelineno-1-52"></a>    subgraph Windows_OS [Windows 运行：Root Partition]
+<a id="__codelineno-1-53" name="__codelineno-1-53"></a>        VM_Launch --&gt; WinResume[Winload 恢复执行]
+<a id="__codelineno-1-54" name="__codelineno-1-54"></a>        WinResume --&gt; WinBoot[Windows 内核继续加载]
+<a id="__codelineno-1-55" name="__codelineno-1-55"></a>        WinBoot --&gt; FinalState[Windows 以根分区虚拟机身份运行]
+<a id="__codelineno-1-56" name="__codelineno-1-56"></a>    end
+<a id="__codelineno-1-57" name="__codelineno-1-57"></a>
+<a id="__codelineno-1-58" name="__codelineno-1-58"></a>    %% 流程连接
+<a id="__codelineno-1-59" name="__codelineno-1-59"></a>    UEFI_Boot --&gt; HvLoader_Check
+<a id="__codelineno-1-60" name="__codelineno-1-60"></a>    HvLoader_Check --&gt; Phase1
+<a id="__codelineno-1-61" name="__codelineno-1-61"></a>    Phase1 --&gt; Phase2
+<a id="__codelineno-1-62" name="__codelineno-1-62"></a>    Phase2 --&gt; Transition
+<a id="__codelineno-1-63" name="__codelineno-1-63"></a>    Transition --&gt; Hypervisor_Core
+<a id="__codelineno-1-64" name="__codelineno-1-64"></a>    Hypervisor_Core --&gt; Windows_OS
+<a id="__codelineno-1-65" name="__codelineno-1-65"></a>
+<a id="__codelineno-1-66" name="__codelineno-1-66"></a>    %% 样式应用
+<a id="__codelineno-1-67" name="__codelineno-1-67"></a>    class Start,UEFI_Winload,UEFI_Winload uefi;
+<a id="__codelineno-1-68" name="__codelineno-1-68"></a>    class Detect,CPUID,LoadPE,Verify hv_load;
+<a id="__codelineno-1-69" name="__codelineno-1-69"></a>    class CopyMemMap mem_map;
+<a id="__codelineno-1-70" name="__codelineno-1-70"></a>    class BuildPT,MapImg phase1;
+<a id="__codelineno-1-71" name="__codelineno-1-71"></a>    class DiscardUEFI,CopyRuntime,CaptureState,Disable,JumpFunc phase2;
+<a id="__codelineno-1-72" name="__codelineno-1-72"></a>    class Jump1MB,UpdateCR3,EnablePaging,SwitchExec transition;
+<a id="__codelineno-1-73" name="__codelineno-1-73"></a>    class HV_Start,SpaceSep,RestoreContext,VM_Launch hypervisor;
+<a id="__codelineno-1-74" name="__codelineno-1-74"></a>    class WinResume,WinBoot,FinalState win_os;
+</code></pre></div></td></tr></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../stylesheets/javascripts/cyber-buddha.js"></script>
+      
+    
+  </body>
+</html>
