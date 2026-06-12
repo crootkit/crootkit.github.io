@@ -1,0 +1,5978 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../dps-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/">
+      
+      
+        <link rel="next" href="../../../../antiCheats/Deobfuscation%20and%20Analysis%20of%20Ring-1.io/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Abyss Windows UEFI Bootkit — 项目分析与学习指南 - JRC BLOG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../config/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#abyss-windows-uefi-bootkit" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../.." title="JRC BLOG" class="md-header__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JRC BLOG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Abyss Windows UEFI Bootkit — 项目分析与学习指南
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../.." title="JRC BLOG" class="md-nav__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    JRC BLOG
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to crj blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于这个博客的主人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows internel
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Windows internel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UEFI bootkit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UEFI bootkit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Abyss 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_1" id="__nav_3_1_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dps 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dps 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dps-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🦑 Abyss Windows UEFI Bootkit — 深度分析学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_2" id="__nav_3_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimo 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimo 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss Windows UEFI Bootkit — 项目分析与学习指南
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss Windows UEFI Bootkit — 项目分析与学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、项目概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、项目概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        项目目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        灵感来源
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、项目架构总览
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、项目架构总览">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        两大核心组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、核心知识体系
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、核心知识体系">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-uefi-uefi-firmware-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 UEFI 固件编程（UEFI Firmware Programming）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-windows-pe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Windows 启动链与 PE 文件格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-hook-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 函数 Hook 与代码 Patch 技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 模式匹配与代码签名扫描
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 内核保护机制与绕过
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 密码学与配置加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 内核模式驱动注入与内存操作
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、推荐学习路径
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、推荐学习路径">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 1：基础预备（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hook2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 2：理解启动链 Hook（2-3 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pe-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 3：深入 PE 格式与内存操作（2-3 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#41-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 4：安全机制绕过（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 5：持久化与高级技术（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 6：配置与部署（1 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、知识点与文件对照表
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、核心代码逐层解读
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、核心代码逐层解读">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 启动流程全景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Hook 技术详解
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Hook 技术详解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1service-table-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 1：Service Table Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2faux-call-hookinline-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 2：Faux Call Hook（Inline Hook）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3jmp-rel32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 3：JMP rel32 劫持
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、学了有什么用
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、学了有什么用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 红队/渗透测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 蓝队/防御研究
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 安全研究与漏洞发现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 恶意软件分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、实战举例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、实战举例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bootkit-dse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 1：理解一个 Bootkit 如何绕过 DSE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 2：理解内核驱动手动映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 3：理解配置加密与反分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiCheats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiCheats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Deobfuscation%20and%20Analysis%20of%20Ring-1.io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deobfuscation and Analysis of Ring 1.io
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/How%20Kernel%20Anti-Cheats%20Work%20-%20A%20Deep%20Dive%20into%20Modern%20Game%20Protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Riot%20Games%20Vanguard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riot Games Vanguard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/Static%20Analysis%20of%20BattlEye%27s%20Kernel%20Anti-Cheat%20Driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Static Analysis of BattlEye's Kernel Anti Cheat Driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/%E6%B0%B8%E6%9D%B0%E6%97%A0%E9%97%B4-NeacSafe64/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    永杰无间 NeacSafe64
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/%E7%9B%AE%E6%A0%87/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    目的：
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7" id="__nav_3_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV 作弊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV 作弊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7_1" id="__nav_3_2_7_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScyVisor框架
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_2_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ScyVisor框架
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiCheats/hyperV%20%E4%BD%9C%E5%BC%8A/ScyVisor%E6%A1%86%E6%9E%B6/%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiEDR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiEDR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/case%E9%9B%86%E5%90%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case集合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/stackspoofPOC%20-%20BYOUD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stackspoofPOC   BYOUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/stackspoof%E6%A3%80%E6%B5%8B%20-%20%E5%9F%BA%E4%BA%8E%E5%92%8Cshadow%E6%AF%94%E8%BE%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stackspoof检测   基于和shadow比较
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../antiEDR/%E9%80%9A%E8%BF%87%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F%EF%BC%88QoS%EF%BC%89%E9%98%BB%E6%96%ADEDR%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    通过基于策略的服务质量（QoS）阻断EDR通信
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    学习路线
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    学习路线
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/GPT%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPT说学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/gpt%E5%90%88%E5%B9%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gpt合并的学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/qwen%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔍 Hyper-V 漏洞案例资源索引（2023-2026）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文章学习
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    文章学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_7" id="__nav_3_4_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Misc
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/misc/Awesome%20Hyper-V%20Exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    来源
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8" id="__nav_3_4_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8_1" id="__nav_3_4_2_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_4_2_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimikatz 系列
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimikatz 系列
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/1%20internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限和特权
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/2%20lsass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSASS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/3%20kerberos%20%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/4%20PKI%EF%BC%88%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%EF%BC%89/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 PKI（公钥基础设施）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../mimikatz%20%E7%B3%BB%E5%88%97/5%20DCSync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为什么需要
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tips/loader%20lock%20unlock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader lock unlock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反射加载
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反射加载
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/CLR%20HOSTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    常用执行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E5%B0%8F%20case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    函数指针和 createthread
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E6%A3%80%E6%B5%8B%E5%BD%92%E7%BA%B3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CallStack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    提权
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    提权
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1" id="__nav_3_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Doc analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Doc analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E6%8F%90%E6%9D%83/doc_analysis/summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows提权项目汇总分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_2" id="__nav_3_8_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BadPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E6%8F%90%E6%9D%83/doc_analysis/BadPotato/BadPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_3" id="__nav_3_8_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GodPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E6%8F%90%E6%9D%83/doc_analysis/GodPotato/GodPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_4" id="__nav_3_8_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UACME
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E6%8F%90%E6%9D%83/doc_analysis/UACME/UACME_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程保护
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程保护
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/CFG%20XFG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFG 保护
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/PPL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    是什么
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_10" id="__nav_3_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程注入
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程注入
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Hollowing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hollowing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20DLL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject DLL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20by%20callback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject by callback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Windows%20Thread%20Pool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Thread Pool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/inject%20by%20thread/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    process hypnosis injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/%E9%80%9A%E7%94%A8%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程创建 suspend 检测
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyperv docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hyperv docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/Hyper-V%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E7%94%9F%E6%80%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 技术应用生态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/code-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V PowerShell 代码示例索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web articles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Web articles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5" id="__nav_4_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5_1" id="__nav_4_5_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目录
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一、项目概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="一、项目概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        项目目标
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        灵感来源
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二、项目架构总览
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="二、项目架构总览">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        两大核心组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        三、核心知识体系
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="三、核心知识体系">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-uefi-uefi-firmware-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 UEFI 固件编程（UEFI Firmware Programming）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-windows-pe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Windows 启动链与 PE 文件格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-hook-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 函数 Hook 与代码 Patch 技术
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 模式匹配与代码签名扫描
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 内核保护机制与绕过
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 密码学与配置加密
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.7 内核模式驱动注入与内存操作
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        四、推荐学习路径
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="四、推荐学习路径">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 1：基础预备（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hook2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 2：理解启动链 Hook（2-3 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pe-2-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 3：深入 PE 格式与内存操作（2-3 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#41-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 4：安全机制绕过（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 5：持久化与高级技术（1-2 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#61" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        阶段 6：配置与部署（1 周）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        五、知识点与文件对照表
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        六、核心代码逐层解读
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="六、核心代码逐层解读">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 启动流程全景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Hook 技术详解
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Hook 技术详解">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1service-table-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 1：Service Table Hook
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2faux-call-hookinline-hook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 2：Faux Call Hook（Inline Hook）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3jmp-rel32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        技术 3：JMP rel32 劫持
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        七、学了有什么用
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="七、学了有什么用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 红队/渗透测试
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 蓝队/防御研究
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 安全研究与漏洞发现
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 恶意软件分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        八、实战举例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="八、实战举例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bootkit-dse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 1：理解一个 Bootkit 如何绕过 DSE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 2：理解内核驱动手动映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        例 3：理解配置加密与反分析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        九、总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="abyss-windows-uefi-bootkit">Abyss Windows UEFI Bootkit — 项目分析与学习指南</h1>
+<blockquote>
+<p>本文档对 Abyss 项目进行全面分析，帮助读者理解项目的核心知识、学习路径，并将每个知识点映射到具体的源码文件。</p>
+</blockquote>
+<hr />
+<h2 id="_1">目录</h2>
+<ul>
+<li><a href="./#一项目概述">一、项目概述</a></li>
+<li><a href="./#二项目架构总览">二、项目架构总览</a></li>
+<li><a href="./#三核心知识体系">三、核心知识体系</a></li>
+<li><a href="./#四推荐学习路径">四、推荐学习路径</a></li>
+<li><a href="./#五知识点与文件对照表">五、知识点与文件对照表</a></li>
+<li><a href="./#六核心代码逐层解读">六、核心代码逐层解读</a></li>
+<li><a href="./#七学了有什么用">七、学了有什么用</a></li>
+<li><a href="./#八实战举例">八、实战举例</a></li>
+<li><a href="./#九总结">九、总结</a></li>
+</ul>
+<hr />
+<h2 id="_2">一、项目概述</h2>
+<p><strong>Abyss</strong> 是一个完整的 <strong>Windows UEFI Bootkit</strong> 框架，由安全研究员 TheMalwareGuardian 开发。它在 DEFCON 33、RootedCON Madrid 2024、ViCONgal 等顶级安全会议上展示过。</p>
+<h3 id="_3">项目目标</h3>
+<p>Abyss 的核心目标是在操作系统启动的<strong>最早阶段</strong>（UEFI 固件层面）劫持 Windows 启动链，实现：</p>
+<ol>
+<li><strong>持久化内核级访问</strong> — 在固件层面植入，即使重装操作系统也无法清除</li>
+<li><strong>加载内核模式 Rootkit</strong> — 支持文件隐藏、进程隐藏、网络连接隐藏、键盘记录等</li>
+<li><strong>禁用内核保护</strong> — 绕过驱动签名强制（DSE）等安全机制</li>
+<li><strong>持久化后门</strong> — 通过 DXE Runtime Driver 在 OS 运行时仍保持控制</li>
+</ol>
+<h3 id="_4">灵感来源</h3>
+<p>项目受到真实世界高级威胁的启发，包括 <strong>ESPecter</strong>、<strong>BlackLotus</strong>、<strong>FinFisher</strong> 和 <strong>Glupteba</strong> 等已知 UEFI bootkit。</p>
+<hr />
+<h2 id="_5">二、项目架构总览</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>Abyss/
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>├── AbyssBootkitPkg/                          # 核心代码包（EDK2 标准结构）
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>│   ├── AbyssBootkitPkg.dec                   # 包声明文件
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>│   ├── AbyssBootkitPkg.dsc                   # 构建描述文件
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>│   ├── Bootkit1_Boot_UEFIApplication/        # 🔥 核心：UEFI 应用程序（主 Bootkit）
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>│   ├── Bootkit2_Runtime_DXERuntimeDriver/    # DXE 运行时驱动（持久后门）
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>│   ├── Tool_BootkitConfiguration/            # Python 配置工具
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>│   └── Tool_BootkitInstallation/             # 部署安装脚本
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>├── 01 Bootkits/                              # 入门学习材料（指向外部仓库）
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>├── 02 Development Environment/               # 开发环境搭建（指向外部仓库）
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>└── 03 Cybersecurity Conferences/             # 会议演讲材料和演示视频
+</code></pre></div></td></tr></table></div>
+<h3 id="_6">两大核心组件</h3>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bootkit1</strong></td>
+<td>UEFI Application</td>
+<td>在启动时执行，Hook 启动链，注入 Rootkit</td>
+</tr>
+<tr>
+<td><strong>Bootkit2</strong></td>
+<td>DXE Runtime Driver</td>
+<td>可选组件，持久化后门，OS 运行后仍可用</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">三、核心知识体系</h2>
+<p>学习 Abyss 项目可以掌握以下 <strong>7 大核心知识领域</strong>：</p>
+<h3 id="31-uefi-uefi-firmware-programming">3.1 UEFI 固件编程（UEFI Firmware Programming）</h3>
+<p><strong>学什么</strong>：UEFI 规范、Boot Services、Runtime Services、Protocol 机制、Handle 机制。</p>
+<p><strong>对应文件</strong>：
+- <a href="AbyssBootkitPkg.dsc"><code>AbyssBootkitPkg.dsc</code></a> — EDK2 构建系统配置，学习 UEFI 模块如何组织
+- <a href="AbyssBootkitPkg.dec"><code>AbyssBootkitPkg.dec</code></a> — 包声明，学习 UEFI 库依赖关系
+- <a href="AbyssBootkit1UEFIApplication.c"><code>AbyssBootkit1UEFIApplication.c</code></a> — 主入口点 <code>UefiMain()</code>，学习 UEFI Application 生命周期
+- <a href="AbyssBootkit2DXERuntimeDriver.c"><code>AbyssBootkit2DXERuntimeDriver.c</code></a> — DXE 驱动入口，学习 Runtime Driver 的工作方式</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="c1">// 从 AbyssBootkit1UEFIApplication.c 中可以看到 UEFI 应用的标准入口：</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="n">EFI_STATUS</span><span class="w"> </span><span class="n">EFIAPI</span><span class="w"> </span><span class="n">UefiMain</span><span class="p">(</span><span class="n">IN</span><span class="w"> </span><span class="n">EFI_HANDLE</span><span class="w"> </span><span class="n">ImageHandle</span><span class="p">,</span><span class="w"> </span><span class="n">IN</span><span class="w"> </span><span class="n">EFI_SYSTEM_TABLE</span><span class="w"> </span><span class="o">*</span><span class="n">SystemTable</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p>UEFI 应用在固件层面运行，拥有比操作系统更高的权限。<code>gBS</code>（Boot Services）和 <code>gRT</code>（Runtime Services）是两个核心服务表，提供了内存管理、文件操作、协议管理等能力。</p>
+<hr />
+<h3 id="32-windows-pe">3.2 Windows 启动链与 PE 文件格式</h3>
+<p><strong>学什么</strong>：Windows 启动流程（bootmgfw.efi → winload.efi → ntoskrnl.exe）、PE 文件格式（DOS Header、NT Headers、Section Headers、Import Table、Export Table、Base Relocation）。</p>
+<p><strong>对应文件</strong>：
+- <a href="Structures01PortableExecutable.h"><code>Structures01PortableExecutable.h</code></a> — PE 文件结构定义
+- <a href="Utils04Headers.c"><code>Utils04Headers.c</code></a> — PE Header 解析工具
+- <a href="Utils07PortableExecutable.c"><code>Utils07PortableExecutable.c</code></a> — PE 文件版本信息提取
+- <a href="Utils08Tables.c"><code>Utils08Tables.c</code></a> — Import Address Table 解析
+- <a href="Utils11KernelModeDriverMapper.c"><code>Utils11KernelModeDriverMapper.c</code></a> — 完整的 PE 加载器实现</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span>
+<span class="normal"><a href="#__codelineno-2-3">3</a></span>
+<span class="normal"><a href="#__codelineno-2-4">4</a></span>
+<span class="normal"><a href="#__codelineno-2-5">5</a></span>
+<span class="normal"><a href="#__codelineno-2-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// 从 Utils11KernelModeDriverMapper.c 中，可以看到完整的 PE 文件手动加载过程：</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="c1">// 1. 解析 PE Headers</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="n">EFI_IMAGE_NT_HEADERS64</span><span class="w"> </span><span class="o">*</span><span class="n">NtHeaders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">EFI_IMAGE_NT_HEADERS64</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">MapperRaw</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">((</span><span class="n">EFI_IMAGE_DOS_HEADER</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">MapperRaw</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">e_lfanew</span><span class="p">);</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="c1">// 2. 复制各 Section 到内存</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="c1">// 3. 解析 Import Table，从 ntoskrnl.exe 解析导出函数地址</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="c1">// 4. 应用 Base Relocation</span>
+</code></pre></div></td></tr></table></div>
+<p>这是理解 Windows 可执行文件格式的最佳实践代码。</p>
+<hr />
+<h3 id="33-hook-patch">3.3 函数 Hook 与代码 Patch 技术</h3>
+<p><strong>学什么</strong>：Service Table Hook、Inline Hook（push+ret 模板）、函数地址查找、字节码 patch。</p>
+<p><strong>对应文件</strong>：
+- <a href="Functions00PatchHookUefi.c"><code>Functions00PatchHookUefi.c</code></a> — UEFI Service Table Hook 实现
+- <a href="Functions01PatchHookWindowsBootManager.c"><code>Functions01PatchHookWindowsBootManager.c</code></a> — Hook bootmgfw.efi
+- <a href="Functions02PatchHookWindowsOSLoader.c"><code>Functions02PatchHookWindowsOSLoader.c</code></a> — Hook winload.efi
+- <a href="Functions03PatchHookWindowsKernel.c"><code>Functions03PatchHookWindowsKernel.c</code></a> — Patch ntoskrnl.exe
+- <a href="Utils09Hooks.c"><code>Utils09Hooks.c</code></a> — Hook 全局变量管理
+- <a href="Hooks01RuntimeServices.c"><code>Hooks01RuntimeServices.c</code></a> — Runtime Services Hook</p>
+<p><strong>核心概念举例</strong>：</p>
+<p>项目使用了两种 Hook 技术：</p>
+<p><strong>1. Service Table Hook</strong>（用于 UEFI Boot Services）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span>
+<span class="normal"><a href="#__codelineno-3-4">4</a></span>
+<span class="normal"><a href="#__codelineno-3-5">5</a></span>
+<span class="normal"><a href="#__codelineno-3-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1">// 从 Functions00PatchHookUefi.c：</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="c1">// 用 InterlockedCompareExchangePointer 原子替换函数指针</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="n">VOID</span><span class="o">*</span><span class="w"> </span><span class="n">OriginalFunction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InterlockedCompareExchangePointer</span><span class="p">(</span><span class="n">ServiceTableFunction</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">ServiceTableFunction</span><span class="p">,</span><span class="w"> </span><span class="n">NewFunction</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="c1">// 然后更新 CRC32 校验</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="n">ServiceTableHeader</span><span class="o">-&gt;</span><span class="n">CRC32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="n">gBS</span><span class="o">-&gt;</span><span class="n">CalculateCrc32</span><span class="p">((</span><span class="n">UINT8</span><span class="o">*</span><span class="p">)</span><span class="n">ServiceTableHeader</span><span class="p">,</span><span class="w"> </span><span class="n">ServiceTableHeader</span><span class="o">-&gt;</span><span class="n">HeaderSize</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ServiceTableHeader</span><span class="o">-&gt;</span><span class="n">CRC32</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>2. Inline Hook / Faux Call Hook</strong>（用于 Windows 启动组件）：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span>
+<span class="normal"><a href="#__codelineno-4-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="c1">// 从 Functions01PatchHookWindowsBootManager.c：</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="c1">// 备份原始函数开头的字节</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="n">CopyMem</span><span class="p">(</span><span class="n">BackupBytes</span><span class="p">,</span><span class="w"> </span><span class="n">OriginalPointer</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">FauxCallHookTemplate</span><span class="p">));</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="c1">// 写入 push+ret 模板跳转到 Hook 函数</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="n">BootWindowsHookings_UtilsMemory_CopyMemory</span><span class="p">(</span><span class="n">OriginalPointer</span><span class="p">,</span><span class="w"> </span><span class="n">FauxCallHookTemplate</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">FauxCallHookTemplate</span><span class="p">));</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="c1">// 在模板中填入 Hook 函数地址</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="n">BootWindowsHookings_UtilsMemory_CopyMemory</span><span class="p">(</span><span class="n">OriginalPointer</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">AddressOffset</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">HookAddress</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">HookAddress</span><span class="p">));</span>
+</code></pre></div></td></tr></table></div>
+<hr />
+<h3 id="34">3.4 模式匹配与代码签名扫描</h3>
+<p><strong>学什么</strong>：字节模式匹配（Pattern Scanning）、通配符搜索、在内存中定位未导出函数。</p>
+<p><strong>对应文件</strong>：
+- <a href="Utils05Pattern.c"><code>Utils05Pattern.c</code></a> — 通用模式匹配引擎
+- <a href="Utils06Address.c"><code>Utils06Address.c</code></a> — 函数起始地址查找
+- <a href="Utils10Signatures.h"><code>Utils10Signatures.h</code></a> — 预定义的字节签名</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span>
+<span class="normal"><a href="#__codelineno-5-5">5</a></span>
+<span class="normal"><a href="#__codelineno-5-6">6</a></span>
+<span class="normal"><a href="#__codelineno-5-7">7</a></span>
+<span class="normal"><a href="#__codelineno-5-8">8</a></span>
+<span class="normal"><a href="#__codelineno-5-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1">// 从 Utils05Pattern.c：通用模式扫描器</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="c1">// 支持通配符（Wildcard），可以匹配变化的字节</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UINT8</span><span class="w"> </span><span class="o">*</span><span class="n">Address</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">UINT8</span><span class="o">*</span><span class="p">)</span><span class="n">Base</span><span class="p">;</span><span class="w"> </span><span class="n">Address</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">UINT8</span><span class="o">*</span><span class="p">)((</span><span class="n">UINTN</span><span class="p">)</span><span class="n">Base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">PatternLength</span><span class="p">);</span><span class="w"> </span><span class="o">++</span><span class="n">Address</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">PatternLength</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">Wildcard</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">Address</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">Pattern</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PatternLength</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">Found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">VOID</span><span class="o">*</span><span class="p">)</span><span class="n">Address</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">EFI_SUCCESS</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>这种技术在安全研究中极为重要——当目标二进制文件没有符号表时，通过字节签名定位关键函数。</p>
+<hr />
+<h3 id="35">3.5 内核保护机制与绕过</h3>
+<p><strong>学什么</strong>：Driver Signature Enforcement（DSE）、Code Integrity（CI.dll）、CiInitialize 初始化流程、内核内存保护。</p>
+<p><strong>对应文件</strong>：
+- <a href="Protections01DriverSignatureEnforcement.c"><code>Protections01DriverSignatureEnforcement.c</code></a> — DSE 绕过实现
+- <a href="Functions03PatchHookWindowsKernel.c"><code>Functions03PatchHookWindowsKernel.c</code></a> — 内核 Patch 入口</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span>
+<span class="normal"><a href="#__codelineno-6-5">5</a></span>
+<span class="normal"><a href="#__codelineno-6-6">6</a></span>
+<span class="normal"><a href="#__codelineno-6-7">7</a></span>
+<span class="normal"><a href="#__codelineno-6-8">8</a></span>
+<span class="normal"><a href="#__codelineno-6-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1">// 从 Protections01DriverSignatureEnforcement.c：</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="c1">// 1. 在 ntoskrnl.exe 的 IAT 中找到 CI.dll!CiInitialize</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="n">BootWindowsHookings_UtilsTables_FindImportAddressTable</span><span class="p">(</span><span class="n">ImageBase</span><span class="p">,</span><span class="w"> </span><span class="n">NtHeaders</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CI.dll&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CiInitialize&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">CiInitialize</span><span class="p">);</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="c1">// 2. 用 Zydis 反汇编引擎追踪调用 CiInitialize 之前的 MOV ECX 指令</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="c1">// 3. 将 MOV ECX, &lt;value&gt; 替换为 XOR ECX, ECX（清零），使 CI 初始化失败</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="n">CONST</span><span class="w"> </span><span class="n">UINT16</span><span class="w"> </span><span class="n">ZeroEcx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xC931</span><span class="p">;</span><span class="w"> </span><span class="c1">// xor ecx, ecx</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="n">BootWindowsHookings_UtilsMemory_CopyMemory</span><span class="p">(</span><span class="n">SepInitializeCodeIntegrityMovEcxAddress</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ZeroEcx</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ZeroEcx</span><span class="p">));</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="c1">// 4. Patch SeCodeIntegrityQueryInformation 函数</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="n">CopyMem</span><span class="p">(</span><span class="n">Found</span><span class="p">,</span><span class="w"> </span><span class="n">Global_BootWindowsHookings_SeCodeIntegrityQueryInformationPatch</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</code></pre></div></td></tr></table></div>
+<p>这个过程展示了如何在内核加载前禁用代码完整性保护。</p>
+<hr />
+<h3 id="36">3.6 密码学与配置加密</h3>
+<p><strong>学什么</strong>：AES-CBC 加密/解密、PBKDF2 密钥派生、Base64 编码、XOR/Caesar 混淆、PKCS7 填充。</p>
+<p><strong>对应文件</strong>：
+- <a href="Utils03Encrypt.py"><code>Utils03Encrypt.py</code></a> — Python 端加密工具
+- <a href="Utils04Obfuscate.py"><code>Utils04Obfuscate.py</code></a> — XOR + Caesar 混淆
+- <a href="Utils03Decrypt.c"><code>Utils03Decrypt.c</code></a> — UEFI 端解密实现
+- <a href="Utils02Deobfuscate.c"><code>Utils02Deobfuscate.c</code></a> — UEFI 端反混淆
+- <a href="0AbyssBootkitDefaultConfiguration.json"><code>0AbyssBootkitDefaultConfiguration.json</code></a> — 配置模板（混淆后的键名）</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span>
+<span class="normal"><a href="#__codelineno-7-3">3</a></span>
+<span class="normal"><a href="#__codelineno-7-4">4</a></span>
+<span class="normal"><a href="#__codelineno-7-5">5</a></span>
+<span class="normal"><a href="#__codelineno-7-6">6</a></span>
+<span class="normal"><a href="#__codelineno-7-7">7</a></span>
+<span class="normal"><a href="#__codelineno-7-8">8</a></span>
+<span class="normal"><a href="#__codelineno-7-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="c1"># 从 Utils03Encrypt.py：配置加密流程</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="c1"># 1. PBKDF2 派生密钥（100000 次迭代）</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="n">kdf</span> <span class="o">=</span> <span class="n">PBKDF2HMAC</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="n">key_length</span><span class="p">,</span> <span class="n">salt</span><span class="o">=</span><span class="n">salt</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="c1"># 2. AES-CBC 加密</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">modes</span><span class="o">.</span><span class="n">CBC</span><span class="p">(</span><span class="n">iv</span><span class="p">))</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="c1"># 3. Base64 编码</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="n">encrypted_base64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">iv</span> <span class="o">+</span> <span class="n">encrypted_config</span><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="c1"># 4. XOR + Caesar 混淆</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="n">obfuscated</span> <span class="o">=</span> <span class="n">UtilsObfuscate_ObfuscateStringXorCaesar</span><span class="p">(</span><span class="n">encrypted_base64</span><span class="p">,</span> <span class="n">xor_key</span><span class="p">,</span> <span class="n">caesar_shift</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+<p>整个配置文件的键名都被混淆了（如 <code>"R6&gt;Z6"</code> 对应 <code>"Screen"</code>），这是一种反分析技术。</p>
+<hr />
+<h3 id="37">3.7 内核模式驱动注入与内存操作</h3>
+<p><strong>学什么</strong>：内核内存读写、驱动加载器（Driver Mapper）、进程/模块列表操作、RWX 内存分配。</p>
+<p><strong>对应文件</strong>：
+- <a href="Utils11KernelModeDriverMapper.c"><code>Utils11KernelModeDriverMapper.c</code></a> — 内核驱动手动映射器
+- <a href="Utils03Memory.c"><code>Utils03Memory.c</code></a> — 内存操作工具
+- <a href="Utils02Registers.c"><code>Utils02Registers.c</code></a> — CPU 寄存器操作（CR0/CR4）
+- <a href="Structures00ArcSystemFirmware.h"><code>Structures00ArcSystemFirmware.h</code></a> — 内核数据结构定义
+- <a href="AbyssBootkitPkg/Bootkit2_Runtime_DXERuntimeDriver/Bootkit2_Runtime_DXERuntimeDriver_UserClient/"><code>Bootkit2_Runtime_DXERuntimeDriver_UserClient/</code></a> — 用户态客户端（读写内核内存、加载驱动、调用函数）</p>
+<p><strong>核心概念举例</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span>
+<span class="normal"><a href="#__codelineno-8-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1">// 从 Utils11KernelModeDriverMapper.c：</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="c1">// 完整的手动 PE 加载器，将 .sys 驱动映射到内核内存</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="c1">// 1. 解析 PE Headers</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="c1">// 2. 复制 Sections</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="c1">// 3. 从 ntoskrnl.exe 解析 Import（GetExport 函数）</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="c1">// 4. 应用 Base Relocation</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="c1">// 5. 用 JMP rel32 劫持合法驱动的入口点</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="n">UINT8</span><span class="w"> </span><span class="n">JmpRel32</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mh">0xE9</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span><span class="w">  </span><span class="c1">// JMP 指令</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="n">INT32</span><span class="w"> </span><span class="n">RelOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">INT32</span><span class="p">)((</span><span class="n">UINT8</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">EntryPoint</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">DriverEntry</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10"></a><span class="n">CopyMem</span><span class="p">(</span><span class="o">&amp;</span><span class="n">JmpRel32</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">RelOffset</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">INT32</span><span class="p">));</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="n">BootWindowsHookings_UtilsMemory_CopyMemory</span><span class="p">(</span><span class="n">DriverEntry</span><span class="p">,</span><span class="w"> </span><span class="n">JmpRel32</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">JmpRel32</span><span class="p">));</span>
+</code></pre></div></td></tr></table></div>
+<hr />
+<h2 id="_8">四、推荐学习路径</h2>
+<h3 id="11-2">阶段 1：基础预备（1-2 周）</h3>
+<p><strong>目标</strong>：理解 UEFI 基础和 EDK2 构建系统。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>阅读 UEFI 规范核心章节（Boot Services、Runtime Services）</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td>理解 EDK2 包结构：<code>.dec</code>、<code>.dsc</code>、<code>.inf</code> 文件</td>
+<td><a href="AbyssBootkitPkg.dec"><code>AbyssBootkitPkg.dec</code></a>、<a href="AbyssBootkitPkg.dsc"><code>AbyssBootkitPkg.dsc</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>搭建 EDK2 开发环境</td>
+<td><code>02 Development Environment/README.md</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>编译第一个 UEFI Hello World 应用</td>
+<td><code>01 Bootkits/README.md</code>（指向 Bootkits-Development-Starter-Pack）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-hook2-3">阶段 2：理解启动链 Hook（2-3 周）</h3>
+<p><strong>目标</strong>：理解 Abyss 如何一步步 Hook Windows 启动链。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>理解主入口点 <code>UefiMain()</code> 的完整流程</td>
+<td><a href="AbyssBootkit1UEFIApplication.c"><code>AbyssBootkit1UEFIApplication.c</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习 Service Table Hook 原理</td>
+<td><a href="Functions00PatchHookUefi.c"><code>Functions00PatchHookUefi.c</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习如何 Hook bootmgfw.efi</td>
+<td><a href="Functions01PatchHookWindowsBootManager.c"><code>Functions01PatchHookWindowsBootManager.c</code></a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>学习如何 Hook winload.efi</td>
+<td><a href="Functions02PatchHookWindowsOSLoader.c"><code>Functions02PatchHookWindowsOSLoader.c</code></a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>学习如何 Patch ntoskrnl.exe</td>
+<td><a href="Functions03PatchHookWindowsKernel.c"><code>Functions03PatchHookWindowsKernel.c</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-pe-2-3">阶段 3：深入 PE 格式与内存操作（2-3 周）</h3>
+<p><strong>目标</strong>：掌握 PE 文件解析和手动加载技术。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>学习 PE Header 解析</td>
+<td><a href="Utils04Headers.c"><code>Utils04Headers.c</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习模式匹配引擎</td>
+<td><a href="Utils05Pattern.c"><code>Utils05Pattern.c</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习 Import/Export Table 解析</td>
+<td><a href="Utils08Tables.c"><code>Utils08Tables.c</code></a>、<a href="Utils11KernelModeDriverMapper.c"><code>Utils11KernelModeDriverMapper.c</code></a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>学习内核驱动手动映射（Driver Mapper）</td>
+<td><a href="Utils11KernelModeDriverMapper.c"><code>Utils11KernelModeDriverMapper.c</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="41-2">阶段 4：安全机制绕过（1-2 周）</h3>
+<p><strong>目标</strong>：理解内核保护机制及绕过方法。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>学习 DSE 绕过原理</td>
+<td><a href="Protections01DriverSignatureEnforcement.c"><code>Protections01DriverSignatureEnforcement.c</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习 Zydis 反汇编引擎的使用</td>
+<td><a href="Protections01DriverSignatureEnforcement.c"><code>Protections01DriverSignatureEnforcement.c</code></a> 中的 Zydis 代码</td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习 CR0/CR4 寄存器操作</td>
+<td><a href="Utils02Registers.c"><code>Utils02Registers.c</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="51-2">阶段 5：持久化与高级技术（1-2 周）</h3>
+<p><strong>目标</strong>：理解 DXE Runtime Driver 的持久化机制。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>学习 DXE Runtime Driver 架构</td>
+<td><a href="AbyssBootkit2DXERuntimeDriver.c"><code>AbyssBootkit2DXERuntimeDriver.c</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习 Runtime Services Hook</td>
+<td><a href="Hooks01RuntimeServices.c"><code>Hooks01RuntimeServices.c</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习物理地址到虚拟地址转换</td>
+<td><a href="Hooks01RuntimeServices.c"><code>Hooks01RuntimeServices.c</code></a> 中的 <code>SetVirtualAddressMapEvent</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>学习用户态-固件通信机制</td>
+<td><a href="AbyssBootkitPkg/Bootkit2_Runtime_DXERuntimeDriver/Bootkit2_Runtime_DXERuntimeDriver_UserClient/"><code>Bootkit2_Runtime_DXERuntimeDriver_UserClient/</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="61">阶段 6：配置与部署（1 周）</h3>
+<p><strong>目标</strong>：理解攻击者的操作流程。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>学习内容</th>
+<th>对应文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>学习配置加密流程</td>
+<td><a href="Utils03Encrypt.py"><code>Utils03Encrypt.py</code></a>、<a href="AbyssConfiguration.py"><code>AbyssConfiguration.py</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习配置模板与选项</td>
+<td><a href="0AbyssBootkitDefaultConfiguration.json"><code>0AbyssBootkitDefaultConfiguration.json</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习 UEFI Boot Entry 创建</td>
+<td><a href="AddNewBootEntry.ps1"><code>AddNewBootEntry.ps1</code></a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>学习 ESP 分区操作</td>
+<td><a href="ReplaceWindowsBootManager.bat"><code>ReplaceWindowsBootManager.bat</code></a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_9">五、知识点与文件对照表</h2>
+<table>
+<thead>
+<tr>
+<th>知识领域</th>
+<th>核心文件</th>
+<th>学到的关键技术</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UEFI 入口与生命周期</strong></td>
+<td><code>AbyssBootkit1UEFIApplication.c</code></td>
+<td>UEFI Application 标准入口、System Table 使用</td>
+</tr>
+<tr>
+<td><strong>EDK2 构建系统</strong></td>
+<td><code>AbyssBootkitPkg.dsc</code>、<code>AbyssBootkitPkg.dec</code>、<code>*.inf</code></td>
+<td>包声明、库依赖、模块编译配置</td>
+</tr>
+<tr>
+<td><strong>Service Table Hook</strong></td>
+<td><code>Functions00PatchHookUefi.c</code></td>
+<td>原子指针替换、CRC32 更新、Write Protection 控制</td>
+</tr>
+<tr>
+<td><strong>Inline Hook (Faux Call)</strong></td>
+<td><code>Functions01PatchHookWindowsBootManager.c</code>、<code>Functions02PatchHookWindowsOSLoader.c</code></td>
+<td>push+ret 跳转模板、函数字节备份与恢复</td>
+</tr>
+<tr>
+<td><strong>启动链劫持</strong></td>
+<td><code>Functions00PatchHookUefi.c</code> → <code>Functions01...</code> → <code>Functions02...</code> → <code>Functions03...</code></td>
+<td>三级 Hook 链：UEFI → Boot Manager → OS Loader → Kernel</td>
+</tr>
+<tr>
+<td><strong>PE 文件解析</strong></td>
+<td><code>Utils04Headers.c</code>、<code>Utils07PortableExecutable.c</code>、<code>Structures01PortableExecutable.h</code></td>
+<td>DOS Header、NT Headers、Section Header 解析</td>
+</tr>
+<tr>
+<td><strong>模式匹配</strong></td>
+<td><code>Utils05Pattern.c</code>、<code>Utils10Signatures.h</code></td>
+<td>字节模式扫描、通配符匹配</td>
+</tr>
+<tr>
+<td><strong>Import/Export Table</strong></td>
+<td><code>Utils08Tables.c</code>、<code>Utils11KernelModeDriverMapper.c</code></td>
+<td>IAT 解析、导出函数查找</td>
+</tr>
+<tr>
+<td><strong>Driver Mapper</strong></td>
+<td><code>Utils11KernelModeDriverMapper.c</code></td>
+<td>手动 PE 加载、Section 复制、Import 解析、Base Relocation</td>
+</tr>
+<tr>
+<td><strong>DSE 绕过</strong></td>
+<td><code>Protections01DriverSignatureEnforcement.c</code></td>
+<td>CI.dll!CiInitialize 劫持、Zydis 反汇编、字节 Patch</td>
+</tr>
+<tr>
+<td><strong>CPU 寄存器操作</strong></td>
+<td><code>Utils02Registers.c</code></td>
+<td>CR0 WP 位操作、CR4 LA57 检测、EFER MSR 读取</td>
+</tr>
+<tr>
+<td><strong>内存操作</strong></td>
+<td><code>Utils03Memory.c</code></td>
+<td>CopyMem、ZeroMem、内存读写</td>
+</tr>
+<tr>
+<td><strong>AES 加密/解密</strong></td>
+<td><code>Utils03Encrypt.py</code>、<code>Utils03Decrypt.c</code></td>
+<td>AES-256-CBC、PBKDF2、PKCS7 填充</td>
+</tr>
+<tr>
+<td><strong>字符串混淆</strong></td>
+<td><code>Utils04Obfuscate.py</code>、<code>Utils02Deobfuscate.c</code></td>
+<td>XOR 混淆、Caesar 移位</td>
+</tr>
+<tr>
+<td><strong>JSON 配置解析</strong></td>
+<td><code>Utils04Json.c</code>、<code>Functions00Configuration.c</code></td>
+<td>UEFI 环境下的 JSON 解析</td>
+</tr>
+<tr>
+<td><strong>Runtime Driver 持久化</strong></td>
+<td><code>AbyssBootkit2DXERuntimeDriver.c</code>、<code>Hooks01RuntimeServices.c</code></td>
+<td>VirtualAddressMap 事件、ExitBootServices 事件</td>
+</tr>
+<tr>
+<td><strong>Runtime Services Hook</strong></td>
+<td><code>Hooks01RuntimeServices.c</code></td>
+<td>全部 14 个 Runtime Services 的 Hook</td>
+</tr>
+<tr>
+<td><strong>SetVariable C2 通信</strong></td>
+<td><code>Hooks01RuntimeServices.c</code> 中的 <code>HookedSetVariable</code></td>
+<td>通过 EFI 变量实现用户态↔固件通信</td>
+</tr>
+<tr>
+<td><strong>UEFI HTTP/网络</strong></td>
+<td><code>Utils03Http.c</code></td>
+<td>UEFI HTTP Protocol 使用</td>
+</tr>
+<tr>
+<td><strong>NTFS 读写驱动</strong></td>
+<td><code>Utils04Ntfs.c</code>、<code>Payloads01DefaultNtfsDriver.h</code></td>
+<td>UEFI 下加载第三方文件系统驱动</td>
+</tr>
+<tr>
+<td><strong>EFI 分区操作</strong></td>
+<td><code>Utils00EFISystemPartition.c</code></td>
+<td>Device Path 构造、文件定位</td>
+</tr>
+<tr>
+<td><strong>UEFI Boot Entry</strong></td>
+<td><code>AddNewBootEntry.ps1</code></td>
+<td>UEFIv2 模块、mountvol、Boot Entry 管理</td>
+</tr>
+<tr>
+<td><strong>Secure Boot 检测</strong></td>
+<td><code>CheckSecureBootAndPKfail.ps1</code></td>
+<td>Secure Boot 状态检测、PKfail 漏洞利用</td>
+</tr>
+<tr>
+<td><strong>EFI 文件签名</strong></td>
+<td><code>SignEfiFilesInSharedFolder.sh</code></td>
+<td>sbsign 工具使用</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_10">六、核心代码逐层解读</h2>
+<h3 id="61_1">6.1 启动流程全景</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span>
+<span class="normal"><a href="#__codelineno-9-15">15</a></span>
+<span class="normal"><a href="#__codelineno-9-16">16</a></span>
+<span class="normal"><a href="#__codelineno-9-17">17</a></span>
+<span class="normal"><a href="#__codelineno-9-18">18</a></span>
+<span class="normal"><a href="#__codelineno-9-19">19</a></span>
+<span class="normal"><a href="#__codelineno-9-20">20</a></span>
+<span class="normal"><a href="#__codelineno-9-21">21</a></span>
+<span class="normal"><a href="#__codelineno-9-22">22</a></span>
+<span class="normal"><a href="#__codelineno-9-23">23</a></span>
+<span class="normal"><a href="#__codelineno-9-24">24</a></span>
+<span class="normal"><a href="#__codelineno-9-25">25</a></span>
+<span class="normal"><a href="#__codelineno-9-26">26</a></span>
+<span class="normal"><a href="#__codelineno-9-27">27</a></span>
+<span class="normal"><a href="#__codelineno-9-28">28</a></span>
+<span class="normal"><a href="#__codelineno-9-29">29</a></span>
+<span class="normal"><a href="#__codelineno-9-30">30</a></span>
+<span class="normal"><a href="#__codelineno-9-31">31</a></span>
+<span class="normal"><a href="#__codelineno-9-32">32</a></span>
+<span class="normal"><a href="#__codelineno-9-33">33</a></span>
+<span class="normal"><a href="#__codelineno-9-34">34</a></span>
+<span class="normal"><a href="#__codelineno-9-35">35</a></span>
+<span class="normal"><a href="#__codelineno-9-36">36</a></span>
+<span class="normal"><a href="#__codelineno-9-37">37</a></span>
+<span class="normal"><a href="#__codelineno-9-38">38</a></span>
+<span class="normal"><a href="#__codelineno-9-39">39</a></span>
+<span class="normal"><a href="#__codelineno-9-40">40</a></span>
+<span class="normal"><a href="#__codelineno-9-41">41</a></span>
+<span class="normal"><a href="#__codelineno-9-42">42</a></span>
+<span class="normal"><a href="#__codelineno-9-43">43</a></span>
+<span class="normal"><a href="#__codelineno-9-44">44</a></span>
+<span class="normal"><a href="#__codelineno-9-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>UEFI 固件启动
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>    │
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>    ▼
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a>[UefiMain] AbyssBootkit1UEFIApplication.c
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a>    │
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a>    ├── 1. 读取加密配置 → Module0_PreBoot0_Configuration/
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a>    │      ├── 读取嵌入的加密配置 Payload
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a>    │      ├── 反混淆（XOR + Caesar）
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a>    │      ├── Base64 解码
+<a id="__codelineno-9-10" name="__codelineno-9-10"></a>    │      └── AES-256-CBC 解密
+<a id="__codelineno-9-11" name="__codelineno-9-11"></a>    │
+<a id="__codelineno-9-12" name="__codelineno-9-12"></a>    ├── 2. 预启动设置 → Module0_PreBoot1_Setup/
+<a id="__codelineno-9-13" name="__codelineno-9-13"></a>    │      ├── 屏幕配置
+<a id="__codelineno-9-14" name="__codelineno-9-14"></a>    │      ├── Banner 显示
+<a id="__codelineno-9-15" name="__codelineno-9-15"></a>    │      ├── 加载 NTFS 读写驱动
+<a id="__codelineno-9-16" name="__codelineno-9-16"></a>    │      └── 加载附加组件
+<a id="__codelineno-9-17" name="__codelineno-9-17"></a>    │
+<a id="__codelineno-9-18" name="__codelineno-9-18"></a>    ├── 3. Hook gBS-&gt;LoadImage（Service Table Hook）
+<a id="__codelineno-9-19" name="__codelineno-9-19"></a>    │      └── 所有后续加载的镜像都会经过 Hook 函数
+<a id="__codelineno-9-20" name="__codelineno-9-20"></a>    │
+<a id="__codelineno-9-21" name="__codelineno-9-21"></a>    └── 4. 加载并启动 Windows Boot Manager（bootmgfw.efi）
+<a id="__codelineno-9-22" name="__codelineno-9-22"></a>           │
+<a id="__codelineno-9-23" name="__codelineno-9-23"></a>           ▼
+<a id="__codelineno-9-24" name="__codelineno-9-24"></a>    [Hook: gBS-&gt;LoadImage 被触发]
+<a id="__codelineno-9-25" name="__codelineno-9-25"></a>    │
+<a id="__codelineno-9-26" name="__codelineno-9-26"></a>    ├── 识别 bootmgfw.efi → PatchBootmgfwEfi()
+<a id="__codelineno-9-27" name="__codelineno-9-27"></a>    │      ├── 模式匹配找到 ImgArchStartBootApplication
+<a id="__codelineno-9-28" name="__codelineno-9-28"></a>    │      └── Inline Hook（push+ret 模板）
+<a id="__codelineno-9-29" name="__codelineno-9-29"></a>    │
+<a id="__codelineno-9-30" name="__codelineno-9-30"></a>    ▼
+<a id="__codelineno-9-31" name="__codelineno-9-31"></a>    [Hook: ImgArchStartBootApplication 被触发]
+<a id="__codelineno-9-32" name="__codelineno-9-32"></a>    │
+<a id="__codelineno-9-33" name="__codelineno-9-33"></a>    ├── winload.efi 被加载 → PatchWinloadEfi()
+<a id="__codelineno-9-34" name="__codelineno-9-34"></a>    │      ├── 模式匹配找到 OslFwpKernelSetupPhase1
+<a id="__codelineno-9-35" name="__codelineno-9-35"></a>    │      ├── Inline Hook
+<a id="__codelineno-9-36" name="__codelineno-9-36"></a>    │      ├── 模式匹配找到 BlImgAllocateImageBuffer
+<a id="__codelineno-9-37" name="__codelineno-9-37"></a>    │      └── Inline Hook（用于分配 Rootkit 内存）
+<a id="__codelineno-9-38" name="__codelineno-9-38"></a>    │
+<a id="__codelineno-9-39" name="__codelineno-9-39"></a>    ▼
+<a id="__codelineno-9-40" name="__codelineno-9-40"></a>    [Hook: OslFwpKernelSetupPhase1 被触发]
+<a id="__codelineno-9-41" name="__codelineno-9-41"></a>    │
+<a id="__codelineno-9-42" name="__codelineno-9-42"></a>    ├── ntoskrnl.exe 已加载到内存
+<a id="__codelineno-9-43" name="__codelineno-9-43"></a>    ├── PatchNtoskrnlExe() → 禁用 DSE
+<a id="__codelineno-9-44" name="__codelineno-9-44"></a>    ├── MapPayloadToRWXMemory() → 手动映射 Rootkit
+<a id="__codelineno-9-45" name="__codelineno-9-45"></a>    └── PatchDriverEntryWithMapperPayload() → 劫持合法驱动入口
+</code></pre></div></td></tr></table></div>
+<h3 id="62-hook">6.2 Hook 技术详解</h3>
+<p>项目使用了 <strong>三种不同的 Hook 技术</strong>：</p>
+<h4 id="1service-table-hook">技术 1：Service Table Hook</h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
+<span class="normal"><a href="#__codelineno-10-2">2</a></span>
+<span class="normal"><a href="#__codelineno-10-3">3</a></span>
+<span class="normal"><a href="#__codelineno-10-4">4</a></span>
+<span class="normal"><a href="#__codelineno-10-5">5</a></span>
+<span class="normal"><a href="#__codelineno-10-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>原始 Service Table:          Hook 后:
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a>┌──────────────┐            ┌──────────────┐
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a>│ LoadImage ──→│ 原始函数   │ LoadImage ──→│ Hook函数
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a>│ ...          │            │ ...          │
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a>└──────────────┘            └──────────────┘
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a>                             CRC32 已更新
+</code></pre></div></td></tr></table></div>
+<p>代码位置：<a href="AbyssBootkitPkg/Bootkit1_Boot_UEFIApplication/Modules/Module1_BootWindows0_Hookings/Functions/Functions00PatchHookUefi.c:95"><code>Functions00PatchHookUefi.c:95-173</code></a></p>
+<h4 id="2faux-call-hookinline-hook">技术 2：Faux Call Hook（Inline Hook）</h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span>
+<span class="normal"><a href="#__codelineno-11-5">5</a></span>
+<span class="normal"><a href="#__codelineno-11-6">6</a></span>
+<span class="normal"><a href="#__codelineno-11-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>原始函数开头:                Hook 后:
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a>┌──────────────────┐        ┌──────────────────┐
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a>│ push rbp         │        │ push &lt;HookAddr&gt;  │ ← 14 字节
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a>│ mov rbp, rsp     │        │ ret              │
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a>│ sub rsp, 0x20    │        │ ...（原始字节备份）│
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a>│ ...              │        │ ...              │
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a>└──────────────────┘        └──────────────────┘
+</code></pre></div></td></tr></table></div>
+<p>代码位置：<a href="AbyssBootkitPkg/Bootkit1_Boot_UEFIApplication/Modules/Module1_BootWindows0_Hookings/Functions/Functions01PatchHookWindowsBootManager.c:170"><code>Functions01PatchHookWindowsBootManager.c:170-209</code></a></p>
+<h4 id="3jmp-rel32">技术 3：JMP rel32 劫持</h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span>
+<span class="normal"><a href="#__codelineno-12-2">2</a></span>
+<span class="normal"><a href="#__codelineno-12-3">3</a></span>
+<span class="normal"><a href="#__codelineno-12-4">4</a></span>
+<span class="normal"><a href="#__codelineno-12-5">5</a></span>
+<span class="normal"><a href="#__codelineno-12-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>合法驱动入口:                劫持后:
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a>┌──────────────────┐        ┌──────────────────┐
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a>│ mov edi, edi      │        │ JMP &lt;MapperPayload&gt;│  ← 5 字节 E9 + offset
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a>│ push rbp          │        │ ...                │
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a>│ ...               │        │                    │
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a>└──────────────────┘        └──────────────────┘
+</code></pre></div></td></tr></table></div>
+<p>代码位置：<a href="AbyssBootkitPkg/Bootkit1_Boot_UEFIApplication/Modules/Module1_BootWindows0_Hookings/Functions/Utils/Utils11KernelModeDriverMapper.c:470"><code>Utils11KernelModeDriverMapper.c:470-527</code></a></p>
+<hr />
+<h2 id="_11">七、学了有什么用</h2>
+<h3 id="71">7.1 红队/渗透测试</h3>
+<p>掌握 UEFI Bootkit 技术后，可以：
+- <strong>模拟 APT 级别攻击</strong>：在安全评估中模拟真实世界高级威胁
+- <strong>持久化后门部署</strong>：在物理接触场景（Evil Maid Attack）中植入持久化后门
+- <strong>内核级 Rootkit 开发</strong>：在操作系统最底层实现隐蔽控制</p>
+<p><strong>举例</strong>：使用 <a href="AddNewBootEntry.ps1"><code>AddNewBootEntry.ps1</code></a> 脚本，可以在获得物理访问权限的目标机器上，几秒钟内创建一个 UEFI 启动项，使 Bootkit 在每次开机时自动执行，即使重装系统也无法清除。</p>
+<h3 id="72">7.2 蓝队/防御研究</h3>
+<p>理解 Bootkit 的工作原理后，可以：
+- <strong>开发检测工具</strong>：基于对 Hook 技术的理解，开发 UEFI 固件完整性检测工具
+- <strong>Secure Boot 策略加固</strong>：理解绕过机制后，制定更有效的 Secure Boot 部署策略
+- <strong>威胁狩猎</strong>：在企业环境中检测 UEFI 层面的异常</p>
+<p><strong>举例</strong>：通过学习 <a href="Protections01DriverSignatureEnforcement.c"><code>Protections01DriverSignatureEnforcement.c</code></a> 中的 DSE 绕过方法，防御方可以：
+1. 监控 CI.dll!CiInitialize 的调用链是否被篡改
+2. 检查 ntoskrnl.exe 的 PAGE 段是否存在异常字节修改
+3. 实现启动时的内核完整性校验</p>
+<h3 id="73">7.3 安全研究与漏洞发现</h3>
+<p>项目中展示的技术可以应用于：
+- <strong>固件安全审计</strong>：审计 UEFI 固件实现中的安全缺陷
+- <strong>CVE 研究</strong>：如 PKfail（项目中有检测脚本 <a href="CheckSecureBootAndPKfail.ps1"><code>CheckSecureBootAndPKfail.ps1</code></a>）
+- <strong>安全会议演讲</strong>：项目本身就是多个顶级安全会议的演讲材料</p>
+<h3 id="74">7.4 恶意软件分析</h3>
+<p>理解 Bootkit 的内部工作原理后，可以：
+- <strong>逆向分析真实 Bootkit 样本</strong>（如 BlackLotus、ESPecter）
+- <strong>编写 YARA 规则</strong>检测 UEFI 恶意软件
+- <strong>开发解密工具</strong>提取 Bootkit 的配置信息</p>
+<p><strong>举例</strong>：通过学习 <a href="Utils03Encrypt.py"><code>Utils03Encrypt.py</code></a> 中的加密流程（AES-CBC + Base64 + XOR/Caesar），分析人员可以对真实 Bootkit 样本进行逆向解密，提取 C2 地址、目标路径等关键配置。</p>
+<hr />
+<h2 id="_12">八、实战举例</h2>
+<h3 id="1-bootkit-dse">例 1：理解一个 Bootkit 如何绕过 DSE</h3>
+<p><strong>场景</strong>：你想理解为什么 Bootkit 可以加载未签名的 Rootkit 驱动。</p>
+<p><strong>学习步骤</strong>：</p>
+<ol>
+<li>
+<p>先看 <a href="Functions03PatchHookWindowsKernel.c"><code>Functions03PatchHookWindowsKernel.c</code></a> — 理解在内核 Patch 阶段调用了 <code>Protections_DisableDriverSignatureEnforcement()</code></p>
+</li>
+<li>
+<p>再看 <a href="Protections01DriverSignatureEnforcement.c"><code>Protections01DriverSignatureEnforcement.c</code></a> — 理解具体实现：</p>
+</li>
+<li>在 ntoskrnl.exe 的 IAT 中找到 <code>CI.dll!CiInitialize</code></li>
+<li>用 Zydis 反汇编引擎追踪调用链</li>
+<li>将 <code>MOV ECX, &lt;CodeIntegrityFlags&gt;</code> 替换为 <code>XOR ECX, ECX</code>（清零）</li>
+<li>
+<p>Patch <code>SeCodeIntegrityQueryInformation</code> 函数</p>
+</li>
+<li>
+<p>效果：CI（Code Integrity）子系统初始化时收到的标志为 0，导致 DSE 被禁用，未签名驱动可以正常加载。</p>
+</li>
+</ol>
+<h3 id="2">例 2：理解内核驱动手动映射</h3>
+<p><strong>场景</strong>：你想理解 Bootkit 如何在内核中加载一个 Rootkit 而不通过正常的驱动加载机制。</p>
+<p><strong>学习步骤</strong>：</p>
+<ol>
+<li>
+<p>先看 <a href="Utils11KernelModeDriverMapper.c"><code>Utils11KernelModeDriverMapper.c</code></a> 中的 <code>MapPayloadToRWXMemory()</code> — 这是一个完整的 PE 手动加载器</p>
+</li>
+<li>
+<p>关键步骤：</p>
+</li>
+<li>解析 PE Headers（DOS Header → NT Headers → Section Headers）</li>
+<li>将每个 Section 复制到 RWX 内存的正确 RVA 位置</li>
+<li>遍历 Import Table，通过 <code>GetExport()</code> 从 ntoskrnl.exe 解析每个导入函数的地址</li>
+<li>
+<p>遍历 Base Relocation Table，修正所有绝对地址引用</p>
+</li>
+<li>
+<p>然后看 <code>PatchDriverEntryWithMapperPayload()</code> — 用 JMP rel32 指令覆盖合法驱动（如 acpiex.sys）的入口点，使其跳转到映射的 Rootkit</p>
+</li>
+</ol>
+<h3 id="3">例 3：理解配置加密与反分析</h3>
+<p><strong>场景</strong>：你想理解 Bootkit 如何保护其配置不被轻易提取。</p>
+<p><strong>学习步骤</strong>：</p>
+<ol>
+<li>
+<p>先看配置模板 <a href="0AbyssBootkitDefaultConfiguration.json"><code>0AbyssBootkitDefaultConfiguration.json</code></a> — 注意键名都是混淆的（如 <code>"R6&gt;Z6"</code> = <code>"Screen"</code>）</p>
+</li>
+<li>
+<p>看加密流程 <a href="Utils03Encrypt.py"><code>Utils03Encrypt.py</code></a>：</p>
+</li>
+<li>
+<p>JSON → PKCS7 填充 → AES-256-CBC 加密 → Base64 编码 → XOR/Caesar 混淆</p>
+</li>
+<li>
+<p>看 UEFI 端解密 <a href="Utils03Decrypt.c"><code>Utils03Decrypt.c</code></a>：</p>
+</li>
+<li>反混淆 → Base64 解码 → AES-256-CBC 解密 → PKCS7 去填充 → JSON 解析</li>
+</ol>
+<hr />
+<h2 id="_13">九、总结</h2>
+<p>Abyss 项目是一个<strong>教学价值极高</strong>的 UEFI Bootkit 框架。通过学习它，你可以掌握：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UEFI 固件开发</strong></td>
+<td>能够编写 UEFI Application 和 DXE Runtime Driver</td>
+</tr>
+<tr>
+<td><strong>Windows 启动安全</strong></td>
+<td>深入理解从固件到内核的完整启动链</td>
+</tr>
+<tr>
+<td><strong>二进制安全</strong></td>
+<td>掌握 PE 解析、模式匹配、函数 Hook、代码 Patch</td>
+</tr>
+<tr>
+<td><strong>内核编程</strong></td>
+<td>理解内核保护机制及其绕过方法</td>
+</tr>
+<tr>
+<td><strong>密码学应用</strong></td>
+<td>实际使用 AES、PBKDF2、混淆技术</td>
+</tr>
+<tr>
+<td><strong>恶意软件分析</strong></td>
+<td>具备分析高级 UEFI 威胁的能力</td>
+</tr>
+<tr>
+<td><strong>安全防御</strong></td>
+<td>能够设计和实现 UEFI 安全防护方案</td>
+</tr>
+</tbody>
+</table>
+<p><strong>学习建议</strong>：
+- 不要跳过基础，先理解 UEFI 规范和 PE 格式
+- 按照启动流程顺序阅读代码，而非按文件目录
+- 搭建实际的 EDK2 编译环境，亲手编译和调试
+- 结合会议演讲 PDF（<code>03 Cybersecurity Conferences/</code> 目录下）辅助理解
+- 始终在<strong>隔离的虚拟机环境</strong>中进行实验</p>
+<hr />
+<blockquote>
+<p>⚠️ <strong>免责声明</strong>：本文档及 Abyss 项目仅用于安全研究和教育目的。在非授权环境中使用这些技术可能违反法律。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../../..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../../../config/stylesheets/javascripts/cyber-buddha.js"></script>
+      
+    
+  </body>
+</html>

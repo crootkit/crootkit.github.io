@@ -1,0 +1,5421 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../%E5%B0%8F%20case/">
+      
+      
+        <link rel="next" href="../../%E6%8F%90%E6%9D%83/doc_analysis/summary/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>CallStack - JRC BLOG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../config/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#callstack" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="JRC BLOG" class="md-header__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JRC BLOG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CallStack
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="JRC BLOG" class="md-nav__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    JRC BLOG
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to crj blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于这个博客的主人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows internel
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Windows internel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UEFI bootkit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UEFI bootkit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Abyss 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_1" id="__nav_3_1_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dps 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dps 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/dps-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🦑 Abyss Windows UEFI Bootkit — 深度分析学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_2" id="__nav_3_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimo 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimo 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/mimo-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss Windows UEFI Bootkit — 项目分析与学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiCheats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiCheats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/Deobfuscation%20and%20Analysis%20of%20Ring-1.io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deobfuscation and Analysis of Ring 1.io
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/How%20Kernel%20Anti-Cheats%20Work%20-%20A%20Deep%20Dive%20into%20Modern%20Game%20Protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/Riot%20Games%20Vanguard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riot Games Vanguard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/Static%20Analysis%20of%20BattlEye%27s%20Kernel%20Anti-Cheat%20Driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Static Analysis of BattlEye's Kernel Anti Cheat Driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/%E6%B0%B8%E6%9D%B0%E6%97%A0%E9%97%B4-NeacSafe64/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    永杰无间 NeacSafe64
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/%E7%9B%AE%E6%A0%87/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    目的：
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7" id="__nav_3_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV 作弊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV 作弊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7_1" id="__nav_3_2_7_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScyVisor框架
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_2_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ScyVisor框架
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiCheats/hyperV%20%E4%BD%9C%E5%BC%8A/ScyVisor%E6%A1%86%E6%9E%B6/%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiEDR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiEDR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/case%E9%9B%86%E5%90%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case集合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/stackspoofPOC%20-%20BYOUD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stackspoofPOC   BYOUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/stackspoof%E6%A3%80%E6%B5%8B%20-%20%E5%9F%BA%E4%BA%8E%E5%92%8Cshadow%E6%AF%94%E8%BE%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stackspoof检测   基于和shadow比较
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/%E9%80%9A%E8%BF%87%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F%EF%BC%88QoS%EF%BC%89%E9%98%BB%E6%96%ADEDR%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    通过基于策略的服务质量（QoS）阻断EDR通信
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    学习路线
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    学习路线
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/GPT%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPT说学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/gpt%E5%90%88%E5%B9%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gpt合并的学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/qwen%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔍 Hyper-V 漏洞案例资源索引（2023-2026）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文章学习
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    文章学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_7" id="__nav_3_4_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Misc
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/misc/Awesome%20Hyper-V%20Exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    来源
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8" id="__nav_3_4_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8_1" id="__nav_3_4_2_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_4_2_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimikatz 系列
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimikatz 系列
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/1%20internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限和特权
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/2%20lsass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSASS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/3%20kerberos%20%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/4%20PKI%EF%BC%88%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%EF%BC%89/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 PKI（公钥基础设施）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/5%20DCSync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为什么需要
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tips/loader%20lock%20unlock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader lock unlock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反射加载
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反射加载
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLR%20HOSTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    常用执行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E5%B0%8F%20case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    函数指针和 createthread
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CallStack
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CallStack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#64-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        64 bit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="64 bit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ntdllcapturestackbacktrace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取方式: ntdll.CaptureStackBackTrace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取原理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="获取原理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API 工作整体流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdata-rtlplookupfunctionentryforstackwalks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：读 .pdata — RtlpLookupFunctionEntryForStackWalks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsp-rtlpxvirtualunwind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：计算 RSP — RtlpxVirtualUnwind
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：读返回地址
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取原理 2：来自文章(可信)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="获取原理 2：来自文章(可信)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        引用链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        展开器的工作流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        时机问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unbacked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unbacked
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    提权
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    提权
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1" id="__nav_3_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Doc analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Doc analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows提权项目汇总分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_2" id="__nav_3_8_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BadPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/BadPotato/BadPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_3" id="__nav_3_8_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GodPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/GodPotato/GodPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_4" id="__nav_3_8_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UACME
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/UACME/UACME_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程保护
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程保护
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/CFG%20XFG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFG 保护
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/PPL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    是什么
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_10" id="__nav_3_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程注入
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程注入
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Hollowing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hollowing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20DLL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject DLL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20by%20callback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject by callback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Windows%20Thread%20Pool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Thread Pool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/inject%20by%20thread/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    process hypnosis injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/%E9%80%9A%E7%94%A8%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程创建 suspend 检测
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyperv docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hyperv docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E7%94%9F%E6%80%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 技术应用生态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/code-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V PowerShell 代码示例索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web articles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Web articles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5" id="__nav_4_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5_1" id="__nav_4_5_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#64-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        64 bit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="64 bit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ntdllcapturestackbacktrace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取方式: ntdll.CaptureStackBackTrace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取原理
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="获取原理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API 工作整体流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdata-rtlplookupfunctionentryforstackwalks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：读 .pdata — RtlpLookupFunctionEntryForStackWalks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsp-rtlpxvirtualunwind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：计算 RSP — RtlpxVirtualUnwind
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：读返回地址
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取原理 2：来自文章(可信)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="获取原理 2：来自文章(可信)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        引用链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        展开器的工作流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        时机问题
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unbacked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unbacked
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="callstack">CallStack</h1>
+<p>分两种情况，x86 和 x64.其中 64 bit 的程序的栈相对好获取。</p>
+<h2 id="64-bit">64 bit</h2>
+<h3 id="ntdllcapturestackbacktrace">获取方式: ntdll.CaptureStackBackTrace</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span>
+<span class="normal"><a href="#__codelineno-0-56">56</a></span>
+<span class="normal"><a href="#__codelineno-0-57">57</a></span>
+<span class="normal"><a href="#__codelineno-0-58">58</a></span>
+<span class="normal"><a href="#__codelineno-0-59">59</a></span>
+<span class="normal"><a href="#__codelineno-0-60">60</a></span>
+<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+<span class="normal"><a href="#__codelineno-0-62">62</a></span>
+<span class="normal"><a href="#__codelineno-0-63">63</a></span>
+<span class="normal"><a href="#__codelineno-0-64">64</a></span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span>
+<span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="c1">// ============================================================</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="c1">// 方法一：CaptureStackBackTrace —— 最轻量，仅获取返回地址</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="c1">// ============================================================</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kt">void</span><span class="w"> </span><span class="nf">Method1_CaptureStackBackTrace</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">========================================</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;方法一：CaptureStackBackTrace</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;========================================</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;特点：无需初始化 DbgHelp，速度快，仅返回地址数组</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">    </span><span class="cp">#define MAX_FRAMES_M1 62</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">    </span><span class="n">PVOID</span><span class="w"> </span><span class="n">backTrace</span><span class="p">[</span><span class="n">MAX_FRAMES_M1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="w">    </span><span class="c1">// CaptureStackBackTrace 是 kernel32.dll 导出的 Win32 API，</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="w">    </span><span class="c1">// 内部调用 ntdll!RtlCaptureStackBackTrace</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">    </span><span class="n">USHORT</span><span class="w"> </span><span class="n">frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CaptureStackBackTrace</span><span class="p">(</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">        </span><span class="mi">0</span><span class="p">,</span><span class="w">               </span><span class="c1">// FramesToSkip: 0 = 包含 CaptureStackBackTrace 自身</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">        </span><span class="n">MAX_FRAMES_M1</span><span class="p">,</span><span class="w">   </span><span class="c1">// FramesToCapture: 最大帧数</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">        </span><span class="n">backTrace</span><span class="p">,</span><span class="w">       </span><span class="c1">// 输出地址数组</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">        </span><span class="nb">NULL</span><span class="w">             </span><span class="c1">// BackTraceHash: 不需要则传 NULL</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;捕获到 %hu 个栈帧:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">frames</span><span class="p">);</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">USHORT</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">frames</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;  [%2hu]  0x%p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">backTrace</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">        </span><span class="c1">// 可选：尝试解析模块名（不依赖 SymInitialize）</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="n">HMODULE</span><span class="w"> </span><span class="n">hModule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">GetModuleHandleExA</span><span class="p">(</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">                </span><span class="n">GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT</span><span class="p">,</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">                </span><span class="p">(</span><span class="n">LPCSTR</span><span class="p">)</span><span class="n">backTrace</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="w">                </span><span class="o">&amp;</span><span class="n">hModule</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">hModule</span><span class="p">)</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">modulePath</span><span class="p">[</span><span class="n">MAX_PATH</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="w">            </span><span class="n">GetModuleFileNameA</span><span class="p">(</span><span class="n">hModule</span><span class="p">,</span><span class="w"> </span><span class="n">modulePath</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">modulePath</span><span class="p">));</span>
+<a id="__codelineno-0-68" name="__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">pName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strrchr</span><span class="p">(</span><span class="n">modulePath</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;\\&#39;</span><span class="p">);</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">moduleName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pName</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">pName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">modulePath</span><span class="p">;</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;        -&gt; %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">moduleName</span><span class="p">);</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>
+<a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_1">获取原理</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span>
+<span class="normal"><a href="#__codelineno-1-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>① 读 .pdata    → 获取「这个函数的序言做了什么」
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>② 计算 RSP     → 逆向撤销序言操作，让 RSP 回到调用者的栈帧
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a>③ 读返回地址   → *RSP 就是调用者中的返回地址，即调用者的 RIP
+</code></pre></div></td></tr></table></div>
+<p>通过 IDA Pro 反编译 <code>ntdll.dll</code>，完整追踪了 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/index.html?id=fad0f184-bf0e-42aa-b5a6-8dbfdb81256a&amp;parentId=3&amp;origin=88b4c1a2-69ca-48dc-a325-25300df12832&amp;swVersion=5&amp;extensionId=ZooCodeOrganization.zoo-code&amp;platform=electron&amp;vscode-resource-base-authority=vscode-resource.vscode-cdn.net&amp;parentOrigin=vscode-file%3A%2F%2Fvscode-app&amp;purpose=webviewView#%E7%AC%AC%E4%B8%80%E5%B1%82rtlcapturestackbacktrace-0x1800526a0"><code>RtlCaptureStackBackTrace</code></a> 的内部实现链路：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>用户调用 CaptureStackBackTrace(FramesToSkip=0, FramesToCapture=10, buf, NULL)
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>        │
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a>        ▼
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a>① RtlCaptureStackBackTrace
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a>   └─ 参数校验 → 调用 RtlWalkFrameChain(buf, 11, 0x100)
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a>        │
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a>        ▼
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a>② RtlWalkFrameChain
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a>   └─ 解码 skip=1 → 调用 RtlpWalkFrameChain(buf, 12, 1, 2)
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a>        │
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a>        ▼
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a>③ RtlpWalkFrameChain
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a>   ├─ RtlpGetStackLimits()           ← 从 TEB 读 StackBase/StackLimit
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a>   ├─ RtlpCaptureContext2()          ← 捕获当前 RIP/RSP/RBP/...
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a>   │
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>   └─ 循环（每帧）:
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a>       ├─ RtlpIsFrameInBounds()      ← RIP 在 [StackLimit, StackBase) 内？
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a>       ├─ RtlpLookupFunctionEntryForStackWalks()  ← 二分查找 .pdata
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a>       │   └─ RtlpxLookupFunctionTable() ← 查找模块函数表
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a>       ├─ ZwQueryVirtualMemory()     ← 必要时检查内存属性
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a>       ├─ RtlpVirtualUnwind()        ← ★ 核心：展开一帧 ★
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a>       │   └─ RtlpxVirtualUnwind()   ← 解析 UNWIND_CODE，恢复调用者上下文
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a>       ├─ CET 返回地址修正            ← 处理控制流完整性保护
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a>       └─ buf[frameCount-skip] = RIP ← 记录返回地址
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a>        │
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a>        ▼
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a>④ 返回实际帧数给用户
+</code></pre></div></td></tr></table></div>
+<p><code>RtlpxVirtualUnwind</code> @ [<code>0 x 180030 eb 0</code>] — 展开码解析引擎</p>
+<p>这是最复杂的函数（0 x 5 E 9 字节），负责解析 <code>.pdata</code> 中的 <strong>UNWIND_CODE</strong> 序列：</p>
+<ol>
+<li><strong>读取 UNWIND_INFO 头部</strong>：确定展开码数量、序言/结尾大小、帧寄存器等</li>
+<li><strong>解析执行 UNWIND_CODE 数组</strong>：逆向执行函数序言中的指令，恢复调用者的寄存器值</li>
+<li><strong>处理结尾（Epilogue）</strong>：如果 RIP 在函数结尾中，直接从中恢复上下文</li>
+<li><strong>更新 RSP</strong>：恢复到调用者的栈指针位置</li>
+<li><strong>恢复非易失寄存器</strong>：从栈上恢复 rbx, rbp, rsi, rdi, r 12-r 15, xmm 6-xmm 15</li>
+<li><strong>设置新的 RIP</strong>：从栈上取出返回地址作为新的 RIP</li>
+</ol>
+<p><strong>本质原理</strong>：x 64 不依赖 RBP 链，而是通过 <code>.pdata</code> 段中的展开表 (<code>UNWIND_INFO</code> + <code>UNWIND_CODE[]</code>) 来精确恢复每一帧调用者的寄存器状态。这正是为什么必须使用 Windows API 而不能手动解析指针的原因——编译器可能完全省略帧指针，但展开表始终存在。</p>
+<p>pdata 保存了什么, 只保存了函数序言和函数的地址范围，是静态的，编译的时候生成的。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>                          .pdata 段（静态，每个函数一条）
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a>                          ────────────────────────────
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a>同一个函数被调用 10000 次:      ┌─────────────────────┐
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a>                                │ RUNTIME_FUNCTION    │  ← 只有 1 条，与调用次数无关
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a>  func_A() 被调用了:             │  for func_A         │
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a>    第 1 次 ← call              │  BeginAddr = 0x1000 │
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a>    第 2 次 ← call              │  EndAddr   = 0x1080 │
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a>    第 3 次 ← call              │  UnwindInfo →       │
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a>    ...                         ├─────────────────────┤
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a>    第 10000 次 ← call          │ UNWIND_INFO         │
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a>                                │  &quot;这个函数序言中     │
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a>  调用历史（次数/来源/参数）:    │   push了rbx, 分配了  │
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a>    不在 .pdata 中！             │   0x20 字节栈空间&quot;   │
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a>    在运行时栈上！               └─────────────────────┘
+</code></pre></div></td></tr></table></div>
+<h4 id="api">API 工作整体流程</h4>
+<h4 id="pdata-rtlplookupfunctionentryforstackwalks">第一步：读 <code>.pdata</code> — <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/index.html?id=fad0f184-bf0e-42aa-b5a6-8dbfdb81256a&amp;parentId=3&amp;origin=88b4c1a2-69ca-48dc-a325-25300df12832&amp;swVersion=5&amp;extensionId=ZooCodeOrganization.zoo-code&amp;platform=electron&amp;vscode-resource-base-authority=vscode-resource.vscode-cdn.net&amp;parentOrigin=vscode-file%3A%2F%2Fvscode-app&amp;purpose=webviewView"><code>RtlpLookupFunctionEntryForStackWalks</code></a></h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>当前 RIP = 0x7FF6...（在某个函数体内）
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>        │
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>        ▼
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a>RtlpLookupFunctionEntryForStackWalks(RIP, &amp;funcTableCtx)
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a>        │
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a>        ├─ 二分查找 .pdata 段
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a>        │   ▸ 每个条目 12 字节: {BeginAddr, EndAddr, UnwindInfoRVA}
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a>        │   ▸ 找到 RIP ∈ [BeginAddr, EndAddr) 的条目
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a>        │
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a>        └─ 返回 PRUNTIME_FUNCTION → UnwindInfoRVA → UNWIND_INFO
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a>            └─ 包含 UNWIND_CODE[] 数组
+</code></pre></div></td></tr></table></div>
+<h4 id="rsp-rtlpxvirtualunwind">第二步：计算 RSP — <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/index.html?id=fad0f184-bf0e-42aa-b5a6-8dbfdb81256a&amp;parentId=3&amp;origin=88b4c1a2-69ca-48dc-a325-25300df12832&amp;swVersion=5&amp;extensionId=ZooCodeOrganization.zoo-code&amp;platform=electron&amp;vscode-resource-base-authority=vscode-resource.vscode-cdn.net&amp;parentOrigin=vscode-file%3A%2F%2Fvscode-app&amp;purpose=webviewView"><code>RtlpxVirtualUnwind</code></a></h4>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span>
+<span class="normal"><a href="#__codelineno-5-13">13</a></span>
+<span class="normal"><a href="#__codelineno-5-14">14</a></span>
+<span class="normal"><a href="#__codelineno-5-15">15</a></span>
+<span class="normal"><a href="#__codelineno-5-16">16</a></span>
+<span class="normal"><a href="#__codelineno-5-17">17</a></span>
+<span class="normal"><a href="#__codelineno-5-18">18</a></span>
+<span class="normal"><a href="#__codelineno-5-19">19</a></span>
+<span class="normal"><a href="#__codelineno-5-20">20</a></span>
+<span class="normal"><a href="#__codelineno-5-21">21</a></span>
+<span class="normal"><a href="#__codelineno-5-22">22</a></span>
+<span class="normal"><a href="#__codelineno-5-23">23</a></span>
+<span class="normal"><a href="#__codelineno-5-24">24</a></span>
+<span class="normal"><a href="#__codelineno-5-25">25</a></span>
+<span class="normal"><a href="#__codelineno-5-26">26</a></span>
+<span class="normal"><a href="#__codelineno-5-27">27</a></span>
+<span class="normal"><a href="#__codelineno-5-28">28</a></span>
+<span class="normal"><a href="#__codelineno-5-29">29</a></span>
+<span class="normal"><a href="#__codelineno-5-30">30</a></span>
+<span class="normal"><a href="#__codelineno-5-31">31</a></span>
+<span class="normal"><a href="#__codelineno-5-32">32</a></span>
+<span class="normal"><a href="#__codelineno-5-33">33</a></span>
+<span class="normal"><a href="#__codelineno-5-34">34</a></span>
+<span class="normal"><a href="#__codelineno-5-35">35</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="c1">// RtlpxVirtualUnwind 的核心逻辑（简化）</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="c1">// 输入: funcEntry → UNWIND_INFO → UNWIND_CODE[]</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="c1">// 输入: ctx-&gt;Rsp（当前函数的栈指针）</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="n">UNWIND_CODE</span><span class="w"> </span><span class="n">codes</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">从</span><span class="w"> </span><span class="p">.</span><span class="n">pdata</span><span class="w"> </span><span class="n">中读取</span><span class="p">;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">每个</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">codes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">code</span><span class="p">.</span><span class="n">OpCode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">UWOP_PUSH_NONVOL</span><span class="p">:</span><span class="w">    </span><span class="c1">// push rbx</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="w">        </span><span class="n">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">PQWORD</span><span class="p">)</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="p">;</span><span class="w">  </span><span class="c1">// 从栈上读回 rbx 的原始值</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w">            </span><span class="c1">// 撤销 push，RSP 上移</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">UWOP_ALLOC_SMALL</span><span class="p">:</span><span class="w">    </span><span class="c1">// sub rsp, N*8</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15"></a><span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">OpInfo</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w">  </span><span class="c1">// 撤销栈分配</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16"></a><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">UWOP_ALLOC_LARGE</span><span class="p">:</span><span class="w">    </span><span class="c1">// sub rsp, N</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19"></a><span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">largeSize</span><span class="p">;</span><span class="w">       </span><span class="c1">// 撤销大栈分配</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20"></a><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">UWOP_SET_FPREG</span><span class="p">:</span><span class="w">      </span><span class="c1">// lea rbp, [rsp+offset]</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23"></a><span class="w">        </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rbp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">frameOffset</span><span class="p">;</span><span class="w">  </span><span class="c1">// 从帧指针反算 RSP</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24"></a><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25"></a>
+<a id="__codelineno-5-26" name="__codelineno-5-26"></a><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">UWOP_SAVE_NONVOL</span><span class="p">:</span><span class="w">    </span><span class="c1">// mov [rsp+offset], reg</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27"></a><span class="w">        </span><span class="n">regValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">PQWORD</span><span class="p">)(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">code</span><span class="p">.</span><span class="n">Offset</span><span class="p">);</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28"></a><span class="w">        </span><span class="n">set_register</span><span class="p">(</span><span class="n">code</span><span class="p">.</span><span class="n">Reg</span><span class="p">,</span><span class="w"> </span><span class="n">regValue</span><span class="p">);</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29"></a><span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31"></a><span class="p">}</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33"></a><span class="c1">// ★ 此时 ctx-&gt;Rsp 已经指向调用者的返回地址 ★</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34"></a><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">PQWORD</span><span class="p">)</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="p">;</span><span class="w">   </span><span class="c1">// 第三步：读返回地址</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35"></a><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">Rsp</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w">                   </span><span class="c1">// RSP 指向调用者的栈帧</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="_2">第三步：读返回地址</h4>
+<p>这在 IDA 汇编中也有体现，<a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/index.html?id=fad0f184-bf0e-42aa-b5a6-8dbfdb81256a&amp;parentId=3&amp;origin=88b4c1a2-69ca-48dc-a325-25300df12832&amp;swVersion=5&amp;extensionId=ZooCodeOrganization.zoo-code&amp;platform=electron&amp;vscode-resource-base-authority=vscode-resource.vscode-cdn.net&amp;parentOrigin=vscode-file%3A%2F%2Fvscode-app&amp;purpose=webviewView"><code>RtlpWalkFrameChain</code></a> 展开后直接从 <code>ctx-&gt;Rip</code>（即 <code>[rdi+0F8h]</code>）读取：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span>
+<span class="normal"><a href="#__codelineno-6-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1">; RtlpWalkFrameChain 中的关键汇编</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="err">18005294</span><span class="nf">D</span><span class="w">  </span><span class="no">mov</span><span class="w">     </span><span class="no">rcx</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="no">rdi</span><span class="err">+</span><span class="mi">0</span><span class="no">F8h</span><span class="p">]</span><span class="w">       </span><span class="c1">; rcx = ctx-&gt;Rip（刚被 RtlpxVirtualUnwind 更新）</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="err">180052954</span><span class="w">  </span><span class="nf">test</span><span class="w">    </span><span class="no">rcx</span><span class="p">,</span><span class="w"> </span><span class="no">rcx</span><span class="w">               </span><span class="c1">; Rip == 0? → 到达栈底</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="err">180052957</span><span class="w">  </span><span class="nf">jz</span><span class="w">      </span><span class="no">short</span><span class="w"> </span><span class="no">loc_18005297C</span><span class="w">    </span><span class="c1">; 是 → 退出</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="err">180052963</span><span class="w">  </span><span class="nf">mov</span><span class="w">     </span><span class="p">[</span><span class="no">r13</span><span class="err">+</span><span class="no">rax</span><span class="p">*</span><span class="mi">8</span><span class="err">+</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="no">rcx</span><span class="w">     </span><span class="c1">; buf[idx] = Rip（写入用户缓冲区）</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2">获取原理 2：来自文章(可信)</h3>
+<p>https://mp.weixin.qq.com/s/itQPcPCol0tAd6KT6aB9wA</p>
+<h4 id="_3"><strong>引用链</strong></h4>
+<p>当 Windows 需要展开调用栈 (调试、异常处理等场景) 时，它会沿着可执行文件中内嵌的一条引用链逐级查找。</p>
+<ul>
+<li>
+<p><strong>PE 头</strong></p>
+<p>中包含一个 DataDirectory 数组，其索引 3 的条目 (IMAGE_DIRECTORY_ENTRY_EXCEPTION) 存储了异常数据的 RVA 及大小，指向 .pdata 节。</p>
+</li>
+<li>
+<p>.pdata 节本质上是一个 RUNTIME_FUNCTION 结构数组，PE 中的每个函数对应一条记录。</p>
+</li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>typedefstruct _RUNTIME_FUNCTION {  DWORD BeginAddress;      // RVA where function starts  DWORD EndAddress;        // RVA where function ends  DWORD UnwindInfoAddress; // RVA of UNWIND_INFO structure} RUNTIME_FUNCTION;
+</code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>UNWIND_INFO 结构</strong>
+存放在 .rdata 节中，精确描述了如何逆向执行每个函数的序言 (即编译器在函数入口处为设置栈和寄存器而生成的汇编指令)： </li>
+</ul>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span>
+<span class="normal"><a href="#__codelineno-8-3">3</a></span>
+<span class="normal"><a href="#__codelineno-8-4">4</a></span>
+<span class="normal"><a href="#__codelineno-8-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="n">typedefstruct</span><span class="w"> </span><span class="n">_UNWIND_INFO</span><span class="w"> </span><span class="p">{</span><span class="w">  </span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="n">BYTE</span><span class="w"> </span><span class="n">VersionAndFlags</span><span class="p">;</span><span class="w">        </span><span class="c1">// Version (bits 0-2) and flags (bits 3-7)  BYTE SizeOfProlog;           // Size of prolog in bytes  </span>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="n">BYTE</span><span class="w"> </span><span class="n">CountOfCodes</span><span class="p">;</span><span class="w">           </span><span class="c1">// Number of unwind codes  BYTE FrameRegisterAndOffset; // Frame register info  </span>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="n">UNWIND_CODE</span><span class="w"> </span><span class="n">UnwindCode</span><span class="p">[];</span><span class="w">    </span><span class="c1">// Variable length array</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a><span class="p">}</span><span class="w"> </span><span class="n">UNWIND_INFO</span><span class="p">;</span>
+</code></pre></div></td></tr></table></div>
+<h4 id="_4"><strong>展开器的工作流程</strong></h4>
+<p>当 RtlVirtualUnwind 需要定位某个函数的调用者时，执行以下步骤：</p>
+<ul>
+<li>
+<p>获取当前指令指针 (RIP)</p>
+</li>
+<li>
+<p>在 .pdata 中进行二分查找，找到包含该地址的 RUNTIME_FUNCTION 条目</p>
+</li>
+<li>
+<p>根据 UnwindInfoAddress 在 .rdata 中定位对应的 UNWIND_INFO 结构</p>
+</li>
+<li>
+<p>读取 UNWIND_CODE 数组，按逆序 "撤销" 函数序言——如果某个寄存器被压栈则弹出，如果分配了栈空间则将其加回 RSP</p>
+</li>
+<li>
+<p>序言逆向执行完毕后，RSP 即指向返回地址</p>
+</li>
+<li>
+<p>将返回地址弹入 RIP，然后重复上述过程</p>
+</li>
+</ul>
+<p>如此循环，直至 RIP 为 NULL 或指向内核空间，此时整个调用栈遍历完成。</p>
+<h4 id="_5">时机问题</h4>
+<p><strong>pdata:</strong> 对于正常加载的可执行文件，Windows 在加载阶段就会解析并索引 .pdata 节。当 RtlLookupFunctionEntry 需要查找包含给定 RIP 的函数时，它查询的是操作系统加载器在映射 PE 时已注册的函数表，而非在展开过程中直接读取映像内存中的 .pdata。</p>
+<p><strong>.rdata:</strong> RtlVirtualUnwind 无法读取 UNWIND_INFO 结构来处理帧</p>
+<h3 id="unbacked">Unbacked</h3>
+<p>1、原理：如果进程中的某个地址，没有其对应的磁盘文件，那么该地址就被认为是 unbacked 地址。</p>
+<p>2、初始化：在进程创建的过程中进行初始化的。</p>
+<h1 id="alloc">进程内 Alloc</h1>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
+<span class="normal"><a href="#__codelineno-9-2">2</a></span>
+<span class="normal"><a href="#__codelineno-9-3">3</a></span>
+<span class="normal"><a href="#__codelineno-9-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>[Alloc] addr={[rdx]} size={[r9]} type={[rsp+0x28]} protect=={[rsp+0x30]}
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>[Protect] addr={[rdx]} size={[r8]} newprotect={r9}
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a>oldprotect=={[[rsp+0x28]]}
+</code></pre></div></td></tr></table></div>
+<h2 id="_6">一、背景</h2>
+<p>1、作为反射加载，通用步骤是将 PE 文件，按照 section 进行 alloc 空间，然后转移内容，触发执行。</p>
+<p>2、先不考虑直接写入现有空间。开辟空间涉及到两种 API
+- VirtualAlloc
+- HeapAlloc</p>
+<p>3、问题：
+- 经过测试，heapalloc 的空间是无法执行代码的（protect 也无效），我们需要明确原因。
+- 本地的 alloc 事件有很多，要通过分析明确，哪些特征的 alloc 是系统默认行为，这些默认行为的功能是什么。以此进行过滤来减少上报量。</p>
+<h2 id="ida-kernel-32dllheapalloc">二、ida 分析：Kernel 32.dll!HeapAlloc</h2>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
+<span class="normal"><a href="#__codelineno-10-2">2</a></span>
+<span class="normal"><a href="#__codelineno-10-3">3</a></span>
+<span class="normal"><a href="#__codelineno-10-4">4</a></span>
+<span class="normal"><a href="#__codelineno-10-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="n">DECLSPEC_ALLOCATOR</span><span class="w"> </span><span class="n">LPVOID</span><span class="w"> </span><span class="n">HeapAlloc</span><span class="p">(</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="w">  </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w"> </span><span class="n">HANDLE</span><span class="w"> </span><span class="n">hHeap</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="w">  </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w"> </span><span class="n">DWORD</span><span class="w">  </span><span class="n">dwFlags</span><span class="p">,</span><span class="c1">// </span>
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="w">  </span><span class="p">[</span><span class="n">in</span><span class="p">]</span><span class="w"> </span><span class="n">SIZE_T</span><span class="w"> </span><span class="n">dwBytes</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<p>hHeap:
+- 内存分配的堆的句柄。该句柄由 HeapCreate 或 GetProcessHeap 函数返回。</p>
+<p>dwFlags:
+- <strong>HEAP_GENERATE_EXCEPTIONS</strong>: 系统会触发异常以表示函数故障，例如内存不足状态，而不是返回 NULL。
+- <strong>HEAP_NO_SERIALIZE</strong>: 串行访问不会用于此分配。
+- <strong>HEAP_ZERO_MEMORY</strong>: 分配的内存将初始化为零。否则，内存不会初始化为零。</p>
+<p>dwBytes:
+- 分配字节数</p>
+<p>如果函数成功，返回值将作为指向已分配内存块的指针。</p>
+<p>注意：
+- <strong>HeapAlloc</strong> 分配的内存不可移动。<strong>HeapAlloc</strong> 返回的地址在内存块被释放或重新分配之前有效;内存块不需要被锁定。由于系统无法压缩私有堆，它可能会变得碎片化。</p>
+<h3 id="22">2.2 底层实现</h3>
+<p>分析的目的是知道他如何从进程堆中扣一块下来，还是通过 virtualalloc 的套壳实现。</p>
+<p>本质上调用的是：NTDLL.RtlAllocateHeap，重点分析这个的实现。</p>
+<h3 id="21">2.1 分配路径总览</h3>
+<p>RtlAllocateHeap() 根据堆签名分发，最终进入 RtlpAllocateHeapInternal()（地址 <code>0x18002aa20</code>，大小 <code>0xC20</code>，即 3104 字节的巨型函数）。该函数实现了<strong>三级分配器</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-11-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-11-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-11-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-11-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-11-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-11-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-11-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-11-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-11-10">10</a></span>
+<span class="normal"><a href="#__codelineno-11-11">11</a></span>
+<span class="normal"><a href="#__codelineno-11-12">12</a></span>
+<span class="normal"><a href="#__codelineno-11-13">13</a></span>
+<span class="normal"><a href="#__codelineno-11-14">14</a></span>
+<span class="normal"><a href="#__codelineno-11-15">15</a></span>
+<span class="normal"><a href="#__codelineno-11-16">16</a></span>
+<span class="normal"><a href="#__codelineno-11-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>请求大小(size)
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a>│
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a>├─ size ≤ RtlpLargestLfhBlock (通常 0x4000 即 16KB)
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a>│  └─ LFH (Low Fragmentation Heap) 路径
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a>│     └─ RtlpLowFragHeapAllocFromContext() 或 RtlpHpLfhSlotAllocate()
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a>│
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a>├─ size ≤ 0x20000 (128KB)
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a>│  └─ VS (Variable Size) 路径
+<a id="__codelineno-11-9" name="__codelineno-11-9"></a>│     └─ RtlpHpVsContextAllocateInternal()
+<a id="__codelineno-11-10" name="__codelineno-11-10"></a>│
+<a id="__codelineno-11-11" name="__codelineno-11-11"></a>└─ size &gt; 0x20000 (128KB)
+<a id="__codelineno-11-12" name="__codelineno-11-12"></a>   ├─ size ≤ heap-&gt;SegmentSizeThreshold
+<a id="__codelineno-11-13" name="__codelineno-11-13"></a>   │  └─ Seg (Segment) 路径
+<a id="__codelineno-11-14" name="__codelineno-11-14"></a>   │     └─ RtlpHpSegAlloc()
+<a id="__codelineno-11-15" name="__codelineno-11-15"></a>   └─ size &gt; SegmentSizeThreshold
+<a id="__codelineno-11-16" name="__codelineno-11-16"></a>      └─ Large 路径
+<a id="__codelineno-11-17" name="__codelineno-11-17"></a>         └─ RtlpHpLargeAlloc()
+</code></pre></div></td></tr></table></div>
+<h3 id="22-lfh-16-kb">2.2 LFH 路径（小块分配 ≤ 16 KB）</h3>
+<p>LFH 是最常用的路径。在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x18002aa20"><code>RtlpAllocateHeapInternal()</code></a> 中的关键逻辑：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-12-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-12-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-12-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-12-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-12-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-12-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-12-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-12-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-12-10">10</a></span>
+<span class="normal"><a href="#__codelineno-12-11">11</a></span>
+<span class="normal"><a href="#__codelineno-12-12">12</a></span>
+<span class="normal"><a href="#__codelineno-12-13">13</a></span>
+<span class="normal"><a href="#__codelineno-12-14">14</a></span>
+<span class="normal"><a href="#__codelineno-12-15">15</a></span>
+<span class="normal"><a href="#__codelineno-12-16">16</a></span>
+<span class="normal"><a href="#__codelineno-12-17">17</a></span>
+<span class="normal"><a href="#__codelineno-12-18">18</a></span>
+<span class="normal"><a href="#__codelineno-12-19">19</a></span>
+<span class="normal"><a href="#__codelineno-12-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="c1">// 简化后的逻辑 (地址 0x18002ab6e 附近)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">RtlpLargestLfhBlock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3"></a><span class="w">    </span><span class="c1">// 通过 bucket index map 找到对应的 bucket</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4"></a><span class="w">    </span><span class="n">bucket_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpLfhBucketIndexMap</span><span class="p">[(</span><span class="n">actual_size</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6"></a><span class="w">    </span><span class="c1">// 检查 bucket 是否激活</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">LfhBucket</span><span class="p">[</span><span class="n">bucket_index</span><span class="p">].</span><span class="n">Flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8"></a><span class="w">        </span><span class="c1">// 尝试从 LFH context 分配</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9"></a><span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpLowFragHeapAllocFromContext</span><span class="p">(</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10"></a><span class="w">            </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">LfhContext</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-12-11" name="__codelineno-12-11"></a><span class="w">            </span><span class="n">bucket</span><span class="o">-&gt;</span><span class="n">SlotCount</span><span class="p">,</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12"></a><span class="w">            </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13"></a><span class="w">        </span><span class="p">);</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16"></a><span class="w">    </span><span class="c1">// 如果 LFH 失败，尝试激活 bucket 后重试</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18"></a><span class="w">        </span><span class="n">RtlpHpLfhSlotAllocate</span><span class="p">(...);</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>LFH 使用<strong>预分配的 subsegment</strong>（通常 64 KB），每个 subsegment 被划分为固定大小的 slot。分配时从 bitmap 中找到空闲 slot，O(1) 时间返回。</p>
+<h3 id="23-vs-128-kb">2.3 VS 路径（中等块 ≤ 128 KB）</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span>
+<span class="normal"><a href="#__codelineno-13-5">5</a></span>
+<span class="normal"><a href="#__codelineno-13-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="c1">// 地址 0x18002ae59 附近</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mh">0x20000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpHpVsContextAllocateInternal</span><span class="p">(</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a><span class="w">        </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">VsContext</span><span class="p">,</span><span class="w"> </span><span class="n">actual_size</span><span class="p">,</span><span class="w"> </span><span class="n">aligned_size</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">,</span><span class="w"> </span><span class="p">...</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180028cd0"><code>RtlpHpVsContextAllocateInternal()</code></a>（地址 <code>0x180028cd0</code>）实现了一个<strong>伙伴系统</strong>（buddy system）变体：</p>
+<ul>
+<li>在红黑树中查找大小合适的空闲 chunk</li>
+<li>使用 <code>RtlpHpVsChunkSplit()</code> 分裂大块</li>
+<li>如果没有合适的 chunk，调用 <code>RtlpHpVsSubsegmentCreate()</code> 创建新的 subsegment</li>
+</ul>
+<h3 id="24-seg">2.4 Seg 路径（大块分配）</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span>
+<span class="normal"><a href="#__codelineno-14-2">2</a></span>
+<span class="normal"><a href="#__codelineno-14-3">3</a></span>
+<span class="normal"><a href="#__codelineno-14-4">4</a></span>
+<span class="normal"><a href="#__codelineno-14-5">5</a></span>
+<span class="normal"><a href="#__codelineno-14-6">6</a></span>
+<span class="normal"><a href="#__codelineno-14-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="c1">// 地址 0x18002aebe 附近</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">SegmentSizeThreshold</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3"></a><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpHpLargeAlloc</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="n">actual_size</span><span class="p">,</span><span class="w"> </span><span class="n">aligned_size</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">);</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">segment_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">MediumSegThreshold</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">256</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">448</span><span class="p">;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6"></a><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpHpSegAlloc</span><span class="p">(</span><span class="n">heap</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">segment_type</span><span class="p">,</span><span class="w"> </span><span class="n">actual_size</span><span class="p">,</span><span class="w"> </span><span class="n">aligned_size</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180029b70"><code>RtlpHpSegAlloc()</code></a>（地址 <code>0x180029b70</code>）使用<strong>段式分配</strong>：</p>
+<ul>
+<li>维护一个红黑树管理空闲的 segment descriptor</li>
+<li>从空闲树中找到合适的 descriptor</li>
+<li>调用 <code>RtlpHpSegPageRangeCommit()</code> 提交物理内存</li>
+</ul>
+<h3 id="25-large">2.5 Large 路径（超大块分配）</h3>
+<p><a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180003404"><code>RtlpHpLargeAlloc()</code></a>（地址 <code>0x180003404</code>）直接通过虚拟内存管理器分配：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span>
+<span class="normal"><a href="#__codelineno-15-3">3</a></span>
+<span class="normal"><a href="#__codelineno-15-4">4</a></span>
+<span class="normal"><a href="#__codelineno-15-5">5</a></span>
+<span class="normal"><a href="#__codelineno-15-6">6</a></span>
+<span class="normal"><a href="#__codelineno-15-7">7</a></span>
+<span class="normal"><a href="#__codelineno-15-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="c1">// 两步分配：先 Reserve，再 Commit</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a><span class="c1">// 第一步：Reserve</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="n">RtlpHpAllocVA</span><span class="p">(</span><span class="o">&amp;</span><span class="n">base</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">reserve_size</span><span class="p">,</span><span class="w"> </span><span class="n">large_page_size</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="w">    </span><span class="n">MEM_RESERVE</span><span class="p">,</span><span class="w"> </span><span class="n">protection</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">heap_params</span><span class="p">);</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6"></a><span class="c1">// 第二步：Commit</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7"></a><span class="n">RtlpHpAllocVA</span><span class="p">(</span><span class="o">&amp;</span><span class="n">base</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">commit_size</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-15-8" name="__codelineno-15-8"></a><span class="w">    </span><span class="n">MEM_COMMIT</span><span class="p">,</span><span class="w"> </span><span class="n">protection</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">heap_params</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="26-rtlphpallocva">2.6 RtlpHpAllocVA —— 底层虚拟内存分配</h3>
+<p><a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180022bac"><code>RtlpHpAllocVA()</code></a>（地址 <code>0x180022bac</code>）是所有路径的最终出口：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1">1</a></span>
+<span class="normal"><a href="#__codelineno-16-2">2</a></span>
+<span class="normal"><a href="#__codelineno-16-3">3</a></span>
+<span class="normal"><a href="#__codelineno-16-4">4</a></span>
+<span class="normal"><a href="#__codelineno-16-5">5</a></span>
+<span class="normal"><a href="#__codelineno-16-6">6</a></span>
+<span class="normal"><a href="#__codelineno-16-7">7</a></span>
+<span class="normal"><a href="#__codelineno-16-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="c1">// 简化逻辑</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x2000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 使用系统 VA 管理器</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="w">    </span><span class="c1">// 大块或 Reserve 路径</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4"></a><span class="w">    </span><span class="n">NtAllocateVirtualMemoryEx</span><span class="p">(</span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">base</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 使用自定义 VA 管理器</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6"></a><span class="w">    </span><span class="c1">// 小块或 Commit 路径</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7"></a><span class="w">    </span><span class="n">RtlpHpVaMgrCtxAlloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VaMgrCtx</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="1">问题 1：如果要开辟的过大怎么解决</h3>
+<h3 id="31">3.1 堆级大小限制检查</h3>
+<p>在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x18002aa20"><code>RtlpAllocateHeapInternal()</code></a> 中有多层限制检查：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-17-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-17-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-17-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-17-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-17-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-17-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-17-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-17-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-17-10">10</a></span>
+<span class="normal"><a href="#__codelineno-17-11">11</a></span>
+<span class="normal"><a href="#__codelineno-17-12">12</a></span>
+<span class="normal"><a href="#__codelineno-17-13">13</a></span>
+<span class="normal"><a href="#__codelineno-17-14">14</a></span>
+<span class="normal"><a href="#__codelineno-17-15">15</a></span>
+<span class="normal"><a href="#__codelineno-17-16">16</a></span>
+<span class="normal"><a href="#__codelineno-17-17">17</a></span>
+<span class="normal"><a href="#__codelineno-17-18">18</a></span>
+<span class="normal"><a href="#__codelineno-17-19">19</a></span>
+<span class="normal"><a href="#__codelineno-17-20">20</a></span>
+<span class="normal"><a href="#__codelineno-17-21">21</a></span>
+<span class="normal"><a href="#__codelineno-17-22">22</a></span>
+<span class="normal"><a href="#__codelineno-17-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="c1">// 1. 基本溢出检查 (地址 0x18002b289)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mh">0x7FFFFFFFFFFFFFFF</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="w">    </span><span class="c1">// 立即失败，设置 LastError = ERROR_NOT_ENOUGH_MEMORY</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5"></a><span class="p">}</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7"></a><span class="c1">// 2. 堆级最大限制检查 (地址 0x18002b2a6)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8"></a><span class="n">max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">MaximumSize</span><span class="p">;</span><span class="w">  </span><span class="c1">// 偏移 +392</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">max_size</span><span class="p">)</span><span class="w"> </span><span class="n">max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_DefaultMaxHeapSize</span><span class="p">;</span><span class="w">  </span><span class="c1">// 全局默认值</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">max_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11"></a><span class="w">    </span><span class="n">RtlpLogHeapFailure</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13"></a><span class="p">}</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15"></a><span class="c1">// 3. 全局内存限制检查 (地址 0x18002ab6e)</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">g_IgnoreHeapLimit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17"></a><span class="w">    </span><span class="n">global_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">GlobalLimit</span><span class="p">;</span><span class="w">  </span><span class="c1">// 偏移 +48</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">global_limit</span><span class="p">)</span><span class="w"> </span><span class="n">global_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_DefaultGlobalLimit</span><span class="p">;</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">actual_size</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">global_limit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20"></a><span class="w">        </span><span class="n">RtlpLogHeapFailure</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="32">3.2 大块分配的特殊处理</h3>
+<p>当请求超过 128 KB 进入 Large 路径时，<a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180003404"><code>RtlpHpLargeAlloc()</code></a> 有以下特殊处理：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-18-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-18-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-18-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-18-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-18-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-18-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-18-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-18-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-18-10">10</a></span>
+<span class="normal"><a href="#__codelineno-18-11">11</a></span>
+<span class="normal"><a href="#__codelineno-18-12">12</a></span>
+<span class="normal"><a href="#__codelineno-18-13">13</a></span>
+<span class="normal"><a href="#__codelineno-18-14">14</a></span>
+<span class="normal"><a href="#__codelineno-18-15">15</a></span>
+<span class="normal"><a href="#__codelineno-18-16">16</a></span>
+<span class="normal"><a href="#__codelineno-18-17">17</a></span>
+<span class="normal"><a href="#__codelineno-18-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="c1">// 1. 尝试大页 (Large Page) 分配 (地址 0x180003480)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">Flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">HEAP_USE_LARGE_PAGES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3"></a><span class="w">    </span><span class="c1">// 判断是否值得使用大页 (2MB 对齐)</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="w">    </span><span class="n">use_large_page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mh">0x1FFFFF</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">((</span><span class="n">size</span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x1FFFFF</span><span class="p">))</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5"></a><span class="p">}</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7"></a><span class="c1">// 2. 大页失败时回退到普通页 (地址 0x1800a8346)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">use_large_page</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">alloc_failed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9"></a><span class="w">    </span><span class="n">use_large_page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10"></a><span class="w">    </span><span class="c1">// 释放大页预留，重新用普通页分配</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11"></a><span class="w">    </span><span class="n">RtlpHpFreeVA</span><span class="p">(...);</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12"></a><span class="p">}</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13"></a>
+<a id="__codelineno-18-14" name="__codelineno-18-14"></a><span class="c1">// 3. 堆提交限制检查</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">RtlpHpSegHeapCheckCommitLimit</span><span class="p">(</span><span class="n">commit_pages</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16"></a><span class="w">    </span><span class="c1">// 超出堆的提交限制</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17"></a><span class="w">    </span><span class="k">goto</span><span class="w"> </span><span class="n">fail</span><span class="p">;</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="33">3.3 段分配器的溢出保护</h3>
+<p>在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180022e90"><code>RtlpHpSegMgrCommit()</code></a> 中：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
+<span class="normal"><a href="#__codelineno-19-2">2</a></span>
+<span class="normal"><a href="#__codelineno-19-3">3</a></span>
+<span class="normal"><a href="#__codelineno-19-4">4</a></span>
+<span class="normal"><a href="#__codelineno-19-5">5</a></span>
+<span class="normal"><a href="#__codelineno-19-6">6</a></span>
+<span class="normal"><a href="#__codelineno-19-7">7</a></span>
+<span class="normal"><a href="#__codelineno-19-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="c1">// 提交前检查全局内存限制 (地址 0x180022efa)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="n">current_usage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">CommittedPages</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">ReservedPages</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">12</span><span class="p">;</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">g_IgnoreHeapLimit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4"></a><span class="w">    </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">heap</span><span class="o">-&gt;</span><span class="n">CommitLimit</span><span class="p">;</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current_usage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">pages</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">12</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">limit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6"></a><span class="w">        </span><span class="n">RtlpLogHeapFailure</span><span class="p">(</span><span class="mi">21</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">STATUS_NO_MEMORY</span><span class="p">;</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8"></a><span class="w">    </span><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="2_1">问题 2：内存的权限是什么</h3>
+<h3 id="41">4.1 保护级别</h3>
+<p>堆管理器使用两种保护级别，由 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x18000ee64"><code>RtlpHpHeapValidateProtection()</code></a> 确定：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-20-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-20-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-20-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-20-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-20-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-20-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-20-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-20-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-20-10">10</a></span>
+<span class="normal"><a href="#__codelineno-20-11">11</a></span>
+<span class="normal"><a href="#__codelineno-20-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="kr">__int64</span><span class="w"> </span><span class="nf">RtlpHpHeapValidateProtection</span><span class="p">(</span><span class="kr">__int64</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">protection</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="w">    </span><span class="c1">// 如果请求 PAGE_EXECUTE_READWRITE (0x40)</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">protection</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0x40</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4"></a><span class="w">        </span><span class="c1">// 查询虚拟内存属性，确认确实是可执行的</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5"></a><span class="w">        </span><span class="n">ZwQueryVirtualMemory</span><span class="p">(</span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="n">MemoryBasicInformation</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">basic_info</span><span class="p">.</span><span class="n">Protect</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">PAGE_EXECUTE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">PAGE_EXECUTE_READ</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7"></a><span class="w">            </span><span class="n">RtlpLogHeapFailure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">PAGE_READWRITE</span><span class="p">;</span><span class="w">  </span><span class="c1">// 回退到普通保护</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">protection</span><span class="p">;</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p><strong>两种保护级别</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>堆标志</th>
+<th>保护值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>默认</td>
+<td><code>0x04</code> (PAGE_READWRITE)</td>
+<td>可读写，不可执行</td>
+</tr>
+<tr>
+<td><code>HEAP_CREATE_ENABLE_EXECUTE</code></td>
+<td><code>0x40</code> (PAGE_EXECUTE_READWRITE)</td>
+<td>可读写，可执行</td>
+</tr>
+<tr>
+<td>注：HEAP_CREATE_ENABLE_EXECUTE 属性的堆不受 DEP （NX）保护</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>### 4.2 保护标志的传递路径</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
+<span class="normal"><a href="#__codelineno-21-2">2</a></span>
+<span class="normal"><a href="#__codelineno-21-3">3</a></span>
+<span class="normal"><a href="#__codelineno-21-4">4</a></span>
+<span class="normal"><a href="#__codelineno-21-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>RtlAllocateHeap(heap, flags, size)
+<a id="__codelineno-21-2" name="__codelineno-21-2"></a>  → RtlpAllocateHeapInternal(heap, size, heap_flags, ...)
+<a id="__codelineno-21-3" name="__codelineno-21-3"></a>    → RtlpHpHeapValidateProtection(heap, heap-&gt;Flags &amp; HEAP_CREATE_ENABLE_EXECUTE ? 0x40 : 0x04)
+<a id="__codelineno-21-4" name="__codelineno-21-4"></a>      → RtlpHpAllocVA(..., protection, ...)
+<a id="__codelineno-21-5" name="__codelineno-21-5"></a>        → NtAllocateVirtualMemoryEx(..., protection, ...)
+</code></pre></div></td></tr></table></div>
+<h3 id="43">4.3 大页分配的保护</h3>
+<p>在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180003404"><code>RtlpHpLargeAlloc()</code></a> 中：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span>
+<span class="normal"><a href="#__codelineno-22-2">2</a></span>
+<span class="normal"><a href="#__codelineno-22-3">3</a></span>
+<span class="normal"><a href="#__codelineno-22-4">4</a></span>
+<span class="normal"><a href="#__codelineno-22-5">5</a></span>
+<span class="normal"><a href="#__codelineno-22-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="c1">// 大页分配使用特殊标志 (地址 0x1800a8326)</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">use_large_page</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3"></a><span class="w">    </span><span class="n">alloc_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x20000000</span><span class="p">;</span><span class="w">  </span><span class="c1">// MEM_LARGE_PAGES</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">HEAP_ZERO_MEMORY</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5"></a><span class="w">    </span><span class="n">alloc_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x40000000</span><span class="p">;</span><span class="w">  </span><span class="c1">// 特殊清零标志</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="3-protect">问题 3：为什么无法 protect 上可执行权限</h3>
+<p>这是最关键的问题。根据对代码的深入分析，有以下几个原因：</p>
+<h3 id="51">5.1 堆管理器内部状态与外部修改不同步</h3>
+<p>堆管理器在分配/释放/重分配时会<strong>验证内存的保护属性</strong>。当你用 <code>VirtualProtect</code> 外部修改保护后，堆管理器的内部状态与实际不一致：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-23-1">1</a></span>
+<span class="normal"><a href="#__codelineno-23-2">2</a></span>
+<span class="normal"><a href="#__codelineno-23-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="c1">// RtlpHpHeapValidateProtection 在每次 commit 操作时被调用</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="c1">// 它会查询实际的虚拟内存保护属性</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3"></a><span class="c1">// 如果发现与预期不符，会回退到 PAGE_READWRITE</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="52-vs-subsegment">5.2 VS Subsegment 的保护验证</h3>
+<p>在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180072268"><code>RtlpHpVsSubsegmentCreate()</code></a> 中，subsegment 创建时会记录保护类型。后续的 chunk 分裂/合并操作依赖这个保护类型：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1">1</a></span>
+<span class="normal"><a href="#__codelineno-24-2">2</a></span>
+<span class="normal"><a href="#__codelineno-24-3">3</a></span>
+<span class="normal"><a href="#__codelineno-24-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="c1">// subsegment 创建时记录保护 (地址 0x180072304)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">alloc_info</span><span class="p">.</span><span class="n">Protect</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PAGE_EXECUTE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3"></a><span class="w">    </span><span class="n">commit_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alloc_size</span><span class="p">;</span><span class="w">  </span><span class="c1">// 可执行页整块提交</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>如果外部修改了保护，chunk 分裂时的保护验证会失败。</p>
+<h3 id="53-segment-pagerange">5.3 Segment PageRange 的保护验证</h3>
+<p>在 <a href="vscode-webview://0ovrskb351lpn3d277spvijv0rrpp0v7m8gmojrvuklt1c725o07/0x180023180"><code>RtlpHpSegPageRangeCommit()</code></a> 中，commit 操作会调用 <code>RtlpHpSegMgrCommit()</code>，后者会：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-25-1">1</a></span>
+<span class="normal"><a href="#__codelineno-25-2">2</a></span>
+<span class="normal"><a href="#__codelineno-25-3">3</a></span>
+<span class="normal"><a href="#__codelineno-25-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1"></a><span class="c1">// 地址 0x180022f89</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2"></a><span class="n">v22</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">_DWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">heap</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x40000000</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3"></a><span class="n">protection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlpHpHeapValidateProtection</span><span class="p">(</span><span class="n">heap</span><span class="p">,</span><span class="w"> </span><span class="n">v22</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mh">0x40</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mh">0x04</span><span class="p">);</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4"></a><span class="c1">// 如果实际保护与预期不符，返回 0x04 (PAGE_READWRITE)</span>
+</code></pre></div></td></tr></table></div>
+<p>这意味着如果你用 <code>VirtualProtect</code> 把堆内存改成可执行，后续的 commit 操作会：</p>
+<ol>
+<li>查询到实际保护是 <code>PAGE_EXECUTE_READWRITE</code></li>
+<li>但堆管理器预期的是 <code>PAGE_READWRITE</code></li>
+<li>触发 <code>RtlpLogHeapFailure(0, ...)</code> 记录堆失败</li>
+<li>回退到 <code>PAGE_READWRITE</code>，<strong>覆盖掉你设置的可执行权限</strong></li>
+</ol>
+<h3 id="54-heap-integrity-checks">5.4 堆完整性检查 (Heap Integrity Checks)</h3>
+<p>堆管理器在分配和释放时进行多种完整性检查：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-1">1</a></span>
+<span class="normal"><a href="#__codelineno-26-2">2</a></span>
+<span class="normal"><a href="#__codelineno-26-3">3</a></span>
+<span class="normal"><a href="#__codelineno-26-4">4</a></span>
+<span class="normal"><a href="#__codelineno-26-5">5</a></span>
+<span class="normal"><a href="#__codelineno-26-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="c1">// 堆段描述符验证 (地址 0x18002b003)</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2"></a><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">RtlpHpHeapGlobals</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">segment_addr</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">(</span><span class="n">segment_addr</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">mask</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">segment_addr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">0x10</span><span class="p">))</span><span class="w"> </span>
+<a id="__codelineno-26-3" name="__codelineno-26-3"></a><span class="w">    </span><span class="o">!=</span><span class="w"> </span><span class="mh">0xA2E64EADA2E64EAD</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4"></a><span class="w">    </span><span class="c1">// 段描述符损坏</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>如果外部修改保护导致内存布局变化，这些检查可能失败，触发 <code>__fastfail(3)</code> (HEAP_CORRUPTION) 终止进程。</p>
+<h3 id="55">5.5 正确的做法</h3>
+<p><strong>要获取可执行堆内存，必须在创建堆时指定标志</strong>：</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-27-1">1</a></span>
+<span class="normal"><a href="#__codelineno-27-2">2</a></span>
+<span class="normal"><a href="#__codelineno-27-3">3</a></span>
+<span class="normal"><a href="#__codelineno-27-4">4</a></span>
+<span class="normal"><a href="#__codelineno-27-5">5</a></span>
+<span class="normal"><a href="#__codelineno-27-6">6</a></span>
+<span class="normal"><a href="#__codelineno-27-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1"></a><span class="c1">// 方法1: 创建可执行堆</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2"></a><span class="n">HANDLE</span><span class="w"> </span><span class="n">hHeap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HeapCreate</span><span class="p">(</span><span class="n">HEAP_CREATE_ENABLE_EXECUTE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3"></a><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HeapAlloc</span><span class="p">(</span><span class="n">hHeap</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4"></a>
+<a id="__codelineno-27-5" name="__codelineno-27-5"></a><span class="c1">// 方法2: 直接使用 VirtualAlloc</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6"></a><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VirtualAlloc</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">MEM_COMMIT</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">MEM_RESERVE</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-27-7" name="__codelineno-27-7"></a><span class="w">                         </span><span class="n">PAGE_EXECUTE_READWRITE</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<p>使用 <code>HEAP_CREATE_ENABLE_EXECUTE</code> 创建的堆，其内部所有路径（LFH/VS/Seg/Large）都会使用 <code>PAGE_EXECUTE_READWRITE</code> 保护，堆管理器的内部状态与实际保护一致，不会出现上述问题。</p>
+<h3 id="_7">总结</h3>
+<p>1、可以使用 heapalloc 来开辟一段可执行的 heap 内存。
+2、针对 rwx 的内存地址，heap 和 virtualalloc 的底层都是通过 ntvirtualallocmemory 实现的。
+3、差异（检测依据）
+- <strong>内存结构差异：</strong> heap 类型的地址中存在 heap 结构，shellcode 在 heap 中并不是从头开始的。但是 virtualalloc 就是一段纯净的空间。
+- <strong>属性差异：</strong> 属性基本没有差异，仅有上面的数据格式差异。
+- <strong>callstack 差异</strong>：这才是真正能用的差异，差点忘了。根据 callstack 中是否存在 heapalloc 来判断到底是 virtualalloc 还是 heapalloc。</p>
+<p>4、所以，目前采集到的 virtualalloc 事件是无法区分 heap 开辟还是手动开辟的。</p>
+<h2 id="ida-virtualalloc">三、ida 分析：virtualalloc</h2>
+<ul>
+<li>没有分析的必要，这个个 heapalloc 行为基本一致了。</li>
+<li>接下来要做的是事件统计，判断系统默认的 virtualalloc 事件具有什么特征，通过特征进行过滤。</li>
+</ul>
+<h2 id="alloc_1">四、进程默认 alloc 行为的特征分析</h2>
+<h3 id="_8">区分调用来源</h3>
+<p>通过给 syscall 下条件断点的方式来观察。重大发现，可以直接通过 callstack 来判断开辟地址的方式。根据 callstack 中是否存在 heapalloc 来判断到底是 virtualalloc 还是 heapalloc。</p>
+<p><strong>heapcreate</strong></p>
+<p>默认会 create 出 0 x 2000 大小的一段空间，并且具有 RWX 权限（HEAP_CREATE_ENABLE_EXECUTE）。</p>
+<p>![[file-20260529153603969.png]]</p>
+<p>但是在实际的测试过程中，发现并不是所有的 heapcreate 都会遵循上面的情况。经过 ida 分析，我们发现：6 条调用路径, 其中 123 是通过 createheap 触发的，其他的是通过 heapalloc 手动触发的。</p>
+<p><strong>始终执行的初始化路径 (2 条)：</strong></p>
+<ol>
+<li><strong>直接 ZwAllocateVirtualMemory</strong>： <code>RtlCreateHeap</code> → <code>ZwAllocateVirtualMemory</code> (两次调用 @0 x 18000 ac 3 b, @0 x 18000 aced)</li>
+<li><strong>Segment Heap VA 分配</strong>： <code>RtlCreateHeap</code> → <code>RtlpHpHeapCreate</code> → <code>RtlpHpHeapAllocate</code> → <code>RtlpHpAllocVA</code> → <code>NtAllocateVirtualMemoryEx</code></li>
+</ol>
+<p><strong>条件执行路径 (4 条)：</strong></p>
+<ol>
+<li>Segment 预留：<code>RtlCreateHeap</code> → <code>RtlpHpHeapCreate</code> → <code>RtlpHpSegContextReserve</code> → <code>RtlpHpSegSegmentAllocate</code></li>
+<li>传统堆扩展：<code>RtlCreateHeap</code> → <code>RtlAllocateHeap</code> → <code>RtlpAllocateHeapInternal</code> → <code>RtlpExtendHeap</code> → <code>ZwAllocateVirtualMemory</code></li>
+<li>大块分配：<code>RtlCreateHeap</code> → <code>RtlAllocateHeap</code> → <code>RtlpAllocateHeapInternal</code> → <code>RtlpHpLargeAlloc</code> → <code>RtlpHpAllocVA</code> → <code>NtAllocateVirtualMemoryEx</code></li>
+<li>Segment 页面提交：<code>RtlCreateHeap</code> → <code>RtlAllocateHeap</code> → <code>RtlpHpSegAlloc</code> → <code>RtlpHpSegPageRangeCommit</code></li>
+</ol>
+<p><strong>heapalloc</strong>
+1、当 alloc 的大小是 274 bytes 时，并不会产生 alloc 事件。因为他可以直接从上面 creaet 的内存中占用一块即可。</p>
+<p>2、当我申请看 274*100 大小的内存时，会产生 alloc 事件。
+（测试了两次，下面产生了下面两种情况）
+![[file-20260529160239446.png]]</p>
+<p>![[file-20260529154903683.png]]</p>
+<p><strong>virtualalloc</strong>
+这个栈就很直观。
+![[file-20260529153745208.png]]</p>
+<h3 id="_9"><strong>总结</strong></h3>
+<p>ntallocvirtualmemory 事件，我们根据两种不同的方式（开辟堆、直接申请内存），分析出了针对两种方式的过滤条件：</p>
+<h4 id="heap"><strong>heap</strong></h4>
+<p>通过分析发现，alloc 的 ti 事件，很多是由开辟堆的行为产生的，所以要通过 callstack 对开辟堆行为的 alloc 事件进行过滤。（堆的地址属性和 virtualalloc 出的地址属性并无差异，无法通过 query 方法辨别，这里只能使用 callstack）。</p>
+<p>堆开辟又有两种情况，heapcreate 和 heapalloc。
+- heapalloc：必须有堆对象的句柄才能进行 alloc；当 alloc 地址过大的时候，也会产生 alloc 的 ti 事件。
+- heapcreate：创建一个指定权限的内存地址(默认 0 x 2000)，一定会产生 alloc 的 ti 事件。
+而且根据 Windows 的系统机制：Windows DEP 保护默认堆栈不可执行，所以一般进程不会开辟 RWX 的 stack。为了在堆上执行代码，必须手动进行 heapcreate，开辟一段 RWX 属性的堆地址。</p>
+<p>所以，我们只需要关注从 unbacked 地址开辟 RWX 的栈行为即可。过滤策略（AND 关系）：
+- 通过 callstack 中的 api 名称进行过滤。只保留存在 createheap 字段的即可。
+- 开辟的地址属性是 RWX 的。
+- callstack 中存在 unbacked 的。</p>
+<h4 id="virtualalloc"><strong>virtualalloc</strong></h4>
+<p>callstack 中，没有堆特征的调用事件，被认为是直接调用 virtualalloc。针对此类事件，采用下面的过滤方式（和 createthread 事件的过滤策略类似）（AND 关系）
+- 开辟的地址属性是 RWX 的。
+- callstack 中存在 unbacked 的。</p>
+<p>经过 python 测试，会产生很多 virtualalloc 事件，但是目标权限都是 RW，除非代码中调用，几乎没有可执行的地址开辟事件。</p>
+<h1 id="protect">进程内 Protect 事件</h1>
+<p>为什么还需要采集呢？因为我们要检出模块踩踏这种情况，顺带还能解决出内存 hook 这些情况。</p>
+<p>1、模块踩踏：
+特征：把目标模块内存设置为可写，写入后，设置为可执行；
+必经之路：给 *X 的地址添加可写权限。</p>
+<p>2、sleepmask：
+特征：频繁修改某个块的权限，添加 X 权限 - 添加 W 权限 - 添加 W 权限</p>
+<p>3、内存 hook：
+特征：给代码段（*X）添加可写</p>
+<h2 id="_10">总结</h2>
+<ul>
+<li>callstack 异常。</li>
+<li>给可执行的地址添加 W 属性。</li>
+<li>目标属性是 RWX.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../config/stylesheets/javascripts/cyber-buddha.js"></script>
+      
+    
+  </body>
+</html>

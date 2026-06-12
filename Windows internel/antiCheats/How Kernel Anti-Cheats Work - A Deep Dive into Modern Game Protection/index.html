@@ -1,0 +1,4899 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Deobfuscation%20and%20Analysis%20of%20Ring-1.io/">
+      
+      
+        <link rel="next" href="../Riot%20Games%20Vanguard/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>How Kernel Anti Cheats Work A Deep Dive into Modern Game Protection - JRC BLOG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../config/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="JRC BLOG" class="md-header__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            JRC BLOG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="JRC BLOG" class="md-nav__button md-logo" aria-label="JRC BLOG" data-md-component="logo">
+      
+  <img src="../../../config/logos/logo1.png" alt="logo">
+
+    </a>
+    JRC BLOG
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Welcome to crj blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于这个博客的主人
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows internel
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Windows internel
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UEFI bootkit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UEFI bootkit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1" id="__nav_3_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Abyss 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_1" id="__nav_3_1_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dps 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dps 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/dps-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🦑 Abyss Windows UEFI Bootkit — 深度分析学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1_1_2" id="__nav_3_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimo 分析
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimo 分析
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UEFI%20bootkit/Abyss-%E5%88%86%E6%9E%90/mimo-%E5%88%86%E6%9E%90/Abyss-UEFI-Bootkit-%E9%A1%B9%E7%9B%AE%E5%88%86%E6%9E%90%E5%AD%A6%E4%B9%A0%E6%8C%87%E5%8D%97/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Abyss Windows UEFI Bootkit — 项目分析与学习指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiCheats
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiCheats
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Deobfuscation%20and%20Analysis%20of%20Ring-1.io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deobfuscation and Analysis of Ring 1.io
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How Kernel Anti Cheats Work   A Deep Dive into Modern Game Protection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#battleye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BattlEye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#easyanticheateac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EasyAntiCheat（EAC）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanguard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faceit-ac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FACEIT AC
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Riot%20Games%20Vanguard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Riot Games Vanguard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Static%20Analysis%20of%20BattlEye%27s%20Kernel%20Anti-Cheat%20Driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Static Analysis of BattlEye's Kernel Anti Cheat Driver
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E6%B0%B8%E6%9D%B0%E6%97%A0%E9%97%B4-NeacSafe64/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    永杰无间 NeacSafe64
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../%E7%9B%AE%E6%A0%87/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    目的：
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7" id="__nav_3_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV 作弊
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV 作弊
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2_7_1" id="__nav_3_2_7_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ScyVisor框架
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_2_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ScyVisor框架
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hyperV%20%E4%BD%9C%E5%BC%8A/ScyVisor%E6%A1%86%E6%9E%B6/%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    antiEDR
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    antiEDR
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/case%E9%9B%86%E5%90%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case集合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/stackspoofPOC%20-%20BYOUD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stackspoofPOC   BYOUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/stackspoof%E6%A3%80%E6%B5%8B%20-%20%E5%9F%BA%E4%BA%8E%E5%92%8Cshadow%E6%AF%94%E8%BE%83/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stackspoof检测   基于和shadow比较
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antiEDR/%E9%80%9A%E8%BF%87%E5%9F%BA%E4%BA%8E%E7%AD%96%E7%95%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E8%B4%A8%E9%87%8F%EF%BC%88QoS%EF%BC%89%E9%98%BB%E6%96%ADEDR%E9%80%9A%E4%BF%A1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    通过基于策略的服务质量（QoS）阻断EDR通信
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyperV
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyperV
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    学习路线
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    学习路线
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/GPT%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPT说学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/gpt%E5%90%88%E5%B9%B6%E7%9A%84%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gpt合并的学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/qwen%E8%AF%B4%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔍 Hyper-V 漏洞案例资源索引（2023-2026）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2" id="__nav_3_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    文章学习
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    文章学习
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_7" id="__nav_3_4_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Misc
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Misc
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/misc/Awesome%20Hyper-V%20Exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    来源
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8" id="__nav_3_4_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_4_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_2_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4_2_8_1" id="__nav_3_4_2_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_3_4_2_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_2_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hyperV/%E6%96%87%E7%AB%A0%E5%AD%A6%E4%B9%A0/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mimikatz 系列
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mimikatz 系列
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/1%20internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    权限和特权
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/2%20lsass/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSASS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/3%20kerberos%20%E5%8D%8F%E8%AE%AE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    背景
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/4%20PKI%EF%BC%88%E5%85%AC%E9%92%A5%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%EF%BC%89/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 PKI（公钥基础设施）
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mimikatz%20%E7%B3%BB%E5%88%97/5%20DCSync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    为什么需要
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tips/loader%20lock%20unlock/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader lock unlock
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    反射加载
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    反射加载
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/CLR%20HOSTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    常用执行
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E5%B0%8F%20case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    函数指针和 createthread
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E5%8F%8D%E5%B0%84%E5%8A%A0%E8%BD%BD/%E6%A3%80%E6%B5%8B%E5%BD%92%E7%BA%B3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CallStack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    提权
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    提权
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1" id="__nav_3_8_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Doc analysis
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Doc analysis
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows提权项目汇总分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_2" id="__nav_3_8_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BadPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/BadPotato/BadPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BadPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_3" id="__nav_3_8_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GodPotato
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/GodPotato/GodPotato_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GodPotato 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8_1_4" id="__nav_3_8_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_8_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UACME
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E6%8F%90%E6%9D%83/doc_analysis/UACME/UACME_analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UACME 项目分析报告
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_9" id="__nav_3_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程保护
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程保护
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/CFG%20XFG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CFG 保护
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E4%BF%9D%E6%8A%A4/PPL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    是什么
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_10" id="__nav_3_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程注入
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    进程注入
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Hollowing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hollowing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20DLL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject DLL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Inject%20by%20callback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inject by callback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Windows%20Thread%20Pool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows Thread Pool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/inject%20by%20thread/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    process hypnosis injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/%E9%80%9A%E7%94%A8%E6%A3%80%E6%B5%8B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    进程创建 suspend 检测
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyperv docs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hyperv docs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 基础知识索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E7%B4%A2%E5%BC%95/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 安全研究索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/Hyper-V%E6%8A%80%E6%9C%AF%E5%BA%94%E7%94%A8%E7%94%9F%E6%80%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 技术应用生态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/code-samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V PowerShell 代码示例索引
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web articles
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Web articles
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/hyper-v%20%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E5%85%B3%E4%BA%8EHyper-V%E7%9A%84%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    关于Hyper-V的一些理解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E5%88%86%E6%9E%90%20hyper-v-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V Research 文章总结
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5" id="__nav_4_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪文章
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    看雪文章
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5_5_1" id="__nav_4_5_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_4_5_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    hyper V 漏洞挖掘 0 5
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    看雪安全社区｜非营利性质的安全技术交流平台
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 1.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析：Hyper-V安全从0到1(4) - Part 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/LLM%E5%88%86%E6%9E%90%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM分析 5.md
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hyperv%20docs/web%20articles/%E7%9C%8B%E9%9B%AA%E6%96%87%E7%AB%A0/hyper-V%20%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98%200-5/%E9%83%A8%E5%88%86%E7%AC%94%E8%AE%B0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V 学习笔记
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#battleye" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BattlEye
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#easyanticheateac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EasyAntiCheat（EAC）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vanguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vanguard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faceit-ac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FACEIT AC
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<p>来源：https://s4dbrd.github.io/posts/how-kernel-anti-cheats-work/</p>
+<h1 id="_1">最知名的四个反作弊系统</h1>
+<h2 id="battleye">BattlEye</h2>
+<p>BattlEye 被《PUBG》、《彩虹六号：围攻》、《DayZ》、《Arma》以及数十款其他游戏所采用。其核心组件为 <code>BEDaisy.sys</code> 。该技术已经接受了大量的公开逆向工程分析，其中最著名的当属 <strong>secret.club</strong> 的研究人员以及 <strong>back.engineering</strong> 博客的相关分析。</p>
+<h2 id="easyanticheateac">EasyAntiCheat（EAC）</h2>
+<p>EasyAntiCheat（EAC）现在归 Epic Games 所有，被广泛应用于《堡垒之夜》、《Apex Legends》、《Rust》等众多游戏中。其架构在整体上与 BattlEye 类似，都是三部分组成的设计，但在具体实现细节上则有所不同。</p>
+<h2 id="vanguard">Vanguard</h2>
+<p>Vanguard 是 Riot Games 自主研发的反作弊系统，被广泛应用于《无畏契约》和《英雄联盟》中。该系统的特点在于：其核心组件(vgk.sys)会在系统启动时加载，而非在游戏启动时加载；同时，该系统在驱动程序的允许列表管理方面也极为严格。</p>
+<h2 id="faceit-ac">FACEIT AC</h2>
+<p>FACEIT AC 被用于 FACEIT 的《反恐精英》竞技平台中。作为一种内核级系统，它在反作弊功能方面表现优异，因此在竞技社区中享有盛誉。该系统还被学术界作为研究对象，用于分析内核级反作弊软件的架构特点。</p>
+<h1 id="if-it-looks-like-a-rootkit-and-deceives-like-a-rootkit">论文：If It Looks Like a Rootkit and Deceives Like a Rootkit</h1>
+<p>(presented at ARES 2024)</p>
+<p>从 rootkit 的分类角度分析了 FACEIT AC 和 Vanguard 这两个系统。研究指出，这两个系统都具备 rootkit 的技术特征：在内核层面进行操作、在系统中注册各种回调函数，以及能够全面监控操作系统的各项活动。作者们明确区分了技术特征与实际用途，指出这些系统其实是用于防御目的的合法软件。这篇论文的主要贡献在于对相关系统的分类分析，而非指责或批评。</p>
+<p>其核心观点很简单：有效的反作弊机制必须使用与恶意内核软件相同的操作系统底层功能。因为正是这些底层功能，才使得反作弊机制能够检测到作弊行为。任何功能完备的反作弊机制，在静态行为分析中都会被视作 rootkit。因为在内核 API 层面，功能与意图是相互独立的。这是 Windows 架构所决定的限制，而非某个特定反作弊软件供应商的设计选择。</p>
+<p>总结：就是说作为反作弊驱动，必须和恶意软件具有同样的功能。我认为这属于常识，真的是什么人都能发论文了。</p>
+<h1 id="anticheat">anticheat 系统的架构</h1>
+<h2 id="_2">三层架构</h2>
+<p>现代内核反作弊系统普遍采用三层架构：
+1. 内核驱动程序：在 0 环模式下运行。它负责注册回调函数、拦截系统调用、扫描内存以及确保各种安全机制的有效性。可以说，内核驱动程序才是真正具备执行各种操作能力的组件。
+2. 用户模式服务：作为 Windows 服务运行，通常拥有 <code>SYSTEM</code> 级别的权限。通过 IOCTL 与内核驱动程序进行通信。负责与后端服务器的网络通信、执行禁令相关操作、以及收集和传输各种监控数据。
+3. 游戏注入型 DLL：被注入到游戏进程中（或由游戏进程加载）。该 DLL 负责在用户模式下进行各种检查，与相关服务进行通信，并作为针对游戏进程所施加的各种保护措施的接口。</p>
+<p>其实基本架构和 EDR 差不多。</p>
+<h2 id="_3">通信方式</h2>
+<p>在不同的层之间使用不同的通信方式。</p>
+<h3 id="r3-r0">命名管道：r3-r0</h3>
+<p>一般的驱动，都是通过 IOCTLs 控制码进行通信，很多 byovd 也是基于这种通信架构来实现的。基于的底层机制是命名管道</p>
+<h3 id="r3-r3">共享内存：r3-r3</h3>
+<p>使用 <code>NtCreateSection</code> 创建的共享内存区域，再通过 <code>NtMapViewOfSection</code> 被同时映射到服务进程和游戏进程中。这种方式能够实现高带宽、低延迟的数据共享。游戏 DLL 可以将各种遥测数据（输入事件、计时数据等）写入共享环形缓冲区，而服务进程则可以读取这些数据。这样一来，就无需为每个事件单独进行 IPC 通信，从而避免了额外的开销。</p>
+<h2 id="_4">加载方式</h2>
+<p>加载方式存在两种，开机时启动和游戏启动时启动。</p>
+<h1 id="battleye_1">BattlEye 组件的详细构成</h1>
+<h2 id="r-0">R 0</h2>
+<p><code>BEDaisy.sys</code> 是内核驱动程序。它负责为进程创建、线程创建、imageload以及对象处理等操作注册相应的回调函数。同时，它还负责实现实际的扫描和保护逻辑。</p>
+<h2 id="r-3">R 3</h2>
+<p><code>BEService.exe</code> （或 <code>BEService_x64.exe</code> ）是一种用户模式服务。它通过驱动程序所提供的设备对象与 <code>BEDaisy.sys</code> 进行通信。该服务负责与 BattlEye 的后端服务器进行网络通信，接收来自驱动程序的检测结果，并负责执行禁言操作（将玩家从游戏服务器中驱逐出去）。</p>
+<p><code>BEClient_x64.dll</code> 被注入到游戏进程中。BattlEye 并非通过 <code>CreateRemoteThread</code> 来注入该组件——而是与游戏合作，在游戏初始化过程中将其加载进来。该 DLL 负责在游戏进程的上下文中执行各种检查：它会验证自身的完整性、进行各种环境检测，同时还是内核驱动程序为保护游戏进程而设置的各种保护机制的作用对象。</p>
+<h2 id="_5">处置流程</h2>
+<p>通信流程如下： <code>BEDaisy.sys</code> 检测到可疑行为后，通过 IOCTL 操作或共享内存通知将信息传递给 <code>BEService.exe</code> 。 <code>BEService.exe</code> 再将信息上报给 BattlEye 的服务器。服务器随后决定采取何种措施（如将用户踢出游戏或禁止其登录）。最后， <code>BEService.exe</code> 指令游戏终止与该用户的连接。</p>
+<p><em>BattlEye 的三分层架构如下：位于第 0 环的 BEDaisy.sys 通过 IOCTL 与作为 SYSTEM 服务运行的 BEService.exe 进行通信。BEService.exe 则负责管理被注入到游戏进程中的 BEClient_x 64.dll 模块。</em></p>
+<p>![[file-20260530155722970.png]]</p>
+<h1 id="vanguard_1">Vanguard 的架构/设计理念</h1>
+<h2 id="_6">优势</h2>
+<p><code>vgk.sys</code> 在功能范围上明显比 BattlEye 驱动程序更为强大。由于它会<strong>在系统启动时加载</strong>，因此能够直接拦截驱动程序的加载过程。Vanguard 维护着一个允许与受保护游戏共存的驱动程序列表。任何不在该列表上的驱动程序，或者那些通过完整性检查的驱动程序，都可能导致 Vanguard 拒绝让游戏启动。这是一种“允许列表”机制，而非“阻止列表”机制；从架构上来看，前者显然更为可靠。</p>
+<p><code>vgauth.exe</code> 属于 Vanguard 服务，该服务负责处理 <code>vgk.sys</code> 与 Riot 后端基础设施之间的通信。</p>
+<h1 id="_7">内核回调</h1>
+<h2 id="obregistercallbacks">ObRegisterCallbacks</h2>
+<p><code>ObRegisterCallbacks</code> 或许是最重要的用于进程保护的 API。它允许驱动程序注册一个回调函数：每当某个特定类型的对象被打开或复制时，该回调函数就会被调用。在反作弊方面，需要重点关注的对象类型就是 <code>PsProcessType</code> 和 <code>PsThreadType</code> 。</p>
+<blockquote>
+<p>这个对应的是遥测中的 processopen 事件等</p>
+</blockquote>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="n">OB_CALLBACK_REGISTRATION</span><span class="w"> </span><span class="n">callbackReg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="n">OB_OPERATION_REGISTRATION</span><span class="w"> </span><span class="n">opReg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="c1">// Altitude string is required - must be unique per driver</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="n">UNICODE_STRING</span><span class="w"> </span><span class="n">altitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RTL_CONSTANT_STRING</span><span class="p">(</span><span class="sa">L</span><span class="s">&quot;31001&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="c1">// Monitor handle opens to process objects</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">ObjectType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PsProcessType</span><span class="p">;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OB_OPERATION_HANDLE_CREATE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">OB_OPERATION_HANDLE_DUPLICATE</span><span class="p">;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">PreOperation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ObPreOperationCallback</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">PostOperation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ObPostOperationCallback</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="c1">// Monitor handle opens to thread objects</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">ObjectType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PsThreadType</span><span class="p">;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">Operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OB_OPERATION_HANDLE_CREATE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">OB_OPERATION_HANDLE_DUPLICATE</span><span class="p">;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">PreOperation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ObPreOperationCallback</span><span class="p">;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="n">opReg</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">PostOperation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="n">callbackReg</span><span class="p">.</span><span class="n">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OB_FLT_REGISTRATION_VERSION</span><span class="p">;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="n">callbackReg</span><span class="p">.</span><span class="n">OperationRegistrationCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="n">callbackReg</span><span class="p">.</span><span class="n">Altitude</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">altitude</span><span class="p">;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="n">callbackReg</span><span class="p">.</span><span class="n">RegistrationContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="n">callbackReg</span><span class="p">.</span><span class="n">OperationRegistration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opReg</span><span class="p">;</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="n">NTSTATUS</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ObRegisterCallbacks</span><span class="p">(</span><span class="o">&amp;</span><span class="n">callbackReg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">gCallbackHandle</span><span class="p">);</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="_8">阻断核心</h3>
+<p>回调函数会接收一个 <code>POB_PRE_OPERATION_INFORMATION</code> 结构体。其中，关键的字段是 <code>Parameters-&gt;CreateHandleInformation.DesiredAccess</code> 。在创建句柄之前，回调函数可以通过修改 <code>Parameters-&gt;CreateHandleInformation.DesiredAccess</code> 来取消对相应资源的访问权限。这就是反作弊机制防止外部进程使用 <code>PROCESS_VM_READ</code> 或 <code>PROCESS_VM_WRITE</code> 权限来获取游戏进程的句柄的方式。</p>
+<p><strong>比如：</strong>
+当作弊程序调用 <code>OpenProcess</code> <code>(PROCESS_VM_READ | PROCESS_VM_WRITE, FALSE, gameProcessId)</code> 时，反作弊系统的 <code>ObRegisterCallbacks</code> 预处理回调函数会被触发。该回调函数会检查目标进程是否为受保护的游戏进程。如果是的话，系统会取消对 <code>PROCESS_VM_READ</code> 、 <code>PROCESS_VM_WRITE</code> 、 <code>PROCESS_VM_OPERATION</code> 和 <code>PROCESS_DUP_HANDLE</code> 的访问权限。虽然作弊程序能够获得相应的句柄，但该句柄无法用于读取或写入游戏内存。作弊程序对 <code>ReadProcessMemory</code> 的调用将会以 <code>ERROR_ACCESS_DENIED</code> 的结果告终。</p>
+<h2 id="pssetcreateprocessnotifyroutineex">PsSetCreateProcessNotifyRoutineEx</h2>
+<p><code>PsSetCreateProcessNotifyRoutineEx</code> 允许驱动程序注册一个回调函数，该函数会在整个系统中，每当有进程被创建或终止时被调用。该回调函数会接收与该进程相关的信息： <code>PEPROCESS</code> 、进程 ID，以及包含有关被创建进程的详细信息的 <code>PPS_CREATE_NOTIFY_INFO</code> 结构体。这些详细信息包括进程的名称、命令行参数以及父进程的 ID。</p>
+<h3 id="_9">阻断核心</h3>
+<p>反作弊系统利用这一回调机制来检测系统中是否出现了作弊工具相关的进程。如果在游戏运行过程中有已知的作弊工具被启动，反作弊系统会立即将其标记出来。某些实现方式还会将 <code>CreateInfo-&gt;CreationStatus</code> 设置为错误代码，从而直接阻止该进程的启动。</p>
+<h2 id="pssetcreatethreadnotifyroutine">PsSetCreateThreadNotifyRoutine</h2>
+<p><code>PsSetCreateThreadNotifyRoutine</code> 该机制会在整个系统中，每当有新线程被创建或现有线程被终止时被触发。反作弊系统专门利用这一机制来检测受保护的游戏进程中的线程创建行为。当游戏进程中有一个新线程被创建时，该回调机制会被触发，反作弊系统便可获取该线程的起始地址。</p>
+<h3 id="_10">阻断核心</h3>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span>
+<span class="normal"><a href="#__codelineno-1-12">12</a></span>
+<span class="normal"><a href="#__codelineno-1-13">13</a></span>
+<span class="normal"><a href="#__codelineno-1-14">14</a></span>
+<span class="normal"><a href="#__codelineno-1-15">15</a></span>
+<span class="normal"><a href="#__codelineno-1-16">16</a></span>
+<span class="normal"><a href="#__codelineno-1-17">17</a></span>
+<span class="normal"><a href="#__codelineno-1-18">18</a></span>
+<span class="normal"><a href="#__codelineno-1-19">19</a></span>
+<span class="normal"><a href="#__codelineno-1-20">20</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="n">VOID</span><span class="w"> </span><span class="nf">ThreadNotifyCallback</span><span class="p">(</span><span class="n">HANDLE</span><span class="w"> </span><span class="n">ProcessId</span><span class="p">,</span><span class="w"> </span><span class="n">HANDLE</span><span class="w"> </span><span class="n">ThreadId</span><span class="p">,</span><span class="w"> </span><span class="n">BOOLEAN</span><span class="w"> </span><span class="n">Create</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Create</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">IsProtectedProcess</span><span class="p">(</span><span class="n">ProcessId</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">        </span><span class="n">PETHREAD</span><span class="w"> </span><span class="n">Thread</span><span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">        </span><span class="n">PsLookupThreadByThreadId</span><span class="p">(</span><span class="n">ThreadId</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">Thread</span><span class="p">);</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">        </span><span class="c1">// Get the thread start address - this is stored in ETHREAD</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">        </span><span class="n">PVOID</span><span class="w"> </span><span class="n">StartAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PsGetThreadWin32StartAddress</span><span class="p">(</span><span class="n">Thread</span><span class="p">);</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">        </span><span class="c1">// Check if start address is within a known module</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">IsAddressInKnownModule</span><span class="p">(</span><span class="n">StartAddress</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">            </span><span class="c1">// Thread started at an address with no backing module - suspicious</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">            </span><span class="n">FlagSuspiciousThread</span><span class="p">(</span><span class="n">Thread</span><span class="p">,</span><span class="w"> </span><span class="n">StartAddress</span><span class="p">);</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">        </span><span class="n">ObDereferenceObject</span><span class="p">(</span><span class="n">Thread</span><span class="p">);</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<p>调用 <code>PsLookupThreadByThreadId</code> 后，会获取到新线程的 <code>ETHREAD</code> 指针。 <code>PsGetThreadWin32StartAddress</code> 则返回该进程所看到的 Win32 地址空间中的起始地址，这一地址与内核内部所记录的起始地址是不同的。当对线程对象的操作完成后， <code>ObDereferenceObject</code> 会释放 <code>PsLookupThreadByThreadId</code> 所持有的对该线程的引用。</p>
+<p>在游戏进程中创建的、其起始地址不在任何已加载模块的地址范围内的线程，很可能是被注入的恶意代码所导致的。正常的线程都是从模块代码中启动的。而被注入的线程则通常是从壳代码或手动映射的 PE 代码中启动的，而这些代码并没有对应的模块作为支撑。</p>
+<h2 id="pssetloadimagenotifyroutine">PsSetLoadImageNotifyRoutine</h2>
+<p>检查游戏进程加载的每个模块</p>
+<h2 id="cmregistercallbackex">CmRegisterCallbackEx</h2>
+<p>检查是否存在潜在的修改注册表实现的作弊行为。</p>
+<h2 id="minifilter-drivers-for-filesystem-monitoring">MiniFilter Drivers for Filesystem Monitoring</h2>
+<p>通过 minifilter 回调，检查对文件读写操作，防止游戏组件被篡改。</p>
+<h1 id="_11">内存保护和扫描</h1>
+<h2 id="_12">内存保护</h2>
+<h3 id="_13">句柄权限检查</h3>
+<p>1、通过 obregistercallbacks 回调，监控进程句柄的权限，有效阻断掉对游戏进程的读写操作。
+- bypass: 通过驱动实现直接读写：作弊者可以直接调用 <code>MmCopyVirtualMemory</code> 函数（这是一个未被导出但仍然可被调用的内核函数），或者直接操作页表条目，从而无需经过基于句柄的访问控制机制就能访问游戏内存。</p>
+<h3 id="_14">内存完整性哈希检查</h3>
+<p>2 、周期性内存完整性哈希算法，比如下面的驱动代码实现
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span>
+<span class="normal"><a href="#__codelineno-2-28">28</a></span>
+<span class="normal"><a href="#__codelineno-2-29">29</a></span>
+<span class="normal"><a href="#__codelineno-2-30">30</a></span>
+<span class="normal"><a href="#__codelineno-2-31">31</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="c1">// Pseudocode for code section integrity checking</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="n">BOOLEAN</span><span class="w"> </span><span class="nf">VerifyCodeSectionIntegrity</span><span class="p">(</span><span class="n">PEPROCESS</span><span class="w"> </span><span class="n">Process</span><span class="p">,</span><span class="w"> </span><span class="n">PVOID</span><span class="w"> </span><span class="n">ModuleBase</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">    </span><span class="c1">// Attach to process context to read its memory</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">    </span><span class="n">KAPC_STATE</span><span class="w"> </span><span class="n">apcState</span><span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">    </span><span class="n">KeStackAttachProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">apcState</span><span class="p">);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">    </span><span class="c1">// Parse PE headers to find .text section</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">    </span><span class="n">PIMAGE_NT_HEADERS</span><span class="w"> </span><span class="n">ntHeaders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtlImageNtHeader</span><span class="p">(</span><span class="n">ModuleBase</span><span class="p">);</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">    </span><span class="n">PIMAGE_SECTION_HEADER</span><span class="w"> </span><span class="n">section</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IMAGE_FIRST_SECTION</span><span class="p">(</span><span class="n">ntHeaders</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">USHORT</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ntHeaders</span><span class="o">-&gt;</span><span class="n">FileHeader</span><span class="p">.</span><span class="n">NumberOfSections</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">section</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memcmp</span><span class="p">(</span><span class="n">section</span><span class="o">-&gt;</span><span class="n">Name</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;.text&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">            </span><span class="n">PVOID</span><span class="w"> </span><span class="n">sectionBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">PVOID</span><span class="p">)((</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">ModuleBase</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">section</span><span class="o">-&gt;</span><span class="n">VirtualAddress</span><span class="p">);</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">            </span><span class="n">ULONG</span><span class="w"> </span><span class="n">sectionSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">section</span><span class="o">-&gt;</span><span class="n">Misc</span><span class="p">.</span><span class="n">VirtualSize</span><span class="p">;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">            </span><span class="c1">// Compute hash of current code section contents</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="w">            </span><span class="n">UCHAR</span><span class="w"> </span><span class="n">currentHash</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">            </span><span class="n">ComputeSHA256</span><span class="p">(</span><span class="n">sectionBase</span><span class="p">,</span><span class="w"> </span><span class="n">sectionSize</span><span class="p">,</span><span class="w"> </span><span class="n">currentHash</span><span class="p">);</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">            </span><span class="c1">// Compare against stored baseline hash</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memcmp</span><span class="p">(</span><span class="n">currentHash</span><span class="p">,</span><span class="w"> </span><span class="n">gBaselineHash</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="w">                </span><span class="n">KeUnstackDetachProcess</span><span class="p">(</span><span class="o">&amp;</span><span class="n">apcState</span><span class="p">);</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span><span class="w"> </span><span class="c1">// Code modification detected</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28"></a>
+<a id="__codelineno-2-29" name="__codelineno-2-29"></a><span class="w">    </span><span class="n">KeUnstackDetachProcess</span><span class="p">(</span><span class="o">&amp;</span><span class="n">apcState</span><span class="p">);</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<code>KeStackAttachProcess</code> / <code>KeUnstackDetachProcess</code> 这种模式用于将调用线程暂时连接到目标进程的地址空间中。这样一来，驱动程序就可以直接读取被映射到游戏进程中的内存数据，而无需经过基于句柄的访问控制机制。 <code>RtlImageNtHeader</code> 则负责解析内存中的 PE 文件头信息。</p>
+<h2 id="_15">内存扫描</h2>
+<h3 id="_16">启发式扫描：检测手动编写的代码</h3>
+<p>找到目标进程中所有的可执行内存，检查这些内存是 backed 还是 unbacked，这里和检查 callstack 思路差不多。</p>
+<h3 id="vad">VAD 遍历</h3>
+<p>是什么：VAD（虚拟地址描述符）树是内核内部的一种数据结构，内存管理器利用它来跟踪进程中所有已分配的内存区域。每个 VAD 实际上都是内核中的某种数据结构。每个 VAD 都包含有关该内存区域的信息：其基地址和大小、访问权限、是否以某个文件作为存储介质（如果是的话，该文件是什么），以及各种标志信息。</p>
+<p>为什么：VAD 依然能够检测到那些被手动添加的代码。VAD 是一种内核结构，用户模式代码无法直接对其进行修改。有效的防止：作弊者篡改 PEB 模块列表或 <code>LDR_DATA_TABLE_ENTRY</code> 链表来隐藏自己的行踪，</p>
+<h1 id="_17">反注入检测</h1>
+<p>检测进程注入行为。检测方式列举了下面的几个，和 edr 的检测差不多。
+- 远程线程，通过线程创建的进程判断。
+- apc，定期查询 apc 队列中是否存在预期外的代码
+- map ，检查 VAD 里的 <code>MMVAD::u.VadFlags.NoChange</code> and related flags。</p>
+<h1 id="rtlwalkframechain">RtlWalkFrameChain 进行堆栈遍历</h1>
+<p>获取方式：
+当 BEDaisy 想要查看某个线程的调用栈时，它会利用 APC 机制来捕获该线程在用户模式下的栈帧信息。APC 在游戏线程的上下文中被触发，然后调用 <code>RtlWalkFrameChain</code> 或 <code>RtlCaptureStackBackTrace</code> 来获取返回地址链信息。</p>
+<p>检测逻辑：
+对 BEDaisy 的后端工程分析表明：BEDaisy 会将内核的 APC 调用分配给受保护进程中的各个线程。APC 内核例程在 <code>APC_LEVEL</code> 处运行，它会捕获该线程的堆栈信息，然后逐一检查每个返回地址是否存在于已加载的模块列表中。如果某个返回地址指向了未加载的模块，那就很可能意味着堆栈上存在被注入的代码。这表明该线程当前正在执行这些被注入的代码，或者刚刚执行完这些代码。</p>
+<h1 id="ssdt">SSDT 完整性检查</h1>
+<p>相当于通过 SSDT 来实现 syscall 的 hook。</p>
+<p>原理：
+系统服务描述符表（SSDT）是内核用于处理系统调用的机制。当用户模式进程执行系统调用指令时，内核会利用存储在 EAX 寄存器中的系统调用编号来查找 SSDT 中的相应条目，从而调用相应的内核函数。通过修改 SSDT，可以将系统调用重定向到攻击者控制的代码中。</p>
+<p>局限性：
+但在 64 位 Windows 系统中引入了 PatchGuard（内核补丁保护机制）PatchGuard 会持续监控 SSDT 等结构。如果检测到任何修改，就会触发 <code>CRITICAL_STRUCTURE_CORRUPTION</code> 错误代码（0 x 109）。</p>
+<h1 id="idt-gdt">IDT 和 GDT</h1>
+<ul>
+<li>中断描述符表（IDT）将各种中断向量与相应的处理程序相对应。</li>
+<li>全局描述符表（GDT）则用于定义内存段。
+这两种结构都属于处理器级别的机制，仅依靠 PatchGuard 是无法在所有配置环境下有效保护它们的。</li>
+</ul>
+<p>利用：在内核层面运行的作弊程序可能会试图篡改 IDT 表中的条目，从而拦截特定的中断信号。这些被拦截的中断信号可以被用来操控程序的执行流程，或者被用作秘密通信的渠道。</p>
+<p>检测：反作弊系统会验证 IDT 表中的条目是否指向了正确的内核地址。</p>
+<h1 id="piddbcache-piddblock">PiDDBCache 与 PiDDBLock</h1>
+<p>原理：
+- <code>PiDDBCacheTable</code> 是一种内核内部的 AVL 树，用于缓存有关之前已加载的驱动程序的信息。
+- 当有驱动程序被加载时，内核会将该驱动程序的 <code>TimeDateStamp</code> （来自 PE 头信息）和 <code>SizeOfImage</code> 作为键值，将相关数据存储在缓存中。
+- 通过这个缓存，可以快速判断某个驱动程序是否曾经被加载过。
+- 该数据结构受到 <code>PiDDBLock</code> 的保护，而 <code>PiDDBLock</code> 实际上是一种 <code>ERESOURCE</code> 锁。</p>
+<p>利用方式：
+那些不通过正常加载路径而手动加载驱动程序的作弊者，会试图删除或修改相应的 <code>PiDDBCacheTable</code> 条目，以掩盖其驱动程序已被加载的事实。</p>
+<p>检测方式：
+1. 验证 <code>PiDDBCacheTable</code> 的一致性——如果某个驱动程序存在于内存中（通过池标签扫描或其他方式可以检测到），但却没有对应的 <code>PiDDBCacheTable</code> 条目，那么很可能是该条目已被删除了。
+2. 监控 <code>PiDDBLock</code> ，以防有来自非内核线程的意外获取操作。
+3. 将所有已加载驱动程序的时间戳/大小组合与 <code>PiDDBCacheTable</code> 条记录进行比较。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span>
+<span class="normal"><a href="#__codelineno-3-11">11</a></span>
+<span class="normal"><a href="#__codelineno-3-12">12</a></span>
+<span class="normal"><a href="#__codelineno-3-13">13</a></span>
+<span class="normal"><a href="#__codelineno-3-14">14</a></span>
+<span class="normal"><a href="#__codelineno-3-15">15</a></span>
+<span class="normal"><a href="#__codelineno-3-16">16</a></span>
+<span class="normal"><a href="#__codelineno-3-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="c1">// Locating PiDDBCacheTable (must locate via signature scan since not exported)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="c1">// This is version-specific and fragile; anti-cheats maintain multiple signatures</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="n">BOOLEAN</span><span class="w"> </span><span class="nf">FindPiDDBCacheTable</span><span class="p">(</span><span class="n">PVOID</span><span class="w"> </span><span class="o">*</span><span class="n">TableAddress</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="w">    </span><span class="c1">// Pattern to locate PiDDBCacheTable in ntoskrnl</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="w">    </span><span class="c1">// This is a simplified illustration - real implementations use robust pattern matching</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="n">PVOID</span><span class="w"> </span><span class="n">ntoskrnl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetKernelModuleBase</span><span class="p">(</span><span class="s">&quot;ntoskrnl.exe&quot;</span><span class="p">);</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">    </span><span class="n">PUCHAR</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\x48\x8D\x0D</span><span class="s">&quot;</span><span class="p">;</span><span class="w"> </span><span class="c1">// LEA RCX, [RIP+...]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">    </span><span class="n">PVOID</span><span class="w"> </span><span class="n">match</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FindPattern</span><span class="p">(</span><span class="n">ntoskrnl</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">NTOSKRNL_TEXT_RANGE</span><span class="p">);</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">match</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11"></a><span class="w">        </span><span class="c1">// Extract the RIP-relative offset</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12"></a><span class="w">        </span><span class="n">INT32</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">INT32</span><span class="o">*</span><span class="p">)((</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">match</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13"></a><span class="w">        </span><span class="o">*</span><span class="n">TableAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">PVOID</span><span class="p">)((</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">match</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="picompareddbcacheentries">逆向 PiCompareDDBCacheEntries 操作</h2>
+<p><code>PiDDBCacheTable</code> 没有被导出，而 <code>PiDDBCacheEntry</code> 也不属于公共符号。为了与缓存进行交互，我们需要反转数据的存储结构。比较函数是个不错的起点，因为它可以直接访问用于排序的各个字段。</p>
+<p>反编译后的结果揭示了该结构的布局。该函数接收两个 <code>PiDDBCacheEntry</code> 指针，首先使用 <code>RtlCompareUnicodeString</code> 来比较这两个指针所指向的 <code>DriverName</code> 字段的内容（即偏移量为 0 x 10 处的 <code>UNICODE_STRING</code> 值）。如果这两个字段的值相等，且 <code>TableContext</code> 不为零，则认为这两个元素是相同的。否则，函数会继续比较 <code>TimeDateStamp</code> 字段的内容（即偏移量为 0 x 20 处的 <code>ULONG</code> 值）。通过这种方式，我们就可以了解该结构的详细信息了。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">PiDDBCacheEntry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">    </span><span class="n">RTL_BALANCED_LINKS</span><span class="w"> </span><span class="n">Links</span><span class="p">;</span><span class="w">    </span><span class="c1">// 0x00 - AVL tree node pointers (0x20 bytes)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">    </span><span class="n">UNICODE_STRING</span><span class="w"> </span><span class="n">DriverName</span><span class="p">;</span><span class="w">   </span><span class="c1">// 0x10 - driver filename (from compare routine offset)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">    </span><span class="n">ULONG</span><span class="w"> </span><span class="n">TimeDateStamp</span><span class="p">;</span><span class="w">         </span><span class="c1">// 0x20 - PE header timestamp (secondary sort key)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="p">};</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="walking-the-avl-tree">Walking the AVL Tree</h2>
+<h3 id="_18">原理：</h3>
+<p><code>PiDDBCacheTable</code> 实际上是一种 <code>RTL_AVL_TABLE</code> ，也就是一种自平衡二叉搜索树。该树中的每个节点都包含一个 <code>_RTL_BALANCED_LINKS</code> 标题，其中包含 <code>Parent</code> 、 <code>LeftChild</code> 和 <code>RightChild</code> 指针。真正的 <code>PiDDBCacheEntry</code> 数据则位于这个标题的后面。</p>
+<p>要列出这些条目，首先需要确定该表的地址。 <code>PiDDBCacheTable</code> 并未被导出，因此反作弊系统是通过在 <code>ntoskrnl.exe</code> 中扫描签名来定位它的。在已加载了符号文件的 WinDbg 中，我们可以直接确定该表的地址。</p>
+<p>该表包含 151 个缓存后的驱动程序条目，树的深度为 9。 <code>CompareRoutine</code> 指向 <code>PiCompareDDBCacheEntries</code> ，由此可以确认这就是正确的表格。 <code>BalancedRoot</code> 是进入该树的入口点。其 <code>RightChild</code> 则代表了该树中的第一个实际节点。</p>
+<p>从每个节点开始，数据从偏移量 0 x 20 处开始存储（即位于 <code>_RTL_BALANCED_LINKS</code> 头部之后）。根据我们之前确定的偏移量信息： <code>DriverName</code> 位于节点+0 x 30 处， <code>TimeDateStamp</code> 位于节点+0 x 40 处。只要跟随 <code>LeftChild</code> 和 <code>RightChild</code> 指针的指引，就能遍历整棵树了。</p>
+<h3 id="_19">利用：</h3>
+<p>那些试图手动修改内核驱动程序的作弊者，会试图找到并将自己留下的记录从该数据结构中删除，以避免被检测出来。</p>
+<h3 id="_20">检测：</h3>
+<p>而反作弊系统如果能在内存中检测到某个驱动程序的痕迹（通过扫描相关标签或其他方式），但却找不到相应的记录，那么它就会知道该驱动程序的记录已被人为删除了。</p>
+<h1 id="mmunloadeddrivers">MmUnloadedDrivers  已卸载的驱动程序</h1>
+<h2 id="_21">功能：</h2>
+<p><code>MmUnloadedDrivers</code> 是一个内核数组（同样没有对外公开），用于存储最近卸载的 50 个驱动程序的相关信息。这些信息包括驱动程序的名称、起始地址、结束地址以及卸载时间戳。这一结构有助于对驱动程序的运行情况进行调试和分析。</p>
+<h2 id="_22">利用</h2>
+<p>那些成功加载又卸载了内核驱动程序的作弊者，通常会试图将 <code>MmUnloadedDrivers</code> 中的相关数据清零或破坏，以隐藏自己的行踪。</p>
+<h2 id="_23">检测</h2>
+<p>反作弊系统则通过以下方式来检测这种行为：
+1. 保留着对预期中的 <code>MmUnloadedDrivers</code> 条目的自有副本。
+2. 检测到循环缓冲区中间有异常的、被清空的条目——这是有人故意删除数据的迹象。
+3. 将 <code>MmUnloadedDrivers</code> 与其他内核时间戳及日志进行交叉比对。</p>
+<h1 id="bigpool-allocations">BigPool Allocations</h1>
+<h2 id="_24">原理：</h2>
+<p>当内核分配的内存大小超过大约 4 KB 时（更准确地说，当超过内存池分配器所设定的阈值时），这种分配会被视为“大内存池分配”，并被记录在 <code>PoolBigPageTable</code> 中。</p>
+<h2 id="_25">检测</h2>
+<p>反作弊系统会扫描这个表格，以找出那些由手动映射的驱动程序所进行的内存分配。手动映射的驱动程序通常会为自身的代码和数据部分分配大量内存；这些分配会在大内存池表格中显示出来，不过对应的驱动程序并未真正被加载到系统中。</p>
+<ul>
+<li>先列出所有大的内存分配区域</li>
+<li>每个分配区域的地址与已加载的驱动程序地址范围进行比对。</li>
+<li>那些不在任何驱动程序地址范围内，但大小又符合驱动程序代码段要求的分配区域，就值得怀疑了。</li>
+</ul>
+<h1 id="_26">反调试机制</h1>
+<h2 id="r-0_1">r 0</h2>
+<h3 id="-">检测调试 - 检查标志位</h3>
+<p>内核驱动程序会检查内核所公开的变量 <code>KdDebuggerEnabled</code> 和 <code>KdDebuggerNotPresent</code> 。</p>
+<p>在安装了 WinDbg（或任何内核调试工具）的系统中， <code>KdDebuggerEnabled</code> 的值为 TRUE，而 <code>KdDebuggerNotPresent</code> 的值为 FALSE。</p>
+<p><div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="n">BOOLEAN</span><span class="w"> </span><span class="nf">IsKernelDebuggerPresent</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="w">    </span><span class="c1">// KD_DEBUGGER_ENABLED is a kernel export</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">KdDebuggerEnabled</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!*</span><span class="n">KdDebuggerNotPresent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="w">    </span><span class="c1">// Additional check: attempt a debug break and see if it&#39;s handled</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="w">    </span><span class="c1">// More sophisticated: check specific kernel structures</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+一些反作弊机制则更为彻底：它们会直接检查 <code>KDDEBUGGER_DATA64</code> 结构以及共享内核数据页( <code>KUSER_SHARED_DATA</code> )，以查找与调试器相关的标记。</p>
+<h3 id="-hwbp">检测调试 - HWBP</h3>
+<p>反作弊系统会检查所有线程中保存的调试寄存器状态：
+- 可以通过 <code>KeGetContextThread</code> 获取的 <code>CONTEXT</code> 结构来访问
+- 直接从 <code>KTHREAD::TrapFrame</code> 中获取）。
+系统会查找那些并非由反作弊系统本身设置的硬件断点。</p>
+<h3 id="-_1">对抗调试 - 线程隐藏</h3>
+<p><strong><code>NtSetInformationThread</code> 通过 <code>ThreadHideFromDebugger</code> （17）：</strong>
+- 会在该线程的 <code>ETHREAD</code> 结构中设置一个标志位（ <code>CrossThreadFlags.HideFromDebugger</code> ）。
+- 内核不再向任何连接的调试器发送与该线程相关的调试信息。
+- 该线程对 WinDbg 来说就“不可见”了。在该线程上设置的断点不会触发调试器的任何通知，异常也不会被传递给调试器。</p>
+<p><strong>同时这种方式也被用来进行检测：</strong>
+检测方式是：通过内核级枚举来列出系统中的所有线程（而非使用可能被截获的用户模式 API），然后检查每个线程的 <code>CrossThreadFlags</code> 中的 <code>HideFromDebugger</code> 位。如果游戏中有反作弊系统本身没有隐藏的线程，那显然是个危险信号。</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-6-10">10</a></span>
+<span class="normal"><a href="#__codelineno-6-11">11</a></span>
+<span class="normal"><a href="#__codelineno-6-12">12</a></span>
+<span class="normal"><a href="#__codelineno-6-13">13</a></span>
+<span class="normal"><a href="#__codelineno-6-14">14</a></span>
+<span class="normal"><a href="#__codelineno-6-15">15</a></span>
+<span class="normal"><a href="#__codelineno-6-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="c1">// Check CrossThreadFlags for HideFromDebugger</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="cp">#define PS_CROSS_THREAD_FLAGS_HIDEFROMDEBUGGER 0x4</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="n">VOID</span><span class="w"> </span><span class="nf">CheckThreadDebugVisibility</span><span class="p">(</span><span class="n">PETHREAD</span><span class="w"> </span><span class="n">Thread</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="w">    </span><span class="c1">// CrossThreadFlags is at a version-specific offset in ETHREAD</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="w">    </span><span class="n">ULONG</span><span class="w"> </span><span class="n">crossFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">ULONG</span><span class="o">*</span><span class="p">)((</span><span class="n">ULONG_PTR</span><span class="p">)</span><span class="n">Thread</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ETHREAD_CROSS_THREAD_FLAGS_OFFSET</span><span class="p">);</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">crossFlags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PS_CROSS_THREAD_FLAGS_HIDEFROMDEBUGGER</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">        </span><span class="c1">// Thread is hidden from debuggers</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="w">        </span><span class="c1">// If we didn&#39;t hide it, flag it</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">IsAntiCheatOwnedThread</span><span class="p">(</span><span class="n">Thread</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="w">            </span><span class="n">ReportHiddenThread</span><span class="p">(</span><span class="n">Thread</span><span class="p">);</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="r-3_1">r 3</h2>
+<h3 id="-_2">检测调试 - 调试标志位</h3>
+<p>在用户模式层面（即游戏所加载的 DLL 中），反作弊系统会使用 <code>NtQueryInformationProcess</code> 来传递多种类型的信息：</p>
+<ul>
+<li><code>ProcessDebugPort</code> (7)：如果通过 <code>DebugActiveProcess</code> 连接了调试器，则该函数会返回非零值。内核驱动程序可以通过拦截 <code>NtQueryInformationProcess</code> 来欺骗该机制，不过内核驱动程序本身也会进行相应的检查。</li>
+<li><code>ProcessDebugObjectHandle</code> (30)：如果存在调试对象，则返回该对象的句柄。</li>
+<li><code>ProcessDebugFlags</code> (31)： <code>NoDebugInherit</code> 标志；通过检测其反值，可以判断是否有调试器正在运行。</li>
+</ul>
+<h3 id="-timing-based-anti-debug">检测调试 - Timing-Based Anti-Debug</h3>
+<p>单步调试功能（通过 EFLAGS 中的 TF 标志来实现）以及硬件断点机制，都会显著增加指令执行之间的时间间隔。反作弊系统则利用基于 <strong><code>RDTSC</code></strong> 指令的计时方式来检测这一现象。比如：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="n">UINT64</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__rdtsc</span><span class="p">();</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="c1">// Execute a fixed number of operations</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="k">volatile</span><span class="w"> </span><span class="n">ULONG</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">dummy</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="n">UINT64</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__rdtsc</span><span class="p">();</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="n">UINT64</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">before</span><span class="p">;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">EXPECTED_MAXIMUM_CYCLES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="w">    </span><span class="c1">// Execution was slowed - likely single-stepping or a breakpoint</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="w">    </span><span class="n">ReportDebuggerDetected</span><span class="p">();</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div>
+<code>EXPECTED_MAXIMUM_CYCLES</code> 是根据已知的 CPU 行为来校准的。单步执行时，每条指令可能需要数千个时钟周期来执行（这是由于调试过程中的异常处理所导致的）。</p>
+<h3 id="-hypervisor-based-debugger">检测调试 - Hypervisor-Based Debugger</h3>
+<h4 id="cpuid">CPUID 检测本身：</h4>
+<p>当执行 CPUID 指令的第 1 级操作时，ECX 寄存器的第 31 位会指示系统中是否存在管理程序。可以通过 CPUID 指令的第 0 级操作来查询管理程序的供应商信息。VMware 会返回“VMwareVMware”，VirtualBox 则返回“VBoxVBoxVBox”。如果返回的字符串无法识别，那么该管理程序很可能是来自未知的供应商。</p>
+<h4 id="cpuid_1">CPUID 指令的执行时间：</h4>
+<p>在虚拟化环境中， <code>CPUID</code> 指令本身属于特权指令，必须由虚拟机管理程序来处理。这一处理过程会带来一定的延迟。</p>
+<h4 id="msr">MSR 计时：</h4>
+<p>在虚拟机中执行 <code>RDMSR</code> 会带来额外的开销，相比在原生环境中执行而言。反作弊系统会监测 MSR 的读取情况以及任何异常行为。</p>
+<h1 id="dma">DMA 作弊手段与检测方法</h1>
+<h2 id="_27">原理</h2>
+<p><strong>DMA (Direct Memory Access)</strong>
+直接内存访问，技术利用了通过 PCIe 连接的设备——通常是用于开发的 FPGA 板卡。
+- 直接通过 PCIe 总线读取主机系统的物理内存，而无需 CPU 的参与。 
+- <code>pcileech</code> 框架及其 <code>LeechCore</code> 库为这类设备提供了所需的软件支持。
+- 该设备在 PCIe 总线上被视作一个独立的设备，它通过 PCIe TLP 协议来获取对主机物理内存的访问权限。
+- 该设备通过将虚拟地址转换为物理地址来读取游戏进程中的数据（这一过程需要借助页表来完成，而页表本身也存储在物理内存中，因此可以被该设备读取）。</p>
+<p><strong>实现作弊</strong></p>
+<p>游戏和作弊程序是物理上分开的。所有的作弊操作都在攻击者的独立硬件上完成。游戏机器上没有任何与作弊相关的进程、驱动程序或内存分配。从纯粹的软件角度来看，游戏机器是完全干净的。</p>
+<h3 id="pcie-pcie">PCIe 内部结构/PCIe 的内部运作方式</h3>
+<p>PCIe 通信是以 TLP 为基本单位的。来自 DMA 设备的读内存请求 TLP 中包含要读取的物理地址以及所需的字节数。PCIe 根复合体负责处理这一请求：它读取指定的物理内存中的数据，并通过完成 TLP 将数据返回给发送请求的设备。整个过程完全由硬件来完成，CPU 不参与这一请求的处理过程。</p>
+<p>该设备需要配置一个有效的基地址寄存器，该地址是由 BIOS 在 PCIe 枚举过程中分配的。此外，如果目标系统配备了 <strong>IOMMU</strong>，那么必须将其禁用，或者允许该设备的 DMA 操作通过 IOMMU 进行。</p>
+<h3 id="iommu">IOMMU 作为一种防御机制</h3>
+<p>IOMMU（即 Intel VT-d 和 AMD-Vi）是一种硬件设备，它负责将 PCIe 设备所使用的 DMA 地址转换为可被系统处理的格式。这一过程是通过设备专用的页表来实现的，其原理类似于 CPU 中用于用户模式地址转换的页表。如果 IOMMU 被正确启用并配置好了，那么 PCIe 设备就只能访问操作系统通过 IOMMU 页表所允许其访问的物理内存。</p>
+<p><strong>本质：</strong> 通过限制 PCIE 设备能够读取的地址范围，来阻止对游戏进程内存的访问。</p>
+<h2 id="_28">检测</h2>
+<h3 id="pcie">PCIE 检查</h3>
+<p>反作弊机制试图通过列出所有的 PCIe 设备，并验证每个设备所报告的参数是否与预期的硬件规格相符，从而检测出这种作弊行为。不过，如果没有在固件层面进行相应的验证，就很难区分真正的硬件和那些能够完美模仿真实硬件的 FPGA 设备。</p>
+<h3 id="tpm">TPM 启动</h3>
+<p>Epic Games 要求《堡垒之夜》必须使用安全启动机制和 TPM 2.0 技术，这一要求与 DMA 威胁直接相关。安全启动机制能确保只有经过验证的引导加载程序才能运行，从而防止在系统启动时遭到攻击，避免 IOMMU 被破坏或固件被篡改。TPM 2.0 则能够记录每次启动过程中的各种数据，从而形成一条验证链，证明系统确实是在正常状态下启动的。通过 TPM 进行的远程验证，还可以让服务器确认客户端系统的固件未被篡改。</p>
+<p><strong>缺点：</strong>
+这并不能直接解决 DMA 相关的问题（因为那些直接连接到 PCIe 插槽的 DMA 攻击设备可以绕过所有这些防护措施），但至少可以阻断一些通过软件实现的 DMA 攻击途径。</p>
+<h1 id="_29">行为检测与遥测技术</h1>
+<h2 id="_30">鼠标与输入操作分析</h2>
+<h3 id="_31">原理</h3>
+<p><strong>该反作弊驱动程序在系统底层运行，能够截获那些在到达游戏之前产生的原始输入数据。</strong>
+用于处理 HID 设备输入的驱动程序，尤其是那些用于鼠标和键盘的驱动程序，都属于输入驱动程序栈的一部分。
+通过在 <code>mouclass.sys</code> 或 <code>kbdclass.sys</code> 之上安装过滤驱动程序，反作弊系统就能准确记录下所有的输入事件，其时间精度可达到系统时钟的微秒级别。</p>
+<h3 id="_32">自瞄检测实现：</h3>
+<p>1、自动瞄准器的检测机制，主要是通过分析鼠标移动的统计特性来实现的。
+<strong>2、原理：</strong> 人类的瞄准行为具有特定的规律：菲茨定律决定了鼠标移动的轨迹；当光标接近目标时，速度会逐渐减小；速度曲线呈现出特定的加速和减速模式；此外，还存在一定的测量误差。
+<strong>3、检测方式</strong> 自动瞄准器在向目标移动时采用完全线性的移动方式，这种移动方式违背了上述规律。至于那些在光标对准目标时自动扣动扳机的装置，虽然它们不操控鼠标的移动，但可以通过反应时间来检测出来：人类对光标对准目标的反应时间存在一定的生理极限（大约 150-200 毫秒），并且反应时间分布也有一定的规律。如果反应时间持续低于这一极限，那就很可能意味着该装置是自动化的。</p>
+<p>总结：
+- 通过线性移动路径检测。
+- 通过移动+触发按键的时间窗口的长短进行检测。</p>
+<h2 id="_33">机器学习检测</h2>
+<p>![[file-20260530203445787.png]]
+<em>左图：正常玩家的鼠标移动轨迹符合菲茨定律，呈现出自然的 S 形曲线、超调现象以及微小的调整。右图：使用自动瞄准功能的玩家，其鼠标移动先处于静止状态，随后会立即直线移动到目标位置，没有自然的减速过程。</em></p>
+<h1 id="anti-vm-and-environment-checks">Anti-VM and Environment Checks</h1>
+<p>反作弊系统从内核模式中检测这些特征，因为用户模式下的拦截手段无法触及这些数据。如果系统出现此类特征，很可能是运行在虚拟机中。在这种情况下，反作弊系统会拒绝该会话的运行，或将其标记为异常会话。</p>
+<h2 id="_34">系统标志位</h2>
+<p>最可靠的虚拟机检测方法是基于 CPUID 的。当执行 <code>CPUID</code> 和 <code>EAX=1</code> 时，如果系统中存在 hypervisor，那么 <code>ECX</code> 的第 31 位就会被设置为 1（该位被称为“管理程序存在位”）。使用 <code>EAX=0x40000000</code> 时，管理程序的供应商信息会分别存储在 EBX、ECX 和 EDX 寄存器中。下面是检测的示例代码：
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-8-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-8-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-8-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-8-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-8-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-8-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-8-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-8-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-8-10">10</a></span>
+<span class="normal"><a href="#__codelineno-8-11">11</a></span>
+<span class="normal"><a href="#__codelineno-8-12">12</a></span>
+<span class="normal"><a href="#__codelineno-8-13">13</a></span>
+<span class="normal"><a href="#__codelineno-8-14">14</a></span>
+<span class="normal"><a href="#__codelineno-8-15">15</a></span>
+<span class="normal"><a href="#__codelineno-8-16">16</a></span>
+<span class="normal"><a href="#__codelineno-8-17">17</a></span>
+<span class="normal"><a href="#__codelineno-8-18">18</a></span>
+<span class="normal"><a href="#__codelineno-8-19">19</a></span>
+<span class="normal"><a href="#__codelineno-8-20">20</a></span>
+<span class="normal"><a href="#__codelineno-8-21">21</a></span>
+<span class="normal"><a href="#__codelineno-8-22">22</a></span>
+<span class="normal"><a href="#__codelineno-8-23">23</a></span>
+<span class="normal"><a href="#__codelineno-8-24">24</a></span>
+<span class="normal"><a href="#__codelineno-8-25">25</a></span>
+<span class="normal"><a href="#__codelineno-8-26">26</a></span>
+<span class="normal"><a href="#__codelineno-8-27">27</a></span>
+<span class="normal"><a href="#__codelineno-8-28">28</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="n">BOOLEAN</span><span class="w"> </span><span class="nf">IsRunningInVM</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">cpuInfo</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="w">    </span><span class="n">__cpuid</span><span class="p">(</span><span class="n">cpuInfo</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6"></a><span class="w">    </span><span class="c1">// Check hypervisor present bit (ECX bit 31)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cpuInfo</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">31</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8"></a><span class="w">        </span><span class="c1">// Get hypervisor vendor</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9"></a><span class="w">        </span><span class="n">__cpuid</span><span class="p">(</span><span class="n">cpuInfo</span><span class="p">,</span><span class="w"> </span><span class="mh">0x40000000</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11"></a><span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">vendor</span><span class="p">[</span><span class="mi">13</span><span class="p">];</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12"></a><span class="w">        </span><span class="n">memcpy</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cpuInfo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13"></a><span class="w">        </span><span class="n">memcpy</span><span class="p">(</span><span class="n">vendor</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cpuInfo</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14"></a><span class="w">        </span><span class="n">memcpy</span><span class="p">(</span><span class="n">vendor</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cpuInfo</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15"></a><span class="w">        </span><span class="n">vendor</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16"></a>
+<a id="__codelineno-8-17" name="__codelineno-8-17"></a><span class="w">        </span><span class="c1">// Known VM vendors</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;VMwareVMware&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19"></a><span class="w">            </span><span class="n">strcmp</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;VBoxVBoxVBox&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20"></a><span class="w">            </span><span class="n">strcmp</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Microsoft Hv&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w">  </span><span class="c1">// Hyper-V</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21"></a><span class="w">            </span><span class="n">strcmp</span><span class="p">(</span><span class="n">vendor</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;KVMKVMKVM&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TRUE</span><span class="p">;</span><span class="w"> </span><span class="c1">// Unknown hypervisor is also suspicious</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28"></a><span class="p">}</span>
+</code></pre></div></td></tr></table></div></p>
+<h2 id="_35">注册表信息</h2>
+<p>每个虚拟机平台都会在注册表和设备枚举信息中留下各自的独特痕迹。</p>
+<ul>
+<li>VMware：注册表键 <code>HKLM\SOFTWARE\VMware, Inc.\VMware Tools</code> ；PCI 设备 <code>\Device\VMwareHGFS</code> ；名称中包含“VMware”的虚拟设备出现在 <code>Win32_PnPEntity</code> 中。</li>
+<li><code>VBoxMiniRdDN</code> 驱动程序；注册表键值 <code>HKLM\HARDWARE\ACPI\DSDT\VBOX__</code> 。</li>
+<li>Hyper-V： <code>HKLM\SOFTWARE\Microsoft\Virtual Machine\Guest\Parameters</code> ；存在 <code>vmbus</code> 和 <code>storvsc</code> 驱动程序对象。</li>
+</ul>
+<h3 id="hypervisors">检测嵌套式 hypervisors</h3>
+<p>含义：将游戏在虚拟机中运行，而作弊程序则运行在虚拟机的宿主系统中。</p>
+<p>检测方式：检测嵌套式虚拟机的方法是依靠时间上的异常现象：在嵌套虚拟机中执行的 <code>CPUID</code> 指令需要经过两个虚拟机的处理，从而产生双倍的延迟。 <code>RDMSR</code> 和 <code>WRMSR</code> 指令也会导致类似的延迟增加。</p>
+<h1 id="_36">硬件指纹识别与禁令执行机制</h1>
+<h2 id="_37">封禁策略</h2>
+<p>类似于黑样本库，根据签名规则直接封禁。</p>
+<p>就是日常说的封主板的情况。列出了下面的几种情况
+- <strong>SMBIOS 数据：</strong> 制造商、产品名称、序列号、UUID。可以通过 <code>NtQuerySystemInformation</code> <code>(SystemFirmwareTableInformation, ...)</code> 来获取这些信息，或者直接从固件表中查询。
+- <strong>磁盘序列号：</strong> 通过 IOCTL <code>IOCTL_STORAGE_QUERY_PROPERTY</code> 可以获取物理磁盘的序列号。这些序列号是稳定的标识符，即使在重新安装操作系统后也不会改变。
+- GPU 标识符：设备实例 ID、适配器 LUID。
+- <strong>MAC 地址：</strong> 通过 NDIS 或注册表获取网卡的 MAC 地址。这些地址可以在软件层面被伪造，但通常非技术用户不会去更改它们。
+- <strong>Boot GUID</strong>:  即 <code>HKLM\SOFTWARE\Microsoft\Cryptography</code> 中的 <code>MachineGuid</code> ；或者更准确地说，是通过 SMBIOS 可以获取的 UEFI 固件平台 UUID。</p>
+<p><code>rhaym-tech</code> GitHub 上的 gist 文档中包含了 Vanguard 的分析结果。这些文档收集了 BIOS 信息，包括系统 UUID 以及各种 SMBIOS 字段。这些信息被整合起来，形成所谓的“硬件指纹”，从而用于实施禁令措施。</p>
+<h2 id="bypass-hwid">bypass 策略 - HWID 欺骗</h2>
+<p>bypass 的方式无法就是对特定的检测点进行伪造。HWID 欺骗行为指的是修改反作弊系统所读取的标识符，从而规避硬件层面的禁令。常见的欺骗手段包括：
+- 用户数据手动修改
+- 烧入多个 MAC 地址
+- 驱动 IOCTLs 请求劫持，返回假值。</p>
+<h1 id="_38">未来发展</h1>
+<ol>
+<li>下一个阶段则是基于固件的攻击方式，也就是将恶意代码嵌入到固态硬盘的固件、GPU 的固件或网络接口卡的固件中。
+固件攻击尤其令人担忧，因为它们在操作系统重新安装后仍然存在；所有内核级的检测手段都无法发现它们。此外，如果不直接接触设备来验证固件，就几乎不可能检测到这些攻击。目前，还没有有效的防御措施来应对固件层面的作弊行为。</li>
+</ol>
+<h1 id="_39">总结</h1>
+<p>本文是一篇对于反作弊保护的综述，从攻击角度和防御角度混合进行的讲解。</p>
+<h2 id="_40">基本架构</h2>
+<p>用户态：
+- 服务进程负责和驱动通信
+- 游戏中的 dll，负责信息采集和响应消息。
+驱动：
+- 回调检测
+- 反调试
+- 驱动层对抗
+- 检测用户态信息</p>
+<h2 id="_41">内核回调</h2>
+<ul>
+<li>object 回调：控制 process 、thread 等 object 的权限获取操作，以此来阻止其他进程非法获取游戏进程句柄。</li>
+<li>minifilter：防止篡改游戏相关组件文件。</li>
+<li>process、thread、imageload 回调：看操作的模块是否合法。</li>
+<li>注册表回调：防止通过修改注册表来修改游戏进程加载的模块。</li>
+</ul>
+<h2 id="_42">内存保护</h2>
+<ul>
+<li>内存完整性检查</li>
+<li>扫描：启发式扫描</li>
+<li>扫描：VAD 树遍历</li>
+</ul>
+<h2 id="_43">反注入检测</h2>
+<ul>
+<li>检测可疑线程创建</li>
+<li>检测 APC 队列</li>
+<li>检测 unbacked 的内存</li>
+</ul>
+<h2 id="callstack">callstack 检测</h2>
+<p>通过内核插入 apc 的方式，获取线程 callstack，检测 callstack 中是否存在可疑模块。</p>
+<h2 id="_44">内核结构检测</h2>
+<ul>
+<li>ssdt 检测 syscall 劫持，但是 Windows 通过 PG 已经做了。</li>
+<li>IDT 和 GDT 劫持，验证 IDT 表中的条目是否指向了正确的内核地址。</li>
+<li>PiDDBCache 与 PiDDBLock，检测幽灵驱动模块加载。</li>
+<li>bigpool 检测，检查开辟的超过 4 kb 的大内核内存的分配，寻找不在任何驱动地址范围内的地址，类似于内核的 unbacked 内存。</li>
+</ul>
+<h2 id="_45">反调试</h2>
+<ul>
+<li>标志位：检查线程的调试标志位</li>
+<li>标志位：设置线程调试隐藏属性，对调试器不可见</li>
+<li>系统：通过 CPUID 指令检查系统标志位。</li>
+<li>系统：通过指令执行时间检查虚拟化嵌套。</li>
+<li>系统：注册表检查</li>
+</ul>
+<h2 id="_46">黑名单机制</h2>
+<ul>
+<li>查询设备标识符，进行黑名单匹配。</li>
+</ul>
+<h2 id="_47">行为检查</h2>
+<ul>
+<li>检查输入轨迹</li>
+<li>检查输入是否突破人类极限。</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../config/stylesheets/javascripts/cyber-buddha.js"></script>
+      
+    
+  </body>
+</html>
